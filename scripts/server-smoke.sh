@@ -11,7 +11,7 @@ smoke_one() {
   local pid=$!
   local ok=0
   for _ in $(seq 1 90); do
-    if grep -Eq 'Done \([0-9.]+s\)! For help, type "help"|For help, type "help"|Starting minecraft server version|You need to agree to the EULA' "$log"; then
+    if grep -Eq 'Done \([0-9.]+s\)! For help, type "help"|For help, type "help"|Starting minecraft server version|You need to agree to the EULA|EULA not accepted' "$log"; then
       ok=1
       break
     fi

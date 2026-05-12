@@ -1,13 +1,6 @@
 pluginManagement {
-    repositories {
-        mavenLocal()
-        gradlePluginPortal()
-        maven { url = 'https://maven.minecraftforge.net/' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-    }
+    repositories { mavenLocal(); gradlePluginPortal(); maven { url = 'https://maven.minecraftforge.net/' }; maven { url = 'https://nexus.gtnewhorizons.com/repository/public/' } }
 }
-
 plugins { id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0' }
-
 rootProject.name = 'keep-my-sword'
 include 'forge'

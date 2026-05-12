@@ -1,16 +1,2 @@
-plugins {
-    id 'net.minecraftforge.gradle' version '6.0.+' apply false
-    id 'org.spongepowered.mixin' version '0.7.+' apply false
-}
-
-subprojects {
-    group = rootProject.mod_group_id
-    version = rootProject.mod_version
-    repositories {
-        mavenLocal(); mavenCentral(); maven { url = 'https://maven.minecraftforge.net/' }; maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-    }
-    plugins.withType(JavaPlugin).configureEach {
-        java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-        tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; sourceCompatibility='8'; targetCompatibility='8' }
-    }
-}
+plugins { id 'com.gtnewhorizons.retrofuturagradle' version '1.4.0' apply false }
+subprojects { group=rootProject.mod_group_id; version=rootProject.mod_version; repositories { mavenLocal(); mavenCentral(); maven { url='https://nexus.gtnewhorizons.com/repository/public/' }; maven { url='https://maven.minecraftforge.net/' } }; plugins.withType(JavaPlugin).configureEach { java.toolchain.languageVersion=JavaLanguageVersion.of(8); tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; sourceCompatibility='8'; targetCompatibility='8' } } }
