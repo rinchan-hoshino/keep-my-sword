@@ -15,4 +15,3 @@ plugins {
 rootProject.name = 'keep-my-sword'
 include 'fabric'
 include 'forge'
-include 'neoforge'

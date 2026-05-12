@@ -38,7 +38,7 @@ smoke_one() {
   fi
 }
 
-mapfile -t server_tasks < <(./gradlew --no-daemon tasks --all | awk '/:(runServer|server) / {print $1}' | sed 's/ .*//' | sort -u)
+mapfile -t server_tasks < <(./gradlew --no-daemon tasks --all | awk '/^[^[:space:]]*:(runServer|server)([[:space:]]|$)/ {print $1}' | sed 's/ .*//' | sort -u)
 if ((${#server_tasks[@]} == 0)); then
   echo "server smoke skipped: no server run task found"
   exit 0
