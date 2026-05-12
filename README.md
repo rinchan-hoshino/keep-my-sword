@@ -36,3 +36,19 @@ Then build Keep My Sword:
 cd ../keep-my-sword
 ./gradlew build
 ```
+
+## Local CI
+
+Run the same local checks as the commit hook:
+
+```bash
+./scripts/ci.sh
+```
+
+The check builds all loaders on the current branch and starts each headless server run until it reaches startup. The repository includes `.githooks/pre-commit`; enable it once per clone with:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The containerized hook builds and installs RinLib from the matching RinLib branch name, falling back to `main` when that branch does not exist.
