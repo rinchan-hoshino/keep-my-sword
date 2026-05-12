@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "minecraft mod local ci: docker is not installed, so containerized commit checks cannot run." >&2
+  exit 1
+fi
+
+image_tag="$(basename "$repo_root")-local-ci:latest"
+branch_name="$(git rev-parse --abbrev-ref HEAD)"
+
+echo "minecraft mod local ci: building container image..."
+docker build -f .ci/local-ci/Dockerfile --build-arg RINLIB_REF="$branch_name" -t "$image_tag" .
+
+tree_id="$(git write-tree)"
+archive_file="$(mktemp)"
+trap 'rm -f "$archive_file"' EXIT
+git archive --format=tar "$tree_id" >"$archive_file"
+
+echo "minecraft mod local ci: running checks in container..."
+docker run --rm -e RUN_SERVER_SMOKE="${RUN_SERVER_SMOKE:-1}" -e GRADLE_USER_HOME="$HOME/.gradle" -v "$HOME/.gradle:$HOME/.gradle" -i "$image_tag" <"$archive_file"

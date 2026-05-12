@@ -50,11 +50,12 @@ legacyForge.ideSyncTask tasks.named('generateModMetadata')
 mixin {
     add sourceSets.main, "${modId}.refmap.json"
     config "${modId}.mixins.json"
+    config "${modId}.client.mixins.json"
 }
 
 jar {
     manifest.attributes([
-        "MixinConfigs": "${modId}.mixins.json"
+        "MixinConfigs": "${modId}.mixins.json,${modId}.client.mixins.json"
     ])
 }
 

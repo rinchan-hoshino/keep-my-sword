@@ -17,7 +17,7 @@ Keep My Sword depends on RinLib.
 
 ## Supported targets
 
-This branch implements Minecraft 1.20.1 for Fabric, Forge, and NeoForge.
+The first implemented line is Minecraft 1.21.1 for Fabric and NeoForge.
 
 The full target matrix is tracked in [docs/version-support.md](docs/version-support.md): 1.7.10, 1.12.2, 1.16.5, 1.20.1, 1.21.1, and the latest 26.1.x line, with Forge capped at 1.20.1, NeoForge starting at 1.20.1, and Fabric starting at 1.16.5.
 
@@ -36,3 +36,19 @@ Then build Keep My Sword:
 cd ../keep-my-sword
 ./gradlew build
 ```
+
+## Local CI
+
+Run the same local checks as the commit hook:
+
+```bash
+./scripts/ci.sh
+```
+
+The check builds all loaders on the current branch and starts each headless server run until it reaches startup. The repository includes `.githooks/pre-commit`; enable it once per clone with:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The containerized hook builds and installs RinLib from the matching RinLib branch name, falling back to `main` when that branch does not exist.
