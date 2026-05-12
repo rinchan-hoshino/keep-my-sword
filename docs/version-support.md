@@ -11,9 +11,9 @@ Keep My Sword targets the same Minecraft matrix as RinLib. Every published build
 | 1.16.5 | Forge `36.2.42` | Not applicable | Fabric API `0.42.0+1.16` | 8 | Target |
 | 1.20.1 | Forge `47.4.20` | NeoForge `47.1.106` | Fabric API `0.92.9+1.20.1` | 17 | Target |
 | 1.21.1 | Not targeted | NeoForge `21.1.229` | Fabric API `0.116.12+1.21.1` | 21 | Implemented first |
-| 26.1.x | Not targeted | NeoForge `26.1.2.48-beta` | Fabric API `0.148.2+26.1.2` | 21 | Target |
+| 26.1.x | Not targeted | NeoForge `26.1.2.48-beta` | Fabric API `0.148.2+26.1.2` | 25 | NeoForge implemented; Fabric blocked by missing mappings |
 
-Forge is intentionally capped at Minecraft 1.20.1. NeoForge starts at Minecraft 1.20.1. Fabric starts at Minecraft 1.16.5.
+Forge is intentionally capped at Minecraft 1.20.1. NeoForge starts at Minecraft 1.20.1. Fabric starts at Minecraft 1.16.5. For 26.1.x, Fabric artifacts exist but dev mappings for `26.1.2` are not currently published, so this branch keeps a NeoForge-only build until Fabric mappings/tooling are available.
 
 ## Porting order
 
