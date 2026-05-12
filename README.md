@@ -17,7 +17,7 @@ Keep My Sword depends on RinLib.
 
 ## Supported targets
 
-The first implemented line is Minecraft 1.21.1 for Fabric and NeoForge.
+This branch implements Minecraft 1.20.1 for Fabric, Forge, and NeoForge.
 
 The full target matrix is tracked in [docs/version-support.md](docs/version-support.md): 1.7.10, 1.12.2, 1.16.5, 1.20.1, 1.21.1, and the latest 26.1.x line, with Forge capped at 1.20.1, NeoForge starting at 1.20.1, and Fabric starting at 1.16.5.
 

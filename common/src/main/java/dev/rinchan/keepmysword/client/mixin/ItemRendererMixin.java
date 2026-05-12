@@ -56,55 +56,16 @@ public abstract class ItemRendererMixin {
         method = "renderQuadList",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFII)V"
-        ),
-        require = 0
+            target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFII)V"
+        )
     )
-    private void keepMySword$tintBrokenNonGuiModelFabric(
+    private void keepMySword$tintBrokenNonGuiModel(
         VertexConsumer consumer,
         PoseStack.Pose pose,
         BakedQuad quad,
         float red,
         float green,
         float blue,
-        float alpha,
-        int combinedLight,
-        int combinedOverlay
-    ) {
-        keepMySword$putTintedBulkData(consumer, pose, quad, red, green, blue, alpha, combinedLight, combinedOverlay);
-    }
-
-    @Redirect(
-        method = "renderQuadList",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFIIZ)V"
-        ),
-        require = 0
-    )
-    private void keepMySword$tintBrokenNonGuiModelNeoForge(
-        VertexConsumer consumer,
-        PoseStack.Pose pose,
-        BakedQuad quad,
-        float red,
-        float green,
-        float blue,
-        float alpha,
-        int combinedLight,
-        int combinedOverlay,
-        boolean readExistingColor
-    ) {
-        keepMySword$putTintedBulkData(consumer, pose, quad, red, green, blue, alpha, combinedLight, combinedOverlay);
-    }
-
-    private void keepMySword$putTintedBulkData(
-        VertexConsumer consumer,
-        PoseStack.Pose pose,
-        BakedQuad quad,
-        float red,
-        float green,
-        float blue,
-        float alpha,
         int combinedLight,
         int combinedOverlay
     ) {
@@ -115,6 +76,6 @@ public abstract class ItemRendererMixin {
             green *= DamageState.BROKEN_SURFACE_GREEN;
             blue *= DamageState.BROKEN_SURFACE_BLUE;
         }
-        consumer.putBulkData(pose, quad, red, green, blue, alpha, combinedLight, combinedOverlay);
+        consumer.putBulkData(pose, quad, red, green, blue, combinedLight, combinedOverlay);
     }
 }

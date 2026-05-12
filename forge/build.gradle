@@ -9,7 +9,7 @@ def root = rootProject
 def modId = root.property('mod_id')
 
 base {
-    archivesName = "${modId}-neoforge"
+    archivesName = "${modId}-forge"
 }
 
 sourceSets.main.java.srcDir root.file('common/src/main/java')
@@ -17,7 +17,7 @@ sourceSets.main.resources.srcDir root.file('common/src/main/resources')
 sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessResources) {
     def replaceProperties = [
         minecraft_version_range: root.property('minecraft_version_range'),
-        neo_version_range      : root.property('neo_version_range'),
+        forge_version_range    : root.property('forge_version_range'),
         loader_version_range   : root.property('loader_version_range'),
         rinlib_version         : root.property('rinlib_version'),
         mod_id                 : modId,
@@ -35,9 +35,7 @@ sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessRe
 }
 
 legacyForge {
-    enable {
-        neoForgeVersion = "${root.property('minecraft_version')}-${root.property('neo_version')}"
-    }
+    version = "${root.property('minecraft_version')}-${root.property('forge_version')}"
     mods {
         "${modId}" {
             sourceSet(sourceSets.main)
@@ -59,14 +57,14 @@ jar {
 }
 
 dependencies {
-    implementation "dev.rinchan:rinlib-neoforge:${root.property('rinlib_version')}"
+    implementation "dev.rinchan:rinlib-forge:${root.property('rinlib_version')}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = "${modId}-neoforge"
+            artifactId = "${modId}-forge"
             from components.java
         }
     }

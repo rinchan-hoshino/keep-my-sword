@@ -1,32 +1,31 @@
 package dev.rinchan.keepmysword.mixin;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import dev.rinchan.rinlib.item.DamageState;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.DigDurabilityEnchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -36,42 +35,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /** Keeps zero-durability stacks present and makes broken stacks behave like model-only items. */
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-    @Inject(
-        method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V",
-        at = @At("HEAD"),
-        cancellable = true,
-        require = 0
-    )
-    private void keepMySword$hurtWithoutDestroyNeoForge(int amount, ServerLevel level, @Nullable LivingEntity entity, Consumer<Item> onBroken, CallbackInfo ci) {
-        keepMySword$hurtWithoutDestroy(amount, level, entity instanceof ServerPlayer player ? player : null, ci);
-    }
-
-    @Inject(
-        method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V",
-        at = @At("HEAD"),
-        cancellable = true,
-        require = 0
-    )
-    private void keepMySword$hurtWithoutDestroyFabric(int amount, ServerLevel level, @Nullable ServerPlayer player, Consumer<Item> onBroken, CallbackInfo ci) {
-        keepMySword$hurtWithoutDestroy(amount, level, player, ci);
-    }
-
-    private void keepMySword$hurtWithoutDestroy(int amount, ServerLevel level, @Nullable ServerPlayer player, CallbackInfo ci) {
+    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
+    private void keepMySword$hurtWithoutDestroy(int amount, RandomSource random, ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = (ItemStack) (Object) this;
         if (!stack.isDamageableItem()) {
-            return;
-        }
-
-        if (player != null && player.hasInfiniteMaterials()) {
-            ci.cancel();
+            cir.setReturnValue(false);
             return;
         }
 
         int damage = amount;
         if (damage > 0) {
-            damage = EnchantmentHelper.processDurabilityChange(level, stack, damage);
+            int unbreakingLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, stack);
+            int ignored = 0;
+            for (int i = 0; unbreakingLevel > 0 && i < damage; i++) {
+                if (DigDurabilityEnchantment.shouldIgnoreDurabilityDrop(stack, unbreakingLevel, random)) {
+                    ignored++;
+                }
+            }
+            damage -= ignored;
             if (damage <= 0) {
-                ci.cancel();
+                cir.setReturnValue(false);
                 return;
             }
         }
@@ -81,18 +64,11 @@ public abstract class ItemStackMixin {
         }
 
         stack.setDamageValue(DamageState.clampDamage(stack, stack.getDamageValue() + damage));
-        ci.cancel();
+        cir.setReturnValue(false);
     }
 
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableUseOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
-            cir.setReturnValue(InteractionResult.PASS);
-        }
-    }
-
-    @Inject(method = "onItemUseFirst", at = @At("HEAD"), cancellable = true, require = 0)
-    private void keepMySword$disableNeoForgeUseFirst(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
         if (DamageState.isBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(InteractionResult.PASS);
         }
@@ -103,6 +79,13 @@ public abstract class ItemStackMixin {
         ItemStack stack = (ItemStack) (Object) this;
         if (DamageState.isBroken(stack)) {
             cir.setReturnValue(InteractionResultHolder.pass(stack));
+        }
+    }
+
+    @Inject(method = "interactLivingEntity", at = @At("HEAD"), cancellable = true)
+    private void keepMySword$disableEntityUse(Player player, LivingEntity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        if (DamageState.isBroken((ItemStack) (Object) this)) {
+            cir.setReturnValue(InteractionResult.PASS);
         }
     }
 
@@ -136,7 +119,7 @@ public abstract class ItemStackMixin {
     }
 
     @Inject(method = "getUseDuration", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableUseDuration(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
+    private void keepMySword$disableUseDuration(CallbackInfoReturnable<Integer> cir) {
         if (DamageState.isBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(0);
         }
@@ -164,14 +147,7 @@ public abstract class ItemStackMixin {
     }
 
     @Inject(method = "hurtEnemy", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableHurtEnemy(LivingEntity target, Player player, CallbackInfoReturnable<Boolean> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
-            cir.setReturnValue(false);
-        }
-    }
-
-    @Inject(method = "postHurtEnemy", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disablePostHurtEnemy(LivingEntity target, Player player, CallbackInfo ci) {
+    private void keepMySword$disableHurtEnemy(LivingEntity target, Player player, CallbackInfo ci) {
         if (DamageState.isBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
@@ -184,17 +160,10 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableSlotGroupModifiers(EquipmentSlotGroup slotGroup, BiConsumer<Holder<Attribute>, AttributeModifier> consumer, CallbackInfo ci) {
+    @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
+    private void keepMySword$disableAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<Attribute, AttributeModifier>> cir) {
         if (DamageState.isBroken((ItemStack) (Object) this)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableSlotModifiers(EquipmentSlot slot, BiConsumer<Holder<Attribute>, AttributeModifier> consumer, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
-            ci.cancel();
+            cir.setReturnValue(ImmutableMultimap.of());
         }
     }
 }
