@@ -1,15 +1,41 @@
-# No Item Break (`no_item_break`)
+# Keep My Sword
 
-Standalone NeoForge 1.21.1 mod for durability rules.
+Keep My Sword keeps broken tools and equipment as repairable model-only items instead of destroying them.
 
 ## Behavior
 
-- Damageable items are not destroyed when their durability reaches zero.
-- A zero-durability item stays in its slot and can be repaired later.
-- Broken tools mine at zero speed and cannot harvest blocks.
-- Broken equipment provides no item attribute modifiers.
-- Broken right-click item use is blocked while normal block interaction is preserved where possible.
+- Damageable items stay in their slot when durability reaches zero.
+- A zero-durability item remains repairable and movable.
+- Broken items keep their model, but gameplay hooks act like the item has no usable function: no use action, no special mining speed, no correct-tool harvest, no item attack hook, no inventory ticking, and no equipment attribute modifiers.
+- Broken items do not add tooltip text.
+- In GUI slots, broken items show an empty durability bar and a red slot overlay.
+- Outside GUI slots, broken items render with a red surface tint instead of a slot overlay.
 
-## Scope
+## Dependency
 
-This mod only owns the no-destruction/broken-item behavior. Other Watermelon Field systems such as death penalty, repair UI, economy, and dimensions live in separate mods and repositories.
+Keep My Sword depends on RinLib.
+
+## Supported target
+
+- Minecraft 1.21.1
+- Fabric
+- NeoForge
+- Java 21
+
+New Minecraft versions should be added as separate release lines after the 1.21.1 line is stable.
+
+## Build
+
+Publish RinLib locally first:
+
+```bash
+cd ../rinlib
+./gradlew publishToMavenLocal
+```
+
+Then build Keep My Sword:
+
+```bash
+cd ../keep-my-sword
+./gradlew build
+```

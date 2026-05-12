@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.rinchan.keepmysword",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "mixin.ItemStackMixin"
+  ],
+  "client": [
+    "client.mixin.GuiGraphicsMixin",
+    "client.mixin.ItemRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
