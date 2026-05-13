@@ -38,3 +38,5 @@ Compatibility glue may differ per Minecraft version and loader. Do not add broad
 ## Per-release modern status
 <!-- modern-status:1.21.2 -->
 - `1.21.2`: Implemented Fabric `0.106.1+1.21.2` against RinLib branch `mc/1.21.2`; NeoForge skipped for now pending per-version NeoGradle/ModDev wiring; Forge not targeted after 1.20.1.
+<!-- modern-status:1.21.4 -->
+- `1.21.4`: Implemented Fabric `0.119.4+1.21.4` against RinLib branch `mc/1.21.4`; NeoForge skipped for now pending per-version NeoGradle/ModDev wiring; Forge not targeted after 1.20.1.
