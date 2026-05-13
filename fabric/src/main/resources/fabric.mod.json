@@ -11,8 +11,7 @@
     "main": ["dev.rinchan.keepmysword.fabric.KeepMySwordFabric"]
   },
   "mixins": [
-    "keep_my_sword.mixins.json",
-    "keep_my_sword.client.mixins.json"
+    "keep_my_sword.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
