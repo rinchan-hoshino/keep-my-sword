@@ -34,3 +34,7 @@ A supported build must do all of the following:
 - Render a red surface tint when the item is shown outside a GUI slot.
 
 Compatibility glue may differ per Minecraft version and loader. Do not add broad fallback paths that hide a broken version contract; fix the version-specific hook instead.
+
+## Per-release modern status
+<!-- modern-status:1.21.11 -->
+- `1.21.11`: Skipped for now because RinLib `mc/1.21.11` is skipped: Fabric API `0.141.4+1.21.11` fails under current Loom with javadoc namespace error; NeoForge not attempted in this Fabric-first pass.
