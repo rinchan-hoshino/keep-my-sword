@@ -34,3 +34,7 @@ A supported build must do all of the following:
 - Render a red surface tint when the item is shown outside a GUI slot.
 
 Compatibility glue may differ per Minecraft version and loader. Do not add broad fallback paths that hide a broken version contract; fix the version-specific hook instead.
+
+## Per-release modern status
+<!-- modern-status:26.1.1 -->
+- `26.1.1`: Implemented NeoForge `26.1.1.15-beta` against RinLib branch `mc/26.1.1`; Fabric skipped because Yarn/official mappings are unavailable for `26.1.1`.
