@@ -2,8 +2,6 @@ package dev.rinchan.keepmysword.mixin;
 
 import java.util.function.BiConsumer;
 
-import org.apache.commons.lang3.function.TriConsumer;
-
 import dev.rinchan.rinlib.item.DamageState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -19,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -119,13 +116,6 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "mineBlock", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableMineBlock(Level level, BlockState state, BlockPos pos, Player player, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Lorg/apache/commons/lang3/function/TriConsumer;)V", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableSlotGroupModifiers(EquipmentSlotGroup slotGroup, TriConsumer<Holder<Attribute>, AttributeModifier, ItemAttributeModifiers.Display> consumer, CallbackInfo ci) {
         if (DamageState.isBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }

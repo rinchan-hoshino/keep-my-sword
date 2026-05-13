@@ -1,10 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.rinchan.keepmysword.mixin",
+  "package": "dev.rinchan.keepmysword.fabric.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ItemStackMixin"
+    "FabricItemStackDamageMixin"
   ],
   "injectors": {
     "defaultRequire": 1
