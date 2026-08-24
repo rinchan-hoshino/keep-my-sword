@@ -32,5 +32,6 @@ A supported build must do all of the following:
 - Add no tooltip text.
 - Render a red slot overlay in inventory-like GUI slots.
 - Render a red surface tint when the item is shown outside a GUI slot.
+- Bypass all preservation, behavior suppression, and rendering for items in `#keep_my_sword:excluded`, leaving their native break lifecycle intact.
 
 Compatibility glue may differ per Minecraft version and loader. Do not add broad fallback paths that hide a broken version contract; fix the version-specific hook instead.

@@ -2,6 +2,7 @@ package dev.rinchan.keepmysword.client.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.rinchan.keepmysword.KeepMySword;
 import dev.rinchan.rinlib.item.DamageState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -110,7 +111,7 @@ public abstract class ItemRendererMixin {
     ) {
         ItemStack stack = keepMySword$renderStack.get();
         ItemDisplayContext context = keepMySword$renderContext.get();
-        if (stack != null && DamageState.isBroken(stack) && context != ItemDisplayContext.GUI) {
+        if (stack != null && KeepMySword.isManagedBroken(stack) && context != ItemDisplayContext.GUI) {
             red = DamageState.BROKEN_SURFACE_RED;
             green *= DamageState.BROKEN_SURFACE_GREEN;
             blue *= DamageState.BROKEN_SURFACE_BLUE;

@@ -2,7 +2,7 @@ package dev.rinchan.keepmysword.mixin;
 
 import java.util.function.BiConsumer;
 
-import dev.rinchan.rinlib.item.DamageState;
+import dev.rinchan.keepmysword.KeepMySword;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ItemStackMixin {
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableUseOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(InteractionResult.PASS);
         }
     }
@@ -39,7 +39,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableUse(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (DamageState.isBroken(stack)) {
+        if (KeepMySword.isManagedBroken(stack)) {
             cir.setReturnValue(InteractionResultHolder.pass(stack));
         }
     }
@@ -47,91 +47,91 @@ public abstract class ItemStackMixin {
     @Inject(method = "finishUsingItem", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableFinishUsing(Level level, LivingEntity entity, CallbackInfoReturnable<ItemStack> cir) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (DamageState.isBroken(stack)) {
+        if (KeepMySword.isManagedBroken(stack)) {
             cir.setReturnValue(stack);
         }
     }
 
     @Inject(method = "releaseUsing", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableReleaseUsing(Level level, LivingEntity entity, int timeCharged, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "onUseTick", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableUseTick(Level level, LivingEntity entity, int remainingUseDuration, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "inventoryTick", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableInventoryTick(Level level, Entity entity, int inventorySlot, boolean isCurrentItem, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "getUseDuration", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableUseDuration(LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(0);
         }
     }
 
     @Inject(method = "getUseAnimation", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableUseAnimation(CallbackInfoReturnable<UseAnim> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(UseAnim.NONE);
         }
     }
 
     @Inject(method = "getDestroySpeed", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableDestroySpeed(BlockState state, CallbackInfoReturnable<Float> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(1.0F);
         }
     }
 
     @Inject(method = "isCorrectToolForDrops", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableCorrectTool(BlockState state, CallbackInfoReturnable<Boolean> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(false);
         }
     }
 
     @Inject(method = "hurtEnemy", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableHurtEnemy(LivingEntity target, Player player, CallbackInfoReturnable<Boolean> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(false);
         }
     }
 
     @Inject(method = "postHurtEnemy", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disablePostHurtEnemy(LivingEntity target, Player player, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "mineBlock", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableMineBlock(Level level, BlockState state, BlockPos pos, Player player, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableSlotGroupModifiers(EquipmentSlotGroup slotGroup, BiConsumer<Holder<Attribute>, AttributeModifier> consumer, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableSlotModifiers(EquipmentSlot slot, BiConsumer<Holder<Attribute>, AttributeModifier> consumer, CallbackInfo ci) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }

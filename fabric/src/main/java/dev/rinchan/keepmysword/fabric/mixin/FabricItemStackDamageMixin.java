@@ -2,6 +2,7 @@ package dev.rinchan.keepmysword.fabric.mixin;
 
 import java.util.function.Consumer;
 
+import dev.rinchan.keepmysword.KeepMySword;
 import dev.rinchan.rinlib.item.DamageState;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +26,7 @@ public abstract class FabricItemStackDamageMixin {
     )
     private void keepMySword$hurtWithoutDestroy(int amount, ServerLevel level, @Nullable ServerPlayer player, Consumer<Item> onBroken, CallbackInfo ci) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (!stack.isDamageableItem()) {
+        if (!stack.isDamageableItem() || KeepMySword.isExcluded(stack)) {
             return;
         }
 

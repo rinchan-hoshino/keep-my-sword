@@ -2,6 +2,7 @@ package dev.rinchan.keepmysword.neoforge.mixin;
 
 import java.util.function.Consumer;
 
+import dev.rinchan.keepmysword.KeepMySword;
 import dev.rinchan.rinlib.item.DamageState;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerLevel;
@@ -29,7 +30,7 @@ public abstract class NeoForgeItemStackDamageMixin {
     )
     private void keepMySword$hurtWithoutDestroy(int amount, ServerLevel level, @Nullable LivingEntity entity, Consumer<Item> onBroken, CallbackInfo ci) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (!stack.isDamageableItem()) {
+        if (!stack.isDamageableItem() || KeepMySword.isExcluded(stack)) {
             return;
         }
 
@@ -58,7 +59,7 @@ public abstract class NeoForgeItemStackDamageMixin {
 
     @Inject(method = "onItemUseFirst", at = @At("HEAD"), cancellable = true)
     private void keepMySword$disableUseFirst(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        if (DamageState.isBroken((ItemStack) (Object) this)) {
+        if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(InteractionResult.PASS);
         }
     }

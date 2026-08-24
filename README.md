@@ -11,6 +11,19 @@ Keep My Sword keeps broken tools and equipment as repairable model-only items in
 - In GUI slots, broken items show an empty durability bar and a red slot overlay.
 - Outside GUI slots, broken items render with a red surface tint instead of a slot overlay.
 
+## Exclusions
+
+Add items or nested item tags to `#keep_my_sword:excluded` when another mod owns their break lifecycle. Excluded items bypass Keep My Sword completely: native durability damage, destruction or transformation, item behavior, inventory ticking, attributes, overlays, and rendering remain with the producing mod.
+
+Example:
+
+```json
+{
+  "replace": false,
+  "values": ["#examplemod:special_swords"]
+}
+```
+
 ## Dependency
 
 Keep My Sword depends on RinLib.
