@@ -3,6 +3,7 @@ package dev.rinchan.keepmysword.client.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.rinchan.keepmysword.KeepMySword;
+import dev.rinchan.keepmysword.client.BrokenTintRenderState;
 import dev.rinchan.rinlib.item.DamageState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -18,8 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
-    private static final ThreadLocal<ItemDisplayContext> keepMySword$renderContext = new ThreadLocal<>();
-    private static final ThreadLocal<ItemStack> keepMySword$renderStack = new ThreadLocal<>();
+    private static final BrokenTintRenderState keepMySword$brokenTintState = new BrokenTintRenderState();
 
     @Inject(method = "render", at = @At("HEAD"))
     private void keepMySword$rememberRenderContext(
@@ -33,8 +33,11 @@ public abstract class ItemRendererMixin {
         BakedModel model,
         CallbackInfo ci
     ) {
-        keepMySword$renderContext.set(displayContext);
-        keepMySword$renderStack.set(stack);
+        keepMySword$brokenTintState.enter(
+            () -> displayContext != ItemDisplayContext.GUI
+                && stack != null
+                && KeepMySword.isManagedBroken(stack)
+        );
     }
 
     @Inject(method = "render", at = @At("RETURN"))
@@ -49,8 +52,7 @@ public abstract class ItemRendererMixin {
         BakedModel model,
         CallbackInfo ci
     ) {
-        keepMySword$renderContext.remove();
-        keepMySword$renderStack.remove();
+        keepMySword$brokenTintState.exit();
     }
 
     @Redirect(
@@ -109,9 +111,7 @@ public abstract class ItemRendererMixin {
         int combinedLight,
         int combinedOverlay
     ) {
-        ItemStack stack = keepMySword$renderStack.get();
-        ItemDisplayContext context = keepMySword$renderContext.get();
-        if (stack != null && KeepMySword.isManagedBroken(stack) && context != ItemDisplayContext.GUI) {
+        if (keepMySword$brokenTintState.shouldTint()) {
             red = DamageState.BROKEN_SURFACE_RED;
             green *= DamageState.BROKEN_SURFACE_GREEN;
             blue *= DamageState.BROKEN_SURFACE_BLUE;
