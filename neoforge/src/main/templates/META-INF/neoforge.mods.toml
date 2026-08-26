@@ -15,6 +15,7 @@ config="keep_my_sword.mixins.json"
 [[mixins]]
 config="keep_my_sword.client.mixins.json"
 
+
 [[mixins]]
 config="keep_my_sword.neoforge.mixins.json"
 

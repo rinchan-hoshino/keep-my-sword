@@ -2,12 +2,13 @@ package dev.rinchan.keepmysword.mixin;
 
 import java.util.function.BiConsumer;
 
+import org.apache.commons.lang3.function.TriConsumer;
+
 import dev.rinchan.keepmysword.KeepMySword;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -16,8 +17,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,10 +39,10 @@ public abstract class ItemStackMixin {
     }
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableUse(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
+    private void keepMySword$disableUse(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack stack = (ItemStack) (Object) this;
         if (KeepMySword.isManagedBroken(stack)) {
-            cir.setReturnValue(InteractionResultHolder.pass(stack));
+            cir.setReturnValue(InteractionResult.PASS);
         }
     }
 
@@ -67,7 +69,7 @@ public abstract class ItemStackMixin {
     }
 
     @Inject(method = "inventoryTick", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableInventoryTick(Level level, Entity entity, int inventorySlot, boolean isCurrentItem, CallbackInfo ci) {
+    private void keepMySword$disableInventoryTick(Level level, Entity entity, EquipmentSlot slot, CallbackInfo ci) {
         if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
@@ -81,9 +83,9 @@ public abstract class ItemStackMixin {
     }
 
     @Inject(method = "getUseAnimation", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableUseAnimation(CallbackInfoReturnable<UseAnim> cir) {
+    private void keepMySword$disableUseAnimation(CallbackInfoReturnable<ItemUseAnimation> cir) {
         if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
-            cir.setReturnValue(UseAnim.NONE);
+            cir.setReturnValue(ItemUseAnimation.NONE);
         }
     }
 
@@ -102,14 +104,14 @@ public abstract class ItemStackMixin {
     }
 
     @Inject(method = "hurtEnemy", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableHurtEnemy(LivingEntity target, Player player, CallbackInfoReturnable<Boolean> cir) {
+    private void keepMySword$disableHurtEnemy(LivingEntity target, LivingEntity attacker, CallbackInfoReturnable<Boolean> cir) {
         if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             cir.setReturnValue(false);
         }
     }
 
     @Inject(method = "postHurtEnemy", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disablePostHurtEnemy(LivingEntity target, Player player, CallbackInfo ci) {
+    private void keepMySword$disablePostHurtEnemy(LivingEntity target, LivingEntity attacker, CallbackInfo ci) {
         if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
@@ -122,8 +124,8 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V", at = @At("HEAD"), cancellable = true)
-    private void keepMySword$disableSlotGroupModifiers(EquipmentSlotGroup slotGroup, BiConsumer<Holder<Attribute>, AttributeModifier> consumer, CallbackInfo ci) {
+    @Inject(method = "forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Lorg/apache/commons/lang3/function/TriConsumer;)V", at = @At("HEAD"), cancellable = true)
+    private void keepMySword$disableSlotGroupModifiers(EquipmentSlotGroup slotGroup, TriConsumer<Holder<Attribute>, AttributeModifier, ItemAttributeModifiers.Display> consumer, CallbackInfo ci) {
         if (KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }

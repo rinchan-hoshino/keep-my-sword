@@ -54,12 +54,6 @@ neoForge.ideSyncTask tasks.named('generateModMetadata')
 
 dependencies {
     implementation "dev.rinchan:rinlib-neoforge:${rootProject.rinlib_version}"
-    testImplementation platform('org.junit:junit-bom:5.11.4')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
-
-tasks.named('test', Test) {
-    useJUnitPlatform()
 }
 
 publishing {
