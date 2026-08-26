@@ -4,8 +4,7 @@
   "package": "dev.rinchan.keepmysword.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "GuiGraphicsMixin",
-    "ItemRendererMixin"
+    "GuiGraphicsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

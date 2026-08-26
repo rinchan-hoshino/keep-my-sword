@@ -30,8 +30,8 @@ A supported build must do all of the following:
 - Keep the broken stack movable, droppable, and repairable.
 - Treat broken stacks as model-only items for gameplay: no item use, no special mining speed, no correct-tool harvest, no item attack hook, no continuous use, and no equipment attributes.
 - Add no tooltip text.
-- Render a red slot overlay in inventory-like GUI slots.
-- Render a red surface tint when the item is shown outside a GUI slot.
+- Render a light translucent red warning overlay in inventory-like GUI slots.
+- Preserve original item colors in hand, as dropped entities, in displays, and in every other non-GUI context.
 - Bypass all preservation, behavior suppression, and rendering for items in `#keep_my_sword:excluded`, leaving their native break lifecycle intact.
 
 Compatibility glue may differ per Minecraft version and loader. Do not add broad fallback paths that hide a broken version contract; fix the version-specific hook instead.
