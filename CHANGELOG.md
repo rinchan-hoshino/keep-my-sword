@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0 — 2026-08-26
+
+- Promotes the verified 0.1.3 behavior to the stable public version without gameplay changes.
+
 ## 0.1.3 — Unreleased
 
 - Preserve the upstream durability pipeline and cancel only the final stack-shrink operation.
