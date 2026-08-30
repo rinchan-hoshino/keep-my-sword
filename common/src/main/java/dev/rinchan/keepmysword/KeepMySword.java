@@ -22,6 +22,6 @@ public final class KeepMySword {
     }
 
     public static boolean isManagedBroken(ItemStack stack) {
-        return !isExcluded(stack) && DamageState.isBroken(stack);
+        return BrokenItemPolicy.isManaged(isExcluded(stack), DamageState.isBroken(stack));
     }
 }

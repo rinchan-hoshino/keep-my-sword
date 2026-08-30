@@ -2,6 +2,7 @@ package dev.rinchan.keepmysword.neoforge.mixin;
 
 import java.util.function.Consumer;
 
+import dev.rinchan.keepmysword.BrokenItemPolicy;
 import dev.rinchan.keepmysword.KeepMySword;
 import dev.rinchan.rinlib.item.DamageState;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +38,7 @@ public abstract class NeoForgeItemStackDamageMixin {
         CallbackInfo ci
     ) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (KeepMySword.isExcluded(stack)) {
+        if (!BrokenItemPolicy.preserveAtDestruction(KeepMySword.isExcluded(stack))) {
             return;
         }
 

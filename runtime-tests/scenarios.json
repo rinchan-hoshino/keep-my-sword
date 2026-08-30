@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "repository": "keep-my-sword",
+  "status": "not_executed",
+  "scenarios": [
+    {
+      "id": "cross-loader-break-boundary",
+      "owner": "Fabric and NeoForge GameTest",
+      "status": "not_executed",
+      "prerequisites": [
+        "Matching RinLib and loader dependencies",
+        "A one-durability tool with name, enchantment, and custom components",
+        "Equivalent Fabric and NeoForge test worlds"
+      ],
+      "steps": [
+        "Apply damage through the real hurtAndBreak pipeline until vanilla would call shrink(1)",
+        "Record stack identity, count, item ID, components, damage, callback count, and criteria count",
+        "Repeat the normalized sequence on both loaders"
+      ],
+      "assertions": [
+        "The stack survives in its original slot with count, item ID, and components unchanged",
+        "Only damage is clamped to RinLib's broken boundary",
+        "Pre-destruction logic and callbacks execute at most once",
+        "Fabric and NeoForge normalized results are identical"
+      ],
+      "covers": ["KMS-I2", "KMS-I3", "KMS-I6"]
+    },
+    {
+      "id": "excluded-and-broken-behavior",
+      "owner": "Loader GameTest plus client test",
+      "status": "not_executed",
+      "prerequisites": [
+        "A datapack that directly and indirectly tags a fixture item as keep_my_sword:excluded",
+        "Normal, managed-broken, and excluded-broken stacks"
+      ],
+      "steps": [
+        "Reload tags and break the excluded fixture through the real durability pipeline",
+        "Invoke each supported use, mining, attack, tick, and modifier hook on all three stack states",
+        "Render inventory slots, held items, and dropped entities"
+      ],
+      "assertions": [
+        "Excluded stacks follow vanilla destruction and behavior without cancellation",
+        "Only managed-broken stacks have gameplay hooks suppressed",
+        "Only inventory decorations receive the exact 16 by 16 translucent overlay",
+        "Dedicated-server class loading never resolves client rendering classes"
+      ],
+      "covers": ["KMS-I1", "KMS-I4", "KMS-I5", "KMS-I7", "KMS-I8"]
+    }
+  ]
+}

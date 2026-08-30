@@ -14,3 +14,4 @@ plugins {
 rootProject.name = 'keep-my-sword'
 include 'fabric'
 include 'neoforge'
+include 'policy'
