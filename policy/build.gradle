@@ -3,7 +3,11 @@ plugins { id 'java-library' }
 sourceSets.main.java {
     srcDir rootProject.file('common/src/main/java')
     include 'dev/rinchan/keepmysword/BrokenItemPolicy.java'
+    include 'dev/rinchan/keepmysword/client/BrokenVisualStyle.java'
 }
+
+sourceSets.test.java.srcDir rootProject.file('common/src/test/java')
+sourceSets.test.resources.srcDir rootProject.file('common/src/main/resources')
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.11.4')
