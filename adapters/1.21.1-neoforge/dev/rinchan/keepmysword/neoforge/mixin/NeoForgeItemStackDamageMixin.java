@@ -1,6 +1,6 @@
 package dev.rinchan.keepmysword.neoforge.mixin;
 
-import dev.rinchan.keepmysword.KeepMySword;
+import dev.rinchan.keepmysword.item.SealedItems;
 
 import net.minecraft.world.item.ItemStack;
 
@@ -11,13 +11,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemStack.class)
 public abstract class NeoForgeItemStackDamageMixin {
+    @com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod(
+            method =
+                    "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V")
+    private void kms$damageTransaction(
+            int amount,
+            net.minecraft.server.level.ServerLevel level,
+            net.minecraft.world.entity.LivingEntity player,
+            java.util.function.Consumer<net.minecraft.world.item.Item> onBreak,
+            com.llamalad7.mixinextras.injector.wrapoperation.Operation<Void> original) {
+        dev.rinchan.keepmysword.item.SnapshotScope.call(
+                () -> {
+                    original.call(amount, level, player, onBreak);
+                    return null;
+                });
+    }
+
     @Inject(
             method =
                     "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V"),
             cancellable = true)
-    private void keepMySword$preserveBeforeDestruction(CallbackInfo ci) {
-        if (KeepMySword.preserveAtBreak((ItemStack) (Object) this)) {
+    private void keepMySword$preserveBeforeDestruction(
+            int amount,
+            net.minecraft.server.level.ServerLevel level,
+            net.minecraft.world.entity.LivingEntity player,
+            java.util.function.Consumer<net.minecraft.world.item.Item> onBreak,
+            CallbackInfo ci) {
+        if (SealedItems.isSealed((ItemStack) (Object) this)
+                || SealedItems.sealInPlace((ItemStack) (Object) this, level.registryAccess())) {
             ci.cancel();
         }
     }

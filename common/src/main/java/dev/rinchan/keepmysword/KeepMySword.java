@@ -14,15 +14,7 @@ public final class KeepMySword {
     }
 
     public static boolean isManagedBroken(ItemStack stack) {
-        return !isExcluded(stack) && DamageState.isBroken(stack);
-    }
-
-    /** Called after vanilla damage processing, immediately before stack destruction. */
-    public static boolean preserveAtBreak(ItemStack stack) {
-        if (isExcluded(stack)) {
-            return false;
-        }
-        stack.setDamageValue(DamageState.clampDamage(stack, stack.getDamageValue()));
-        return true;
+        return dev.rinchan.keepmysword.item.SealedItems.isSealed(stack)
+                || (!isExcluded(stack) && DamageState.isBroken(stack));
     }
 }

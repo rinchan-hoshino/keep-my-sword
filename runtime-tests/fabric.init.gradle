@@ -1,18 +1,21 @@
 allprojects {
     afterEvaluate { p ->
         if (p.plugins.hasPlugin('fabric-loom') || p.plugins.hasPlugin('net.fabricmc.fabric-loom')) {
+            def unloaded = Boolean.getBoolean('probe.unloaded')
             def base = new File(System.getProperty('probe.sources'))
             p.dependencies.add(p.rootProject.minecraft_version.startsWith('26.') ? 'implementation' : 'modImplementation',
                     "net.fabricmc.fabric-api:fabric-api:${System.getProperty('probe.fabricApi')}")
             def probe = p.sourceSets.create('runtimeProbe') {
-                java.srcDirs new File(base, 'common/java'), new File(base, 'fabric/java'), new File(base, 'players-modern/java')
-                java.srcDir new File(base, p.rootProject.minecraft_version == '26.2' ? 'client-26.2/java' : 'client-modern/java')
-                resources.srcDir new File(base, 'fabric/resources')
-                compileClasspath += p.sourceSets.main.output + p.sourceSets.main.compileClasspath
-                runtimeClasspath += output + p.sourceSets.main.output + p.sourceSets.main.runtimeClasspath
+                java.srcDirs new File(base, unloaded ? 'unload/java' : 'common/java'), new File(base, unloaded ? 'unload-entry/java' : 'fabric/java'), new File(base, 'players-modern/java')
+                if (!unloaded) java.srcDir new File(base, 'client-modern/java')
+                resources.srcDir new File(base, unloaded ? 'unload/resources' : 'fabric/resources')
+                compileClasspath += p.sourceSets.main.compileClasspath
+                if (!unloaded) compileClasspath += p.sourceSets.main.output
+                runtimeClasspath = output + (p.sourceSets.main.runtimeClasspath - p.sourceSets.main.output)
+                if (!unloaded) runtimeClasspath += p.sourceSets.main.output
             }
             p.loom.mods {
-                keep_my_sword { sourceSet(p.sourceSets.main) }
+                if (!unloaded) keep_my_sword { sourceSet(p.sourceSets.main) }
                 kms_probe { sourceSet(probe) }
             }
             ['server', 'client'].each { side ->

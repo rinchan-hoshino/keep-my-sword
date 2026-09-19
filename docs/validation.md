@@ -1,31 +1,38 @@
-# Validation — 1.0.2
+# Validation — 1.1.0-dev
 
-Verified locally on macOS on 2026-09-19, using the matching published RinLib 1.0.2 JARs.
+Local verification on macOS, 2026-09-19. This build is **unpublished**.
 
-| Minecraft | Loader | Server gameplay | Client startup |
+| Minecraft | Loader | Save / uninstall / reinstall assertions | Client world and rendering |
 | --- | --- | --- | --- |
-| 1.21.1 | fabric | 28/28 | Passed |
-| 1.21.1 | neoforge | 28/28 | Passed |
-| 26.1.2 | fabric | 28/28 | Passed |
-| 26.1.2 | neoforge | 28/28 | Passed |
-| 26.2 | fabric | 28/28 | Passed |
-| 26.2 | neoforge | 28/28 | Passed |
+| 1.21.1 | fabric | 63 / 15 / 14 — passed | Passed |
+| 1.21.1 | neoforge | 59 / 13 / 11 — passed | Passed |
+| 26.1.2 | fabric | 64 / 15 / 14 — passed | Passed |
+| 26.1.2 | neoforge | 64 / 15 / 14 — passed | Passed |
+| 26.2 | fabric | 64 / 15 / 14 — passed | Passed |
+| 26.2 | neoforge | 64 / 15 / 14 — passed | Passed |
+
+All 18 server phases passed, totaling **547 assertions**. All six clients loaded isolated worlds, rendered the broken-item fixtures and wrote screenshots. All six development JARs built; the common unit tests passed (6 executions).
+
+## Packaged installation
+
+Normal Fabric servers for all three versions started with only the built Keep My Sword JAR and matching RinLib in `mods`. Each created a zero-durability sword, saved and stopped successfully. No separate Fabric API or Transfer API was installed. The tested JAR hashes match the final build manifest.
+
+Fabric JARs contain exactly three bundled modules: API base, networking and registry sync. All six JARs contain the approved icon and exclude runtime probes/test items.
 
 ## Coverage
 
-- Real `ItemStack.hurtAndBreak` calls retain the original stack, its name and zero-durability state. Excess and repeated damage do not delete it.
-- Native `AnvilMenu` repairs the broken sword, consumes the inputs and deducts experience. Repair restores item attributes and harvesting capability.
-- A test datapack excludes iron swords; they break normally. Empty and non-damageable stacks remain unaffected.
-- Broken tools lose harvesting/attribute bonuses, and a broken shield cannot begin or sustain use.
-- Each client renders the title screen for 20 ticks before exiting, checking client loading and GUI mixin application. This is a startup check, not a full interactive playthrough.
-- The two README screenshots came from an authenticated Minecraft 1.21.1 NeoForge session: a real attack left the sword at damage 1561, and native anvil repair changed it to 1171 while consuming one diamond and reducing experience from 30 to 29.
+- Real final-durability loss, direct component/setter updates and exhausted-stack construction.
+- Inert runtime identity, custom active/passive/attack callbacks, armor attributes and shield use.
+- Copy, split, reconstruction, network transfer and immutable original snapshots.
+- Actual anvil consumption/experience, rename followed by another break, crafting repair and grindstone consumption.
+- Exclusion tags and naturally expiring preexisting effects.
+- Exact native data and NBT type equality after uninstall/reinstall, including nested containers, independent shell metadata, unknown annotations and old snapshot migration.
+- Fabric Transfer and modern NeoForge ItemResource storage; Minecraft 26.x templates, including template application.
 
-## Reproduction
+## Boundaries
 
-Run the commands in [DEVELOPMENT.md](../DEVELOPMENT.md). The executable test cases and matrix results are in [runtime-tests/scenarios.json](../runtime-tests/scenarios.json). Raw logs and pass markers are written to the selected output directory.
+These results validate the named storage and repair interfaces. They do not establish universal uninstall safety for a third-party mod which manually serializes an item identity/components outside those interfaces. Custom repair APIs need an explicit adapter. No publication or production save migration was performed.
 
-Test-only entrypoints, fake players and datapacks are kept outside the production source set.
+## Reproduction and evidence
 
-## Release packaging
-
-All six release builds passed. The three existing common resource/style unit tests passed on each Minecraft profile (9 executions). All six JARs contain the approved icon and no runtime probe classes. Fabric 1.21.1 includes its generated refmap; Fabric 26.x uses native names. The local RinLib dependency files match their published Modrinth SHA-512 checksums.
+See [runtime test commands](../runtime-tests/README.md), [implementation design](sealed-items.md), and [machine-readable results and hashes](validation.json). Raw logs and screenshots live in the local evidence directory recorded in that JSON. Historical 1.0.2 results are kept separately.

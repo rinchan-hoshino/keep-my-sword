@@ -4,8 +4,7 @@
   "package": "dev.rinchan.keepmysword.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "NeoForgeItemStackDamageMixin",
-    "NeoForgeItemStackMixin"
+    "NeoForgeItemStackDamageMixin"
   ],
   "injectors": {
     "defaultRequire": 1

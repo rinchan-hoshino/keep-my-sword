@@ -1,3 +1,5 @@
 {
-  "tag.item.keep_my_sword.excluded": "Excluded from Keep My Sword"
+  "tag.item.keep_my_sword.excluded": "Excluded from Keep My Sword",
+  "item.keep_my_sword.broken": "Broken — repair to use",
+  "item.keep_my_sword.broken_item": "Broken item"
 }

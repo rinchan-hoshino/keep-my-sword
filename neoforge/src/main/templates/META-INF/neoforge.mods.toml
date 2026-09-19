@@ -40,3 +40,5 @@ type="required"
 versionRange="[${rinlib_version},)"
 ordering="AFTER"
 side="BOTH"
+
+${extra_mixins}

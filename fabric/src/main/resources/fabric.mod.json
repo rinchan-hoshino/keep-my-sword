@@ -10,11 +10,16 @@
   "license": "${mod_license}",
   "environment": "*",
   "mixins": [
+    "keep_my_sword.templates.mixins.json",
     "keep_my_sword.mixins.json",
-    "keep_my_sword.client.mixins.json",
-    "keep_my_sword.fabric.mixins.json"
+    "keep_my_sword.fabric.mixins.json",
+    {
+      "config": "keep_my_sword.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
+    "fabric-registry-sync-v0": "*",
     "fabricloader": ">=${fabric_loader_version}",
     "minecraft": "${minecraft_version}",
     "java": ">=${java_version}",
@@ -25,5 +30,10 @@
     "homepage": "https://modrinth.com/mod/keep-my-sword",
     "sources": "https://github.com/rinchan-hoshino/keep-my-sword",
     "issues": "https://github.com/rinchan-hoshino/keep-my-sword/issues"
+  },
+  "entrypoints": {
+    "main": [
+      "dev.rinchan.keepmysword.fabric.KeepMySwordFabric"
+    ]
   }
 }

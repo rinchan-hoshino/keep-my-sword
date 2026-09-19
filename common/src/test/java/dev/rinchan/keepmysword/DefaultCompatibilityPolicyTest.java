@@ -1,6 +1,5 @@
 package dev.rinchan.keepmysword;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,13 +15,6 @@ class DefaultCompatibilityPolicyTest {
         String json =
                 readResource("/data/keep_my_sword/tags/item/excluded.json").replaceAll("\\s+", "");
         assertTrue(json.contains("\"values\":[]"));
-    }
-
-    @Test
-    void clientMixinsOnlyOwnTheGuiWarning() throws IOException {
-        String json = readResource("/keep_my_sword.client.mixins.json");
-        assertTrue(json.contains("GuiGraphicsMixin"));
-        assertFalse(json.contains("ItemRendererMixin"));
     }
 
     private String readResource(String path) throws IOException {
