@@ -2,6 +2,12 @@
 
 This is an unpublished 1.1.0 development build. Runtime validation is recorded separately from release approval.
 
+The subsequent [identity and save-safety review](identity-safety-review.md) keeps
+this implementation experimental. Covered storage tests do not establish safety
+for arbitrary serializers. The owner rejected a behavior-first replacement;
+[vanilla carrier research](vanilla-carrier-research.md) examines a different
+persistence representation while retaining whole-item isolation.
+
 ## Runtime behavior
 
 A managed item with no durability becomes a real inert item. Its original identity, components and count are kept in a private snapshot; normal item queries expose the inert item. This prevents further original-item use, attack callbacks, inventory ticks, attributes and enchantments. Existing timed effects are left to expire normally.

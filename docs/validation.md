@@ -2,6 +2,11 @@
 
 Local verification on macOS, 2026-09-19. This build is **unpublished**.
 
+**Release assessment:** these are targeted test results, not approval of the
+architecture. The [identity and save-safety review](identity-safety-review.md)
+identifies an unresolved persistence boundary; this experiment is not recommended
+for release under an unrestricted uninstall-safety requirement.
+
 | Minecraft | Loader | Save / uninstall / reinstall assertions | Client world and rendering |
 | --- | --- | --- | --- |
 | 1.21.1 | fabric | 63 / 15 / 14 — passed | Passed |
