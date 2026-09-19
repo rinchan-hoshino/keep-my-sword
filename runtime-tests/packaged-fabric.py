@@ -17,6 +17,11 @@ lock = (ROOT / "build/runtime-probe.lock").open("w")
 fcntl.flock(lock, fcntl.LOCK_EX)
 profiles = json.loads((ROOT / "profiles.json").read_text())
 manifest = json.loads((ROOT / "build/releases/manifest.json").read_text())
+version = next(
+    line.split("=", 1)[1]
+    for line in (ROOT / "gradle.properties").read_text().splitlines()
+    if line.startswith("mod_version=")
+)
 results = []
 for mc, profile in profiles.items():
     instance = a.output.resolve() / mc
@@ -122,7 +127,7 @@ for mc, profile in profiles.items():
         and "KMS_PACKAGED_SNAPSHOT_PASS" in text
         and f"minecraft {mc}" in text
         and len(list(mods.glob("*.jar"))) == 2
-        and "keep_my_sword 1.1.0-dev" in text
+        and f"keep_my_sword {version}" in text
         and "fabric-api " not in text
         and "fabric-transfer-api-v1 " not in text
         and "fabric-registry-sync-v0 " not in text

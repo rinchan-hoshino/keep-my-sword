@@ -1,6 +1,6 @@
 # Validation — 1.1.0-dev vanilla carrier
 
-Local verification on macOS, 2026-09-19. **Unpublished.** This report supersedes the custom-registry experiment; its [historical results](validation-sealed-prototype.md) are kept separately.
+Local verification on macOS, 2026-09-19. The development build was unpublished; the 1.1.0 release verification is recorded below. This report supersedes the custom-registry experiment; its [historical results](validation-sealed-prototype.md) are kept separately.
 
 | Minecraft | Loader | Save / uninstall / reinstall assertions | Client world and rendering |
 | --- | --- | --- | --- |
@@ -46,6 +46,10 @@ The server matrix preceded formatting, unused-helper cleanup and an outer encodi
 
 Uninstall leaves a recovery compass with its original data and a readable recovery tooltip. Reinstall makes its original appearance and supported repairs available again. It does not automatically become a sword while the mod is absent.
 
-Unencodable source items are retained rather than destroyed. Vanilla repair rules still apply; deliberate item deletion, ordinary environmental destruction and arbitrary third-party systems that discard native metadata are outside this protection. No public release, push, production merge or player-save migration was performed.
+Unencodable source items are retained rather than destroyed. Vanilla repair rules still apply; deliberate item deletion, ordinary environmental destruction and arbitrary third-party systems that discard native metadata are outside this protection. The development test run did not migrate any player saves.
 
 See [implementation](sealed-items.md), [reproduction](../runtime-tests/README.md), and [machine-readable evidence and hashes](validation.json).
+
+## Release verification — 1.1.0
+
+The runtime implementation is unchanged from `fcda520`. Only the version, changelog date and test version detection changed. All six release artifacts were rebuilt from clean profile directories. All three packaged Fabric server checks passed again using the 1.1.0 JARs; hashes are recorded in `release_verification` in [validation.json](validation.json).

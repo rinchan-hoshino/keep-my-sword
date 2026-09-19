@@ -391,5 +391,146 @@
     "A deliberately oversized native NBT string logs an expected encoding error in the save-phase failure check.",
     "Server matrix preceded formatting, removal of unused helpers and an outer encoding-exception guard. The final source compiled on all targets, ran all six clients, and was clean-built; final packaged Fabric JAR hashes were verified.",
     "Clean release builds remove stale classes left by prior development source layouts."
-  ]
+  ],
+  "release_verification": {
+    "version": "1.1.0",
+    "implementation_commit": "fcda520",
+    "changes_since_validation": [
+      "Release version and changelog date",
+      "Packaged test reads the project version instead of hardcoding the development version"
+    ],
+    "artifacts": [
+      {
+        "minecraft": "1.21.1",
+        "loader": "fabric",
+        "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0+1.21.1-fabric.jar",
+        "sha256": "af94562832a7707248597ca5a1bf08193c0926bd40c285d164c6c00b92f977ab",
+        "sha512": "a2c82057bb4503f23ac9a6e44aed8015fe57272459a7bd1a0305af85277df9ef218b7c73e5041a7c7167bf30a407aa81c8b49c63a750d23c655c59e033e347fe",
+        "profile": "1.21.1-fabric",
+        "loader_label": "Fabric",
+        "dependencies": [
+          {
+            "project_id": "PbP7tKqB",
+            "version_id": "Jl3lMhSZ",
+            "dependency_type": "required"
+          }
+        ]
+      },
+      {
+        "minecraft": "1.21.1",
+        "loader": "neoforge",
+        "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0+1.21.1-neoforge.jar",
+        "sha256": "32bb943be171f7eedf0fabae3448b096556eea17916420921865a8890c3a0187",
+        "sha512": "07d1fdb609501cc6c823632cac588eb4a78f9e97fc90a937816b564670f67952f9418fb52eda10243d4f66aae8685f53b226d41527f3973ce942d08f7cfb5e4e",
+        "profile": "1.21.1-neoforge",
+        "loader_label": "NeoForge",
+        "dependencies": [
+          {
+            "project_id": "PbP7tKqB",
+            "version_id": "z3NXndnx",
+            "dependency_type": "required"
+          }
+        ]
+      },
+      {
+        "minecraft": "26.1.2",
+        "loader": "fabric",
+        "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0+26.1.2-fabric.jar",
+        "sha256": "2c78c31b36d94a483b790dbe89176343a3182c10118c9e522872a5f574bae4a1",
+        "sha512": "0f598e9fe487e1c226a9f03ab61554958c111caed8cc9b7b08a68db1598344f6249e07e3c5d87849e51e73756c056bc0eccac428477985995d4bb2251cc52ae2",
+        "profile": "26.1.2-fabric",
+        "loader_label": "Fabric",
+        "dependencies": [
+          {
+            "project_id": "PbP7tKqB",
+            "version_id": "UwoZPluE",
+            "dependency_type": "required"
+          }
+        ]
+      },
+      {
+        "minecraft": "26.1.2",
+        "loader": "neoforge",
+        "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0+26.1.2-neoforge.jar",
+        "sha256": "b35f0573e50dcc83faf57f77fe076eef8d98a6cf165be4bdfb95b9e683dc1cab",
+        "sha512": "7cc4ed6a64371371ecbf8cab49e1f9705664fb97d11f9e13c12055cd2493ecb977b00d61b125ea75333bf1c33cd7ca223060c47480b5bef70b5aa197401f806a",
+        "profile": "26.1.2-neoforge",
+        "loader_label": "NeoForge",
+        "dependencies": [
+          {
+            "project_id": "PbP7tKqB",
+            "version_id": "dsVwXXrY",
+            "dependency_type": "required"
+          }
+        ]
+      },
+      {
+        "minecraft": "26.2",
+        "loader": "fabric",
+        "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0+26.2-fabric.jar",
+        "sha256": "681af1862158999cd8bca48b6f927cf8c6558603a0a65aff7a9a2308c08be1dd",
+        "sha512": "b0f7e68280ce6393244ac739ae81f8603ffd1051dab78610047ac0efa80fd55cfc46cb710c9e13e58cbe0be5de5fa067b99dba07cf9d6fd5c6eea7b6ea76456d",
+        "profile": "26.2-fabric",
+        "loader_label": "Fabric",
+        "dependencies": [
+          {
+            "project_id": "PbP7tKqB",
+            "version_id": "mxl8QLw6",
+            "dependency_type": "required"
+          }
+        ]
+      },
+      {
+        "minecraft": "26.2",
+        "loader": "neoforge",
+        "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0+26.2-neoforge.jar",
+        "sha256": "d586bb0f6d557cff7b6b0737026b8e2e083493f78626df8263de9d8058d470c3",
+        "sha512": "485eeb632d6f4680ac020075d40edaa4639b2cd1dd3c4c16af7c465b9a2807a44065f13fda0f7be8f5ba1793fe22f8d5cbe33650ec149df767bedb847d81a593",
+        "profile": "26.2-neoforge",
+        "loader_label": "NeoForge",
+        "dependencies": [
+          {
+            "project_id": "PbP7tKqB",
+            "version_id": "Jtu3pUOR",
+            "dependency_type": "required"
+          }
+        ]
+      }
+    ],
+    "packaged_fabric": [
+      {
+        "minecraft": "1.21.1",
+        "passed": true,
+        "exit_code": 0,
+        "jar_sha256": "af94562832a7707248597ca5a1bf08193c0926bd40c285d164c6c00b92f977ab",
+        "mods": [
+          "keep-my-sword-1.1.0+1.21.1-fabric.jar",
+          "rinlib-1.0.2+1.21.1-fabric.jar"
+        ],
+        "log": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-evidence/safety-research/carrier-packaged-release-1.1.0/1.21.1/run.log"
+      },
+      {
+        "minecraft": "26.1.2",
+        "passed": true,
+        "exit_code": 0,
+        "jar_sha256": "2c78c31b36d94a483b790dbe89176343a3182c10118c9e522872a5f574bae4a1",
+        "mods": [
+          "rinlib-1.0.2+26.1.2-fabric.jar",
+          "keep-my-sword-1.1.0+26.1.2-fabric.jar"
+        ],
+        "log": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-evidence/safety-research/carrier-packaged-release-1.1.0/26.1.2/run.log"
+      },
+      {
+        "minecraft": "26.2",
+        "passed": true,
+        "exit_code": 0,
+        "jar_sha256": "681af1862158999cd8bca48b6f927cf8c6558603a0a65aff7a9a2308c08be1dd",
+        "mods": [
+          "rinlib-1.0.2+26.2-fabric.jar",
+          "keep-my-sword-1.1.0+26.2-fabric.jar"
+        ],
+        "log": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-evidence/safety-research/carrier-packaged-release-1.1.0/26.2/run.log"
+      }
+    ]
+  }
 }

@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 — Unreleased
+## 1.1.0 — 2026-09-19
 
 - Isolate broken items as vanilla carriers with complete original-item snapshots, stopping further original item callbacks, attributes and enchantments.
 - Preserve broken-item data when Keep My Sword is uninstalled. Reinstall to display and repair the original item; uninstalled carriers remain recovery compasses with an explanatory tooltip.
