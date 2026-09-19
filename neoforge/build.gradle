@@ -25,7 +25,7 @@ sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessRe
         mod_version            : rootProject.mod_version,
         mod_authors            : rootProject.mod_authors,
         mod_description        : rootProject.mod_description,
-        extra_mixins           : rootProject.minecraft_version.startsWith('26.') ? '\n[[mixins]]\nconfig="keep_my_sword.templates.mixins.json"\n[[mixins]]\nconfig="keep_my_sword.neoforge_resources.mixins.json"\n' : '',
+        extra_mixins           : '',
         icon_property          : rootProject.minecraft_version == '26.2' ? 'iconFile' : 'logoFile'
     ]
     inputs.properties replaceProperties
@@ -74,9 +74,4 @@ publishing {
             from components.java
         }
     }
-}
-
-if (rootProject.minecraft_version.startsWith('26.')) {
-    sourceSets.main.resources.srcDir rootProject.file('adapters/26-resources')
-    sourceSets.main.resources.srcDir rootProject.file('adapters/26-neoforge-resources')
 }

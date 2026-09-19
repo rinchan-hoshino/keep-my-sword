@@ -4,11 +4,9 @@
   "package": "dev.rinchan.keepmysword.fabric.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FabricItemStackDamageMixin",
-    "TransferStorageMixin"
+    "FabricItemStackDamageMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "plugin": "dev.rinchan.keepmysword.fabric.OptionalTransferMixins"
+  }
 }

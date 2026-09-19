@@ -36,7 +36,7 @@ public final class PreviewScreen extends Screen {
             graphics.renderItem(broken[i], 140, 65 + i * 24);
             graphics.renderItemDecorations(font, broken[i], 140, 65 + i * 24);
         }
-        var placeholder = new ItemStack(dev.rinchan.keepmysword.item.SealedRegistry.INERT);
+        var placeholder = new ItemStack(Items.RECOVERY_COMPASS);
         graphics.renderItem(placeholder, 220, 65);
         placeholder.getTooltipLines(Item.TooltipContext.EMPTY, null, TooltipFlag.ADVANCED);
         int y = 150;

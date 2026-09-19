@@ -10,7 +10,9 @@ python3 runtime-tests/run.py --side server \
   --output /path/to/server-results
 ```
 
-This delegates to `sealed-matrix.py`. Every supported Minecraft/loader target runs three phases: save with the mod, reopen with the mod and its classes absent, and reopen after reinstalling it. Full component and exact NBT comparisons cover plain items, independent shell edits and nested containers. Actual damage and repair transactions test use/tick/attack callbacks, construction and mutation boundaries, iron-sword exclusion, copy/split/network behavior, anvil rename, crafting repair and grindstones. Platform resource codecs are tested on Fabric and modern NeoForge.
+This delegates to `sealed-matrix.py`. Every supported Minecraft/loader target runs three phases: save with the mod, reopen with the mod and its classes absent, and reopen after reinstalling it. Full component and exact NBT comparisons cover native carriers, nested containers, unknown snapshots and large payloads. Independent NBT/JSON serializers and platform resource codecs need no Keep My Sword save adapter. Uninstalled probes also decode the snapshot independently of the mod.
+
+Actual damage and repair transactions test use/tick/attack callbacks, immediate removal of equipped attributes, construction and mutation boundaries, iron-sword exclusion, copy/split/network behavior, anvil rename, crafting repair and grindstones. Failure cases check that invalid snapshots cannot consume inputs, metadata edits cannot overwrite the private snapshot, and unsuccessful snapshot encoding cancels destruction. An intentionally oversized native NBT string triggers a logged encoding error in that failure test; the assertion checks the original remains intact.
 
 Read `results.json`, per-phase logs and pass markers. A successful Gradle exit without the expected marker is a failure. Existing worlds are never overwritten by a new save-phase test. All launchers share a build lock because loaded and unloaded probes use different source sets.
 
@@ -37,6 +39,6 @@ python3 runtime-tests/packaged-fabric.py \
   --output /path/to/packaged-results
 ```
 
-Only Keep My Sword and RinLib are placed in `mods`. Keep My Sword bundles its necessary Fabric base, networking and registry-sync modules. The test checks server startup, creates a zero-durability sword, saves and shuts down. Neither a separate full Fabric API installation nor the optional Transfer API is supplied.
+Only Keep My Sword and RinLib are placed in `mods`. Keep My Sword bundles no Fabric API modules. The test checks server startup, creates a zero-durability sword, saves and shuts down. Neither Fabric API nor Transfer API is supplied.
 
 Test items, entrypoints, datapacks and fake players are outside production source sets.

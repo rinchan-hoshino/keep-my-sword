@@ -13,6 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class GrindstoneExperienceMixin {
     @WrapMethod(method = "getExperienceFromItem")
     private int kms$originalEnchantments(ItemStack stack, Operation<Integer> original) {
-        return original.call(SealedItems.originalForSave(stack));
+        return original.call(SealedItems.originalForRepair(stack));
     }
 }

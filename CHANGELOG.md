@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 — Unreleased
+
+- Isolate broken items as vanilla carriers with complete original-item snapshots, stopping further original item callbacks, attributes and enchantments.
+- Preserve broken-item data when Keep My Sword is uninstalled. Reinstall to display and repair the original item; uninstalled carriers remain recovery compasses with an explanatory tooltip.
+- Prevent carriers from being used as ordinary recipe ingredients and preserve their snapshots during metadata edits.
+- Support anvil, crafting and grindstone repair without reactivating input items.
+- Keep original data intact when snapshot encoding or recovery fails; retain unknown and future snapshots.
+- Remove custom item/component registration and loader-specific storage conversion adapters.
+
 ## 1.0.2 — 2026-09-19
 
 - Fix the item-destruction hook on Minecraft 26.1.2 and 26.2.

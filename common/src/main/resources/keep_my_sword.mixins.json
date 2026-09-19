@@ -4,14 +4,20 @@
   "package": "dev.rinchan.keepmysword.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "StorageCodecMixin",
     "StackReplacementMixin",
     "AnvilSnapshotMixin",
     "DurabilityMutationMixin",
     "CraftingRepairMixin",
     "GrindstoneRepairMixin",
     "GrindstoneInputMixin",
-    "GrindstoneExperienceMixin"
+    "GrindstoneExperienceMixin",
+    "ServerContextMixin",
+    "IngredientProtectionMixin",
+    "RecipeProtectionMixin",
+    "SnapshotCacheMixin",
+    "CarrierDataProtectionMixin",
+    "EquippedBreakMixin",
+    "EquipmentRefreshMixin"
   ],
   "injectors": {
     "defaultRequire": 1

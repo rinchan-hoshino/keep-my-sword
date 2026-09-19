@@ -43,6 +43,6 @@ public abstract class FabricItemStackDamageMixin {
             var sealed = SealedItems.seal(stack);
             if (sealed != stack) ((ReplaceableStack) (Object) stack).kms$replaceWith(sealed);
         }
-        if (SealedItems.isSealed(stack)) ci.cancel();
+        if (dev.rinchan.keepmysword.KeepMySword.isManagedBroken(stack)) ci.cancel();
     }
 }

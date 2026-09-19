@@ -1,5 +1,5 @@
 {
   "tag.item.keep_my_sword.excluded": "不受 Keep My Sword 影响",
   "item.keep_my_sword.broken": "已损坏，修复后可使用",
-  "item.keep_my_sword.broken_item": "损坏物品"
+  "item.keep_my_sword.recovery": "损坏物品 — 安装 Keep My Sword 后可修复。"
 }

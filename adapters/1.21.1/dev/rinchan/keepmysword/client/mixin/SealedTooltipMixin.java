@@ -26,11 +26,10 @@ public abstract class SealedTooltipMixin {
             TooltipFlag flag,
             CallbackInfoReturnable<List<Component>> cir) {
         var stack = (ItemStack) (Object) this;
-        if (!SealedItems.isSealed(stack)
-                || !stack.has(dev.rinchan.keepmysword.item.SealedRegistry.ORIGINAL)) return;
-        var lines =
-                new ArrayList<>(
-                        SealedItems.originalForSave(stack).getTooltipLines(context, player, flag));
+        if (!SealedItems.isSealed(stack)) return;
+        var original = SealedItems.originalForRepair(stack);
+        if (original.isEmpty()) return;
+        var lines = new ArrayList<>(original.getTooltipLines(context, player, flag));
         lines.add(
                 1,
                 Component.translatable("item.keep_my_sword.broken").withStyle(ChatFormatting.RED));

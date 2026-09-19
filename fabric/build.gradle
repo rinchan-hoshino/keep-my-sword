@@ -28,14 +28,8 @@ if (!unobfuscated) loom {
 }
 
 dependencies {
-    // Development runs include the API; release JARs include only the three modules below.
+    // API is available to development probes only; the shipped mod registers no content.
     add(unobfuscated ? 'localRuntime' : 'modLocalRuntime', "net.fabricmc.fabric-api:fabric-api:${root.fabric_api_version}")
-    ['fabric-api-base', 'fabric-networking-api-v1', 'fabric-registry-sync-v0'].each { module ->
-        def bundled = fabricApi.module(module, root.fabric_api_version)
-        add(unobfuscated ? 'implementation' : 'modImplementation', bundled)
-        include bundled
-    }
-    add(unobfuscated ? 'compileOnly' : 'modCompileOnly', fabricApi.module('fabric-transfer-api-v1', root.fabric_api_version))
     compileOnly "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
     minecraft "com.mojang:minecraft:${root.property('minecraft_version')}"
     if (!unobfuscated) mappings loom.officialMojangMappings()
@@ -60,9 +54,7 @@ processResources {
     inputs.properties(resourceProperties)
     filesMatching('fabric.mod.json') {
         expand resourceProperties
-        if (!unobfuscated) filter { line ->
-            line.contains('"keep_my_sword.templates.mixins.json"') ? null : line
-        }
+
     }
 }
 
@@ -73,8 +65,4 @@ publishing {
             from components.java
         }
     }
-}
-
-if (root.minecraft_version.startsWith('26.')) {
-    sourceSets.main.resources.srcDir root.file('adapters/26-resources')
 }

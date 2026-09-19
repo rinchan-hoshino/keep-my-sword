@@ -1,43 +1,51 @@
-# Validation — 1.1.0-dev
+# Validation — 1.1.0-dev vanilla carrier
 
-Local verification on macOS, 2026-09-19. This build is **unpublished**.
-
-**Release assessment:** these are targeted test results, not approval of the
-architecture. The [identity and save-safety review](identity-safety-review.md)
-identifies an unresolved persistence boundary; this experiment is not recommended
-for release under an unrestricted uninstall-safety requirement.
+Local verification on macOS, 2026-09-19. **Unpublished.** This report supersedes the custom-registry experiment; its [historical results](validation-sealed-prototype.md) are kept separately.
 
 | Minecraft | Loader | Save / uninstall / reinstall assertions | Client world and rendering |
 | --- | --- | --- | --- |
-| 1.21.1 | fabric | 63 / 15 / 14 — passed | Passed |
-| 1.21.1 | neoforge | 59 / 13 / 11 — passed | Passed |
-| 26.1.2 | fabric | 64 / 15 / 14 — passed | Passed |
-| 26.1.2 | neoforge | 64 / 15 / 14 — passed | Passed |
-| 26.2 | fabric | 64 / 15 / 14 — passed | Passed |
-| 26.2 | neoforge | 64 / 15 / 14 — passed | Passed |
+| 1.21.1 | fabric | 64 / 26 / 36 — passed | Passed |
+| 1.21.1 | neoforge | 63 / 25 / 35 — passed | Passed |
+| 26.1.2 | fabric | 64 / 26 / 36 — passed | Passed |
+| 26.1.2 | neoforge | 64 / 26 / 36 — passed | Passed |
+| 26.2 | fabric | 64 / 26 / 36 — passed | Passed |
+| 26.2 | neoforge | 64 / 26 / 36 — passed | Passed |
 
-All 18 server phases passed, totaling **547 assertions**. All six clients loaded isolated worlds, rendered the broken-item fixtures and wrote screenshots. All six development JARs built; the common unit tests passed (6 executions).
+All 18 server phases passed: **753 assertions** across the six targets. The common unit tests passed in all three NeoForge builds (6 executions). All six clients loaded copied test worlds, rendered healthy/broken swords, shields and armor, and captured screenshots. These are actual world/rendering checks, not a claim of manual playthroughs.
 
-## Packaged installation
+## Persistence and recovery
 
-Normal Fabric servers for all three versions started with only the built Keep My Sword JAR and matching RinLib in `mods`. Each created a zero-durability sword, saved and stopped successfully. No separate Fabric API or Transfer API was installed. The tested JAR hashes match the final build manifest.
+- Complete native component and exact NBT equality after saving, removing the mod and its classes, and reinstalling.
+- Independent NBT/JSON serializers, Fabric Transfer and NeoForge ItemResource preserve the carrier without any Keep My Sword save adapters.
+- The uninstalled probe independently decodes original snapshots without loading mod classes.
+- Nested shulker storage, unknown snapshots and a 180,000-byte random data payload survive the cycle.
+- Old pre-component item data passes through Minecraft's item data fixer.
+- Unknown/corrupt payloads yield no repair output and leave carriers/materials untouched.
+- Metadata deletion/overwrite attempts cannot discard the reserved original snapshot.
+- An intentionally overlong native NBT string exercises unsuccessful encoding: destruction is cancelled and the original remains. Its logged NBT encoding error is expected.
 
-Fabric JARs contain exactly three bundled modules: API base, networking and registry sync. All six JARs contain the approved icon and exclude runtime probes/test items.
+## Gameplay
 
-## Coverage
+- Actual final durability loss, constructor and direct component mutation paths.
+- Custom active, passive and attack callback controls; broken armor/enchantment/shield isolation.
+- Immediate removal of cached armor attributes on equipped break; existing timed effects remain.
+- Copy, split, reconstruction and network round trips without losing or duplicating items.
+- Actual anvil input/material/XP consumption, rename and rebreak, crafting repair and grindstone repair/disenchantment.
+- Normal carrier-item ingredient control versus blocked marked carriers; a test consumption recipe cannot consume a sealed item.
+- Excluded iron swords retain native destruction behavior.
 
-- Real final-durability loss, direct component/setter updates and exhausted-stack construction.
-- Inert runtime identity, custom active/passive/attack callbacks, armor attributes and shield use.
-- Copy, split, reconstruction, network transfer and immutable original snapshots.
-- Actual anvil consumption/experience, rename followed by another break, crafting repair and grindstone consumption.
-- Exclusion tags and naturally expiring preexisting effects.
-- Exact native data and NBT type equality after uninstall/reinstall, including nested containers, independent shell metadata, unknown annotations and old snapshot migration.
-- Fabric Transfer and modern NeoForge ItemResource storage; Minecraft 26.x templates, including template application.
+## Final artifacts
 
-## Boundaries
+All six JARs were rebuilt from clean profile directories. They contain the approved icon, no runtime probes, no deleted prototype classes and no nested Fabric API modules.
 
-These results validate the named storage and repair interfaces. They do not establish universal uninstall safety for a third-party mod which manually serializes an item identity/components outside those interfaces. Custom repair APIs need an explicit adapter. No publication or production save migration was performed.
+For every Minecraft version, a normal Fabric server with **only Keep My Sword and RinLib** in `mods` started from the final JAR. Console commands placed an exhausted sword in a chest and verified both the native recovery-compass identity and its snapshot before saving and stopping. Artifact hashes match the build manifest. No separate Fabric API or Transfer API was installed.
 
-## Reproduction and evidence
+The server matrix preceded formatting, unused-helper cleanup and an outer encoding-exception guard. Final source passed compilation and all six client runs; final clean-built Fabric artifacts passed the packaged checks. Results and source/artifact fingerprints are recorded explicitly rather than treating historical prototype tests as current validation.
 
-See [runtime test commands](../runtime-tests/README.md), [implementation design](sealed-items.md), and [machine-readable results and hashes](validation.json). Raw logs and screenshots live in the local evidence directory recorded in that JSON. Historical 1.0.2 results are kept separately.
+## Uninstall behavior and scope
+
+Uninstall leaves a recovery compass with its original data and a readable recovery tooltip. Reinstall makes its original appearance and supported repairs available again. It does not automatically become a sword while the mod is absent.
+
+Unencodable source items are retained rather than destroyed. Vanilla repair rules still apply; deliberate item deletion, ordinary environmental destruction and arbitrary third-party systems that discard native metadata are outside this protection. No public release, push, production merge or player-save migration was performed.
+
+See [implementation](sealed-items.md), [reproduction](../runtime-tests/README.md), and [machine-readable evidence and hashes](validation.json).

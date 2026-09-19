@@ -3,6 +3,10 @@
 Research date: 2026-09-19. This is a feasibility experiment, not a replacement
 release or a claim of universal compatibility.
 
+Follow-up: the owner accepted retained carrier data plus reinstall/recovery, and
+authorized implementation. See the [current design](sealed-items.md); the paper
+and SNBT prototypes below are historical experiments, not the shipped format.
+
 ## Conclusion
 
 A runtime replacement need not introduce a custom registry identity. A vanilla
@@ -16,7 +20,7 @@ This moves the uninstall tradeoff from **unknown item / potential loss** to
 **known carrier / original data retained, recovery still needed**. Automatic
 restoration after uninstall is not established. The preceding review mistakenly
 treated automatic restoration as inseparable from data preservation; they are
-different requirements. The owner has not accepted the carrier's uninstall UX.
+different requirements. The owner subsequently accepted the carrier's uninstall UX.
 
 The owner explicitly rejected per-effect compatibility patches. This candidate
 retains whole-item replacement; it does not depend on discovering every original

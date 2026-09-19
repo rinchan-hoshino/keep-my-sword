@@ -1,50 +1,49 @@
 # Broken-item implementation
 
-This is an unpublished 1.1.0 development build. Runtime validation is recorded separately from release approval.
+Unpublished 1.1.0 development build. This replaces the earlier custom-registry prototype. The approved architecture is whole-item isolation with an opaque snapshot in a vanilla carrier; per-effect compatibility patches were rejected.
 
-The subsequent [identity and save-safety review](identity-safety-review.md) keeps
-this implementation experimental. Covered storage tests do not establish safety
-for arbitrary serializers. The owner rejected a behavior-first replacement;
-[vanilla carrier research](vanilla-carrier-research.md) examines a different
-persistence representation while retaining whole-item isolation.
+## Runtime isolation
 
-## Runtime behavior
+A managed item with exhausted durability becomes a native recovery compass. Its original registry identity and full persistent components are encoded privately inside `minecraft:custom_data`; the original is not a live nested container item. Normal gameplay sees the carrier, so the original item's use, attack, inventory callbacks, attributes and enchantments stop. The entity's native equipment state is refreshed immediately when an equipped item breaks. Existing timed effects are left to expire.
 
-A managed item with no durability becomes a real inert item. Its original identity, components and count are kept in a private snapshot; normal item queries expose the inert item. This prevents further original-item use, attack callbacks, inventory ticks, attributes and enchantments. Existing timed effects are left to expire normally.
+RinLib supplies durability and exclusion-adjacent state checks through `DamageState`. The snapshot format, transition, protection and repair rules are common code. Small adapters handle changed Minecraft API types, render methods and loader-specific damage/anvil signatures. Both 26.x targets use the same core and version adapter.
 
-The transition covers normal break processing, component mutations and construction from an exhausted component patch. Native break transactions and private decoding/repair calculations finish inside a scoped snapshot context, so intermediate copies cannot be mistaken for live equipment. Excluded items retain vanilla break behavior.
+The transition covers native break processing, exhausted-stack construction and damage-component mutation. Registry ownership is scoped to the server run or client frame; asynchronous server work can use the active server's registry provider. Internal snapshot copies and repair calculations suppress live conversion. Excluded items keep vanilla behavior.
 
-RinLib supplies the shared durability rules. The sealing, snapshot ownership, storage envelope and mutation logic are shared by all six targets. Small adapters handle changed Minecraft field types, names, codec entry points and rendering APIs.
+## Native persistence
 
-## Persistence
+No custom item or component type is registered. The recovery compass and its native data components are saved directly by Minecraft, independent serializers and platform storage APIs. There is no identity substitution during saving and no loader-specific storage adapter.
 
-The normal disk form uses the original item's registry identity and components. An unmodified sealed item needs no custom storage envelope. Independent edits to the inert item are stored under a namespaced annotation in vanilla custom data, without overwriting original custom data.
+`keep_my_sword:sealed` inside native custom data records schema 1, the Minecraft data version, and compressed NBT encoded as Base64 chunks of at most 16,000 characters. Chunking avoids the native per-string length limit and keeps NBT numeric/array types intact through JSON-based storage. A count-one original snapshot is paired with the actual carrier count, so copying/splitting does not create a second independent item.
 
-The annotation records its schema and Minecraft data version. Schema 3 distinguishes an inherited display name from an independently edited shell name, so anvil renaming survives another break. Previous schemas remain readable. Unknown future or malformed annotations remain opaque and recoverable. Shell snapshots retain exact NBT types through SNBT, and Minecraft's data fixer upgrades their item representation.
+Encoding constructs and reads back the entire snapshot before changing the live stack. The readback must equal the original native NBT. Encoding/decoding enforces a 16 MiB safety budget; unsupported encoding cancels destruction and retains the original instead of discarding it. The pathological case where an original has no valid native NBT representation remains unsealed, rather than losing its data. No claim is made that an unencodable third-party item can be safely converted.
 
-Storage boundaries covered:
+Decoding uses Minecraft's item data fixer for older snapshots. Unknown schemas, future versions, missing original registrations and malformed data remain sealed with their payload unchanged. A transient per-stack cache avoids repeated decompression during rendering; callers receive private copies, never the cached original.
 
-- Native `ItemStack` disk codecs, including optional/single forms on 1.21.1 and map codecs on 26.x.
-- `ItemStackTemplate` disk storage on 26.x, used by nested containers. Templates retain their deferred creation lifecycle and transient registry context.
-- NeoForge 26.x `ItemResource` and its optional disk codec. Native stack handlers use the covered item codecs.
-- Fabric Transfer `ItemVariant` disk storage, using its native schema. This integration is optional. Fabric builds bundle only the base, networking and registry-sync modules needed for item registration; a separate full Fabric API install is not required.
+## Accidental-consumption protection
 
-Network snapshots retain the inert runtime identity. Decoding the private original payload does not reactivate it.
+A recovery compass has no native use action and is not consumed by vanilla recipes. While the mod is installed, marked carriers additionally fail normal ingredient matching and non-repair recipe-manager results. Custom data edits cannot remove or overwrite the reserved snapshot. Unrecognized snapshots get the same ingredient protection.
 
-The original codec is deliberately internal. A third-party serializer which bypasses the covered boundaries and manually writes registry IDs/components can persist the inert identity. Uninstall safety cannot be promised for every such custom format. Removing or corrupting the private original component is also outside normal supported mutation.
+Inventory moves, copies, splitting and ordinary dropping remain normal operations; count setters are not globally blocked, which would break transfers and risk duplication. This is not item-loss immunity: destruction in lava, deliberate deletion, or third-party systems that discard native item metadata are not prevented.
 
 ## Repair and appearance
 
-- Anvils calculate against private originals; real input slots remain sealed. Vanilla owns material consumption, experience costs and output collection.
-- Crafting repair uses the original inputs and vanilla output rules, including vanilla's normal loss of non-curse enchantments and other discarded data.
-- Grindstones accept sealed inputs, preserve the native repair/disenchantment transaction and calculate experience from original enchantments.
-- Mending does not run while broken: it is a passive effect, and the requested behavior disables new passive effects.
-- Client rendering receives a display copy of the original. Gameplay getters do not expose that copy. Broken items retain the red inventory warning and a localized broken-item tooltip.
+- Anvils calculate on private originals while preserving the real input slots and vanilla material/XP transactions. Renaming followed by another break preserves the new name.
+- Crafting repair uses private originals and vanilla output rules. Non-curse enchantments/data discarded by native crafting repair are not added back artificially.
+- Grindstones validate private originals, repair/disenchant with native rules, and consume inputs only through the native transaction.
+- Invalid snapshots produce no repair result; input carriers and materials remain untouched.
+- Mending does not act on the carrier: the original enchantments are inactive while broken.
+- Rendering and tooltips display a private original copy and the broken warning. Unreadable snapshots fall back to the carrier's native display instead of crashing.
+- The private snapshot is authoritative for repair. Carrier-only visual/help metadata is not mistaken for original gameplay components.
 
-Custom repair systems need an explicit repair integration; exposing original gameplay components globally would undo the inert-item guarantee.
+## Uninstall and recovery
+
+Uninstalling Keep My Sword leaves a recovery compass with the original item's name, a plain fallback tooltip explaining how to repair it, and the complete saved snapshot. It does not automatically become the original sword.
+
+Reinstalling recognizes that carrier without a storage migration. Its original appearance and supported repairs become available again. A successful repair produces the original item through the native transaction; a failed decode leaves the carrier in place. Uninstalling the mod that defines the original item may prevent recovery until that mod is restored, while the opaque snapshot itself remains retained.
+
+The previous registry-backed prototype was never released and is not a supported public save format. This change does not publish artifacts or migrate player worlds.
 
 ## Verification
 
-`runtime-tests/sealed-matrix.py` runs fresh isolated worlds through save, real uninstall, and reinstall phases. It checks full native data equality (including NBT numeric/array types), nested containers, network/copy/split behavior, real break events, active/passive callback controls, repair transactions, direct mutation, constructor transitions and exclusion tags.
-
-`runtime-tests/run.py --side client` renders healthy and broken items and records an actual screenshot. These are local development checks; they do not publish or modify a player's world.
+See [current validation](validation.md) and [reproduction commands](../runtime-tests/README.md). The carrier tests use fresh worlds and actual save/uninstall/reinstall cycles; the original prototype's validation is historical evidence, not evidence for this implementation.

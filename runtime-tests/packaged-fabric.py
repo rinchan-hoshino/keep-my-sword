@@ -100,7 +100,12 @@ for mc, profile in profiles.items():
             if "Done (" in line and not ready:
                 ready = True
                 process.stdin.write(
-                    'summon minecraft:item 0 80 0 {Item:{id:"minecraft:diamond_sword",count:1,components:{"minecraft:damage":1561}}}\nsave-all flush\nstop\n'
+                    "forceload add 0 0\n"
+                    "setblock 0 80 0 minecraft:chest\n"
+                    "item replace block 0 80 0 container.0 with minecraft:diamond_sword[minecraft:damage=1561]\n"
+                    'execute if data block 0 80 0 Items[{id:"minecraft:recovery_compass"}] run say KMS_PACKAGED_CARRIER_PASS\n'
+                    'execute if data block 0 80 0 Items[0].components."minecraft:custom_data"."keep_my_sword:sealed".chunks[0] run say KMS_PACKAGED_SNAPSHOT_PASS\n'
+                    "save-all flush\nstop\n"
                 )
                 process.stdin.flush()
         if process.poll() is None:
@@ -113,12 +118,14 @@ for mc, profile in profiles.items():
     passed = (
         ready
         and process.returncode == 0
-        and "Summoned new" in text
+        and "KMS_PACKAGED_CARRIER_PASS" in text
+        and "KMS_PACKAGED_SNAPSHOT_PASS" in text
         and f"minecraft {mc}" in text
         and len(list(mods.glob("*.jar"))) == 2
         and "keep_my_sword 1.1.0-dev" in text
         and "fabric-api " not in text
         and "fabric-transfer-api-v1 " not in text
+        and "fabric-registry-sync-v0 " not in text
     )
     results.append(
         dict(

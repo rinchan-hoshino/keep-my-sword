@@ -1,7 +1,9 @@
-"""Materialize the same safety scenarios against version-specific API spellings."""
+"""Materialize common runtime scenarios against the version/loader API spellings."""
 
 from pathlib import Path
-import argparse, shutil, re
+import argparse
+import shutil
+import re
 
 p = argparse.ArgumentParser()
 p.add_argument("minecraft")
@@ -23,56 +25,35 @@ for folder in [
     "unload-entry",
 ]:
     shutil.copytree(root / folder, out / folder, dirs_exist_ok=True)
-if a.loader == "neoforge" and not a.minecraft.startswith("26."):
-    p = out / "common/java/dev/rinchan/rinlibprobe/MoreSafetyTests.java"
-    s = p.read_text().replace(
-        "import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;", ""
+for name in ["IndependentStorage.java", "PlatformStorage.java"]:
+    shutil.copy2(
+        out / "common/java/dev/rinchan/rinlibprobe" / name,
+        out / "unload/java/dev/rinchan/rinlibprobe" / name,
     )
-    start = s.index("        // Same public storage API")
-    end = s.index("        // Unfamiliar future data", start)
-    s = s[:start] + s[end:]
-    p.write_text(s)
-    p = out / "common/java/dev/rinchan/rinlibprobe/RuntimeProbe.java"
-    s = p.read_text()
-    start = s.index("                            var variantOps")
-    end = s.index("                            s.saveEverything", start)
-    s = s[:start] + s[end:]
-    p.write_text(s)
 if a.loader == "neoforge":
     p = out / "neoforge/java/dev/rinchan/rinlibprobe/ProbeEntrypoint.java"
-    s = p.read_text().replace(
-        "    public ProbeEntrypoint() {",
-        """    public static ProbeEffectItem EFFECT_ITEM;
+    p.write_text(
+        p.read_text().replace(
+            "    public ProbeEntrypoint() {",
+            """    public static ProbeEffectItem EFFECT_ITEM;
     public ProbeEntrypoint(net.neoforged.bus.api.IEventBus bus) {
         bus.addListener((net.neoforged.neoforge.registries.RegisterEvent event) -> {
             event.register(net.minecraft.core.registries.Registries.ITEM, helper -> {
                 EFFECT_ITEM = new ProbeEffectItem();
-                helper.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("kms_probe","effect_item"),EFFECT_ITEM);
+                helper.register(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("kms_probe","effect_item"), EFFECT_ITEM);
             });
         });""",
+        )
     )
-    p.write_text(s)
-if a.loader == "neoforge":
     p = out / "unload/java/dev/rinchan/rinlibprobe/RuntimeProbe.java"
-    s = (
+    p.write_text(
         p.read_text()
         .replace("import net.fabricmc.loader.api.FabricLoader;", "")
         .replace(
-            'FabricLoader.getInstance().isModLoaded("keep_my_sword")',
-            'net.neoforged.fml.ModList.get().isLoaded("keep_my_sword")',
+            "FabricLoader.getInstance().isModLoaded(",
+            "net.neoforged.fml.ModList.get().isLoaded(",
         )
     )
-    if not a.minecraft.startswith("26."):
-        start = s.index("                        var variantOps")
-        end = s.index(
-            "                        Fixtures.check(\n                                Fixtures.chest(s).getItem(0)",
-            start,
-        )
-        s = s[:start] + s[end:]
-        start = s.index("                        var nbtOps")
-        end = s.index("                        Fixtures.chest(s).setChanged()", start)
-        s = s[:start] + s[end:]
-    p.write_text(s)
     p = out / "unload-entry/java/dev/rinchan/rinlibprobe/ProbeEntrypoint.java"
     p.write_text(
         'package dev.rinchan.rinlibprobe; @net.neoforged.fml.common.Mod("kms_probe") public final class ProbeEntrypoint { public ProbeEntrypoint() { net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event) -> new RuntimeProbe().run(event.getServer())); } }'
@@ -80,20 +61,20 @@ if a.loader == "neoforge":
     shutil.copytree(
         out / "neoforge/resources", out / "unload/resources", dirs_exist_ok=True
     )
-if a.loader == "neoforge" and a.minecraft.startswith("26."):
-    for p in out.rglob("*.java"):
-        s = (
-            p.read_text()
-            .replace(
-                "net.fabricmc.fabric.api.transfer.v1.item.ItemVariant",
-                "net.neoforged.neoforge.transfer.item.ItemResource",
+    for p in out.rglob("PlatformStorage.java"):
+        if a.minecraft.startswith("26."):
+            p.write_text(
+                p.read_text()
+                .replace(
+                    "net.fabricmc.fabric.api.transfer.v1.item.ItemVariant",
+                    "net.neoforged.neoforge.transfer.item.ItemResource",
+                )
+                .replace("ItemVariant", "ItemResource")
             )
-            .replace("ItemVariant", "ItemResource")
-            .replace("Fabric Transfer", "NeoForge ItemResource")
-        )
-        if p.name == "MoreSafetyTests.java":
-            s = s.replace('.get("item")', '.get("id")')
-        p.write_text(s)
+        else:
+            p.write_text(
+                "package dev.rinchan.rinlibprobe; public final class PlatformStorage { public static void save(net.minecraft.server.MinecraftServer s, net.minecraft.world.item.ItemStack stack) {} public static void verify(net.minecraft.server.MinecraftServer s) {} }"
+            )
 if a.minecraft.startswith("26."):
     for p in out.rglob("*.java"):
         s = (
@@ -103,14 +84,12 @@ if a.minecraft.startswith("26."):
             .replace("MobEffects.DAMAGE_BOOST", "MobEffects.STRENGTH")
             .replace("TagParser.parseTag", "TagParser.parseCompoundFully")
         )
-        s = re.sub(r'\.getBoolean\(("[^"]+")\)', r".getBooleanOr(\1,false)", s)
-        s = re.sub(r'\.getString\(("[^"]+")\)', r'.getStringOr(\1,"")', s)
+        s = re.sub(r'\.getBoolean\(("[^\"]+")\)', r".getBooleanOr(\1,false)", s)
+        s = re.sub(r'\.getString\(("[^\"]+")\)', r'.getStringOr(\1,"")', s)
         s = s.replace(
-            ".getCompound(ShellPersistence.KEY)",
-            ".getCompoundOrEmpty(ShellPersistence.KEY)",
-        ).replace(
-            '.getLongArray("shell_longs")', '.getLongArray("shell_longs").orElseThrow()'
-        )
+            'data.getCompound("keep_my_sword:sealed")',
+            'data.getCompoundOrEmpty("keep_my_sword:sealed")',
+        ).replace("chunks.getString(i)", "chunks.getString(i).orElseThrow()")
         s = re.sub(
             r"recipe\.assemble\(crafting,\s*s\.registryAccess\(\)\)",
             "recipe.assemble(crafting)",
@@ -129,11 +108,6 @@ if a.minecraft.startswith("26."):
             "inventoryTick(s.overworld(), player, 0, true)",
             "inventoryTick(s.overworld(), player, EquipmentSlot.MAINHAND)",
         )
-        if p.name == "MoreSafetyTests.java":
-            s = s.replace(
-                "        var direct =",
-                '\n        var template=net.minecraft.world.item.ItemStackTemplate.CODEC.parse(nbtOps,net.minecraft.world.item.ItemStackTemplate.CODEC.encodeStart(nbtOps,net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(mutated)).getOrThrow()).getOrThrow();\n        var applied=template.withCount(1).apply(net.minecraft.core.component.DataComponentPatch.EMPTY);\n        check(SealedItems.isSealed(applied) && applied.get(DataComponents.CUSTOM_DATA).copyTag().getBooleanOr("third_party_marker",false),"template apply preserves sealed shell metadata");\n        var direct =',
-            )
         if p.name == "PreviewScreen.java":
             s = (
                 s.replace("GuiGraphics", "GuiGraphicsExtractor")

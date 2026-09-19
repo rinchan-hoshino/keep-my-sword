@@ -2,14 +2,13 @@ package dev.rinchan.rinlibprobe;
 
 import dev.rinchan.keepmysword.item.*;
 
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.*;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.inventory.AnvilMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.*;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -30,66 +29,36 @@ public final class RuntimeProbe {
         s.execute(
                 () -> {
                     try {
+                        var ops = s.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+                        var player = ProbePlayers.create(s, "CarrierTest", 925);
                         if (Files.exists(Path.of("unloaded.pass"))) {
                             Fixtures.verify(s);
+                            var item = Fixtures.chest(s).getItem(0);
                             check(
-                                    SealedItems.isSealed(Fixtures.chest(s).getItem(0)),
-                                    "reinstall restores sealed runtime item");
+                                    SealedItems.isSealed(item),
+                                    "reinstall recognizes native carrier");
                             check(
-                                    Fixtures.chest(s)
-                                            .getItem(3)
-                                            .get(DataComponents.CUSTOM_DATA)
-                                            .copyTag()
-                                            .getBoolean("third_party_marker"),
-                                    "reinstall restores persisted shell annotations");
-                            var variantOps =
-                                    s.registryAccess()
-                                            .createSerializationContext(
-                                                    com.mojang.serialization.JsonOps.INSTANCE);
-                            var variant =
-                                    net.fabricmc.fabric.api.transfer.v1.item.ItemVariant.CODEC
-                                            .parse(
-                                                    variantOps,
-                                                    com.google.gson.JsonParser.parseString(
-                                                            Files.readString(
-                                                                    Path.of(
-                                                                            "transfer-variant.json"))))
-                                            .getOrThrow();
-                            check(
-                                    SealedItems.isSealed(variant.toStack())
-                                            && variant.toStack()
-                                                    .get(DataComponents.CUSTOM_DATA)
-                                                    .copyTag()
-                                                    .getBoolean("third_party_marker"),
-                                    "reinstall restores Fabric Transfer variant with shell"
-                                            + " annotations");
-                            var nbtOps =
-                                    s.registryAccess()
-                                            .createSerializationContext(
-                                                    net.minecraft.nbt.NbtOps.INSTANCE);
-                            var nativeVariantTag =
-                                    net.minecraft.nbt.TagParser.parseTag(
-                                            Files.readString(Path.of("transfer-native.snbt")));
-                            var nativeVariant =
-                                    net.fabricmc.fabric.api.transfer.v1.item.ItemVariant.CODEC
-                                            .parse(nbtOps, nativeVariantTag)
-                                            .getOrThrow();
-                            check(
-                                    SealedItems.isSealed(nativeVariant.toStack()),
-                                    "Fabric Transfer NBT reactivates sealed form after reinstall");
-                            check(
-                                    net.fabricmc.fabric.api.transfer.v1.item.ItemVariant.CODEC
-                                            .encodeStart(nbtOps, nativeVariant)
+                                    ItemStack.CODEC
+                                            .encodeStart(ops, SealedItems.originalForRepair(item))
                                             .getOrThrow()
-                                            .equals(nativeVariantTag),
-                                    "Fabric Transfer NBT preserves exact original and annotation"
-                                            + " types");
-                            s.saveEverything(false, true, true);
+                                            .equals(
+                                                    TagParser.parseTag(
+                                                            Files.readString(
+                                                                    Path.of("original.snbt")))),
+                                    "reinstall restores exact original data");
+                            MoreSafetyTests.run(
+                                    s,
+                                    player,
+                                    item,
+                                    item,
+                                    SealedItems.originalForRepair(item)
+                                            .get(DataComponents.CUSTOM_DATA)
+                                            .copyTag());
+                            PlatformStorage.verify(s);
                             Files.writeString(Path.of("reinstalled.pass"), "pass\n");
                             System.out.println("SAFETY_REINSTALL_PASS");
                             return;
                         }
-                        var player = ProbePlayers.create(s, "SealedTest", 923);
                         var sword = new ItemStack(Items.DIAMOND_SWORD);
                         sword.set(DataComponents.CUSTOM_NAME, Component.literal("Keepsake"));
                         sword.enchant(
@@ -99,101 +68,104 @@ public final class RuntimeProbe {
                                 5);
                         var data = new CompoundTag();
                         data.putString("other_mod_owner", "retained");
-                        var nested = new CompoundTag();
-                        nested.putInt("energy", 451);
-                        nested.putLongArray("opaque", new long[] {1, Long.MAX_VALUE});
-                        data.put("nested", nested);
+                        data.putLongArray("longs", new long[] {1, Long.MAX_VALUE});
+                        data.putByteArray("bytes", new byte[] {1, -1});
+                        data.putIntArray("ints", new int[] {1, Integer.MAX_VALUE});
                         sword.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
                         int max = sword.getMaxDamage();
                         sword.setDamageValue(max - 1);
+                        var expected =
+                                SnapshotScope.call(
+                                        () -> {
+                                            var original = sword.copy();
+                                            original.setDamageValue(max);
+                                            return ItemStack.CODEC
+                                                    .encodeStart(ops, original)
+                                                    .getOrThrow();
+                                        });
+                        Files.writeString(Path.of("original.snbt"), expected.toString());
                         player.getInventory().setItem(0, sword);
                         sword.hurtAndBreak(1, s.overworld(), null, item -> {});
                         check(
                                 sword.getCount() == 1 && player.getInventory().getItem(0) == sword,
-                                "actual final durability loss preserves original slot reference");
+                                "break preserves slot reference and count");
                         check(
-                                SealedItems.isSealed(sword),
-                                "zero durability becomes a real inert item");
+                                SealedItems.isSealed(sword) && sword.is(Items.RECOVERY_COMPASS),
+                                "broken item uses native carrier identity");
                         check(
-                                sword.getItemHolder()
-                                                .is(SealedRegistry.INERT.builtInRegistryHolder())
-                                        && !sword.is(Items.DIAMOND_SWORD),
-                                "runtime identity is consistently inert");
-                        check(!sword.isEnchanted(), "original enchantments are inactive");
+                                !sword.isEnchanted()
+                                        && !sword.has(DataComponents.CONTAINER)
+                                        && !sword.has(DataComponents.BUNDLE_CONTENTS),
+                                "original effects and nested item identity are not exposed");
                         check(
-                                !sword.has(DataComponents.CUSTOM_DATA),
-                                "original mod data is sealed");
-                        var attrs = new AtomicInteger();
-                        sword.forEachModifier(
-                                EquipmentSlot.MAINHAND, (a, b) -> attrs.incrementAndGet());
-                        check(attrs.get() == 0, "original weapon attributes are inactive");
-                        var original = SealedItems.originalForSave(sword);
-                        check(
-                                original.getDamageValue() == max
-                                        && original.get(DataComponents.CUSTOM_DATA)
-                                                .copyTag()
-                                                .equals(data),
-                                "original durability and opaque data preserved");
+                                ItemStack.CODEC
+                                        .encodeStart(ops, SealedItems.originalForRepair(sword))
+                                        .getOrThrow()
+                                        .equals(expected),
+                                "snapshot preserves exact original NBT");
                         var encoded = Fixtures.encode(s, sword);
                         check(
-                                encoded.contains("minecraft:diamond_sword")
-                                        && !encoded.contains("keep_my_sword"),
-                                "native disk codec stores only original item format");
+                                !encoded.contains("sealed_original")
+                                        && !encoded.contains("broken_item"),
+                                "disk needs no custom item or component registry");
+                        var independent =
+                                IndependentStorage.CODEC.encodeStart(ops, sword).getOrThrow();
+                        Files.writeString(Path.of("independent.snbt"), independent.toString());
+                        var jsonOps =
+                                s.registryAccess()
+                                        .createSerializationContext(
+                                                com.mojang.serialization.JsonOps.INSTANCE);
+                        Files.writeString(
+                                Path.of("independent.json"),
+                                IndependentStorage.CODEC
+                                        .encodeStart(jsonOps, sword)
+                                        .getOrThrow()
+                                        .toString());
+                        var jsonCopy =
+                                IndependentStorage.CODEC
+                                        .parse(
+                                                jsonOps,
+                                                com.google.gson.JsonParser.parseString(
+                                                        Files.readString(
+                                                                Path.of("independent.json"))))
+                                        .getOrThrow();
                         check(
-                                encoded.contains("sharpness")
-                                        && encoded.contains("other_mod_owner"),
-                                "disk data includes original passive and opaque components");
-                        check(
-                                Fixtures.encode(s, sword.copy()).equals(encoded),
-                                "ordinary copy retains sealed data");
+                                ItemStack.CODEC
+                                        .encodeStart(ops, SealedItems.originalForRepair(jsonCopy))
+                                        .getOrThrow()
+                                        .equals(expected),
+                                "independent JSON keeps original numeric and array types");
                         var copyByApi =
                                 new ItemStack(
                                         sword.getItemHolder(),
                                         sword.getCount(),
                                         sword.getComponentsPatch());
                         check(
-                                Fixtures.encode(s, copyByApi).equals(encoded)
-                                        && SealedItems.isSealed(copyByApi),
-                                "holder plus component patch reconstruction is lossless");
-                        var mutated = sword.copy();
-                        mutated.update(
-                                DataComponents.CUSTOM_DATA,
-                                CustomData.EMPTY,
-                                old -> {
-                                    var n = old.copyTag();
-                                    n.putBoolean("third_party_marker", true);
-                                    n.putLongArray("shell_longs", new long[] {1, Long.MAX_VALUE});
-                                    return CustomData.of(n);
-                                });
-                        check(
-                                SealedItems.originalForSave(mutated)
-                                        .get(DataComponents.CUSTOM_DATA)
-                                        .copyTag()
-                                        .equals(data),
-                                "outer component update cannot overwrite sealed original");
-                        var repairCopy = SealedItems.originalForSave(sword);
-                        repairCopy.setDamageValue(0);
-                        check(
-                                SealedItems.originalForSave(sword).getDamageValue() == max,
-                                "original snapshot cannot be mutated through returned copy");
+                                Fixtures.encode(s, copyByApi).equals(encoded),
+                                "holder and patch reconstruction preserves carrier");
                         var buffer =
                                 new net.minecraft.network.RegistryFriendlyByteBuf(
                                         io.netty.buffer.Unpooled.buffer(), s.registryAccess());
                         try {
                             ItemStack.STREAM_CODEC.encode(buffer, sword);
-                            var synced = ItemStack.STREAM_CODEC.decode(buffer);
                             check(
-                                    SealedItems.isSealed(synced)
-                                            && Fixtures.encode(s, synced).equals(encoded),
-                                    "network roundtrip keeps consistent sealed item");
+                                    Fixtures.encode(s, ItemStack.STREAM_CODEC.decode(buffer))
+                                            .equals(encoded),
+                                    "network roundtrip preserves payload");
                         } finally {
                             buffer.release();
                         }
-                        var half = sword.copy();
-                        var split = half.split(1);
+                        var splitSource = sword.copy();
+                        var split = splitSource.split(1);
                         check(
-                                half.isEmpty() && Fixtures.encode(s, split).equals(encoded),
-                                "split is lossless and count is not duplicated");
+                                splitSource.isEmpty() && Fixtures.encode(s, split).equals(encoded),
+                                "split does not lose or duplicate item");
+                        var originalCopy = SealedItems.originalForRepair(sword);
+                        originalCopy.setDamageValue(0);
+                        check(
+                                SealedItems.originalForRepair(sword).getDamageValue() == max,
+                                "cached original is never exposed mutably");
+                        CarrierChecks.run(s, player, sword);
                         // A purpose-built item verifies both active and passive dispatch
                         // before/after break.
                         var effect = new ItemStack(ProbeEntrypoint.EFFECT_ITEM);
@@ -230,7 +202,7 @@ public final class RuntimeProbe {
                                 3);
                         armor.setDamageValue(armor.getMaxDamage());
                         armor = SealedItems.seal(armor);
-                        attrs.set(0);
+                        var attrs = new AtomicInteger();
                         armor.forEachModifier(
                                 EquipmentSlot.CHEST, (a, b) -> attrs.incrementAndGet());
                         check(
@@ -250,16 +222,58 @@ public final class RuntimeProbe {
                                 player,
                                 net.minecraft.world.InteractionHand.MAIN_HAND);
                         check(!player.isUsingItem(), "sealed shield cannot block");
+
+                        MoreSafetyTests.run(s, player, sword, sword, data);
+                        check(
+                                player.hasEffect(
+                                        net.minecraft.world.effect.MobEffects.DAMAGE_BOOST),
+                                "preexisting timed effects remain");
                         var box = new ItemStack(Items.SHULKER_BOX);
                         box.set(
                                 DataComponents.CONTAINER,
                                 ItemContainerContents.fromItems(
-                                        List.of(mutated.copy(), new ItemStack(Items.DIAMOND, 7))));
+                                        List.of(sword.copy(), new ItemStack(Items.DIAMOND, 7))));
+                        var invalid = CarrierChecks.invalid(sword, 999);
+                        var big =
+                                SnapshotScope.call(
+                                        () -> {
+                                            var item = SealedItems.originalForRepair(sword);
+                                            var tag = data.copy();
+                                            var noise = new byte[180000];
+                                            new java.util.Random(4815).nextBytes(noise);
+                                            tag.putByteArray("large_payload", noise);
+                                            item.set(
+                                                    DataComponents.CUSTOM_DATA, CustomData.of(tag));
+                                            item.setDamageValue(item.getMaxDamage());
+                                            return item;
+                                        });
+                        var bigExpected = ItemStack.CODEC.encodeStart(ops, big).getOrThrow();
+                        big = SealedItems.seal(big);
+                        check(SealedItems.isSealed(big), "large payload seals successfully");
+                        var bigDisk = ItemStack.CODEC.encodeStart(ops, big).getOrThrow();
+                        var output = new java.io.ByteArrayOutputStream();
+                        NbtIo.writeCompressed((CompoundTag) bigDisk, output);
+                        var bigCopy =
+                                ItemStack.CODEC
+                                        .parse(
+                                                ops,
+                                                NbtIo.readCompressed(
+                                                        new java.io.ByteArrayInputStream(
+                                                                output.toByteArray()),
+                                                        NbtAccounter.create(4000000)))
+                                        .getOrThrow();
+                        check(
+                                ItemStack.CODEC
+                                        .encodeStart(ops, SealedItems.originalForRepair(bigCopy))
+                                        .getOrThrow()
+                                        .equals(bigExpected),
+                                "large snapshot writes actual NBT without string overflow");
+                        Files.writeString(Path.of("large-original.snbt"), bigExpected.toString());
                         s.overworld()
                                 .setBlockAndUpdate(Fixtures.POS, Blocks.CHEST.defaultBlockState());
                         s.overworld().setChunkForced(0, 0, true);
                         var chest = (ChestBlockEntity) s.overworld().getBlockEntity(Fixtures.POS);
-                        var samples = List.of(sword, shield, box, mutated);
+                        var samples = List.of(sword, shield, box, invalid, big);
                         Files.writeString(
                                 Path.of("fixture-count.txt"), Integer.toString(samples.size()));
                         for (int i = 0; i < samples.size(); i++) {
@@ -267,12 +281,7 @@ public final class RuntimeProbe {
                             Files.writeString(
                                     Path.of("expected-" + i + ".snbt"),
                                     ItemStack.CODEC
-                                            .encodeStart(
-                                                    s.registryAccess()
-                                                            .createSerializationContext(
-                                                                    net.minecraft.nbt.NbtOps
-                                                                            .INSTANCE),
-                                                    samples.get(i))
+                                            .encodeStart(ops, samples.get(i))
                                             .getOrThrow()
                                             .toString());
                             Files.writeString(
@@ -280,58 +289,7 @@ public final class RuntimeProbe {
                                     Fixtures.encode(s, samples.get(i)));
                         }
                         chest.setChanged();
-                        var anvil =
-                                new AnvilMenu(1, player.getInventory(), ContainerLevelAccess.NULL);
-                        player.experienceLevel = 30;
-                        anvil.getSlot(0).set(sword.copy());
-                        anvil.getSlot(1).set(new ItemStack(Items.DIAMOND));
-                        anvil.slotsChanged(anvil.getSlot(0).container);
-                        var result = anvil.getSlot(2).getItem();
-                        check(
-                                !result.isEmpty()
-                                        && result.getItem() == Items.DIAMOND_SWORD
-                                        && result.getDamageValue() < max,
-                                "unsealed copy produces native anvil repair result");
-                        check(
-                                Fixtures.encode(s, sword).equals(encoded)
-                                        && result.get(DataComponents.CUSTOM_DATA)
-                                                .copyTag()
-                                                .equals(data),
-                                "repair preview preserves source and opaque data");
-                        MoreSafetyTests.run(s, player, sword, mutated, data);
-                        var observations = new ArrayList<String>();
-                        check(
-                                player.hasEffect(
-                                        net.minecraft.world.effect.MobEffects.DAMAGE_BOOST),
-                                "preexisting effects are intentionally left to expire naturally");
-                        var ops =
-                                s.registryAccess()
-                                        .createSerializationContext(
-                                                com.mojang.serialization.JsonOps.INSTANCE);
-                        var reload =
-                                ItemStack.CODEC
-                                        .parse(
-                                                ops,
-                                                com.google.gson.JsonParser.parseString(
-                                                        Fixtures.encode(s, mutated)))
-                                        .getOrThrow();
-                        check(
-                                reload.get(DataComponents.CUSTOM_DATA)
-                                        .copyTag()
-                                        .getBoolean("third_party_marker"),
-                                "new outer metadata is persisted");
-                        var rawSave =
-                                StorageBoundary.raw()
-                                        .encodeStart(ops, sword)
-                                        .getOrThrow()
-                                        .toString();
-                        if (rawSave.contains("broken_item"))
-                            observations.add(
-                                    "ALTERNATE_SERIALIZER_RISK: serialization bypassing native"
-                                            + " boundary persists custom wrapper identity");
-                        Files.writeString(
-                                Path.of("open-issues.txt"), String.join("\n", observations) + "\n");
-                        for (var f : observations) System.out.println("SAFETY_OPEN " + f);
+                        PlatformStorage.save(s, sword);
                         s.saveEverything(false, true, true);
                         Files.writeString(Path.of("prototype-saved.pass"), "pass\n");
                         System.out.println("SAFETY_SAVE_PASS");

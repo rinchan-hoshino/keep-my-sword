@@ -4,14 +4,12 @@ import com.mojang.serialization.JsonOps;
 
 import dev.rinchan.keepmysword.item.*;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.CustomData;
 
 import java.nio.file.*;
 
@@ -29,143 +27,6 @@ public final class MoreSafetyTests {
             throws Exception {
         var ops = s.registryAccess().createSerializationContext(JsonOps.INSTANCE);
         var serialized = ItemStack.CODEC.encodeStart(ops, mutated).getOrThrow();
-        var restored = ItemStack.CODEC.parse(ops, serialized).getOrThrow();
-        check(
-                restored.get(DataComponents.CUSTOM_DATA).copyTag().getBoolean("third_party_marker"),
-                "shell metadata survives native disk roundtrip");
-        var jsonBaseline =
-                StorageBoundary.raw()
-                        .parse(
-                                ops,
-                                StorageBoundary.raw()
-                                        .encodeStart(ops, SealedItems.originalForSave(mutated))
-                                        .getOrThrow())
-                        .getOrThrow();
-        check(
-                SealedItems.originalForSave(restored)
-                        .get(DataComponents.CUSTOM_DATA)
-                        .copyTag()
-                        .equals(jsonBaseline.get(DataComponents.CUSTOM_DATA).copyTag()),
-                "JSON original components match unmodified vanilla conversion semantics");
-        check(
-                java.util.Arrays.equals(
-                        restored.get(DataComponents.CUSTOM_DATA)
-                                .copyTag()
-                                .getLongArray("shell_longs"),
-                        new long[] {1, Long.MAX_VALUE}),
-                "JSON envelope preserves exact shell NBT numeric array types");
-        var nbtOps = s.registryAccess().createSerializationContext(NbtOps.INSTANCE);
-        var nbtRoundtrip =
-                ItemStack.CODEC
-                        .parse(nbtOps, ItemStack.CODEC.encodeStart(nbtOps, mutated).getOrThrow())
-                        .getOrThrow();
-        check(
-                SealedItems.originalForSave(nbtRoundtrip)
-                        .get(DataComponents.CUSTOM_DATA)
-                        .copyTag()
-                        .equals(originalData),
-                "NBT storage preserves exact original numeric types and all opaque data");
-        check(
-                ItemStack.CODEC.encodeStart(ops, restored).getOrThrow().equals(serialized),
-                "repeated encoding does not duplicate the shell envelope");
-        // Same public storage API used by real Fabric automation mods, with its own independent
-        // disk schema.
-        var variant = ItemVariant.of(mutated);
-        var variantJson = ItemVariant.CODEC.encodeStart(ops, variant).getOrThrow();
-        check(
-                !variantJson
-                                .getAsJsonObject()
-                                .get("item")
-                                .getAsString()
-                                .equals("keep_my_sword:broken_item")
-                        && !variantJson
-                                .getAsJsonObject()
-                                .getAsJsonObject("components")
-                                .has("keep_my_sword:sealed_original"),
-                "Fabric Transfer stores the original registry identity and native component types");
-        check(
-                variantJson
-                        .getAsJsonObject()
-                        .get("item")
-                        .getAsString()
-                        .equals("minecraft:diamond_sword"),
-                "Fabric Transfer retains its native item field format");
-        var returned = ItemVariant.CODEC.parse(ops, variantJson).getOrThrow().toStack();
-        check(
-                SealedItems.isSealed(returned)
-                        && returned.get(DataComponents.CUSTOM_DATA)
-                                .copyTag()
-                                .getBoolean("third_party_marker"),
-                "Fabric Transfer disk roundtrip restores sealed metadata");
-        check(
-                ItemStack.CODEC.encodeStart(ops, returned).getOrThrow().equals(serialized),
-                "Fabric Transfer preserves all canonical data");
-        Files.writeString(Path.of("transfer-variant.json"), variantJson.toString());
-        // Unfamiliar future data must remain recoverable instead of being thrown away.
-        var future = SealedItems.originalForSave(sword);
-        var futureData = future.get(DataComponents.CUSTOM_DATA).copyTag();
-        var unknown = new CompoundTag();
-        unknown.putInt("schema", 999);
-        unknown.putString("opaque", "must survive");
-        futureData.put(ShellPersistence.KEY, unknown);
-        future.set(DataComponents.CUSTOM_DATA, CustomData.of(futureData));
-        var rawFuture = StorageBoundary.raw().encodeStart(nbtOps, future).getOrThrow();
-        var futureRead = ItemStack.CODEC.parse(nbtOps, rawFuture).getOrThrow();
-        check(
-                SealedItems.isSealed(futureRead),
-                "unknown metadata does not reactivate original item");
-        check(
-                ItemStack.CODEC.encodeStart(nbtOps, futureRead).getOrThrow().equals(rawFuture),
-                "unknown metadata survives unchanged");
-        futureRead.set(DataComponents.CUSTOM_DATA, CustomData.of(new CompoundTag()));
-        var editedFuture =
-                ItemStack.CODEC
-                        .parse(nbtOps, ItemStack.CODEC.encodeStart(nbtOps, futureRead).getOrThrow())
-                        .getOrThrow();
-        check(
-                SealedItems.originalForSave(editedFuture)
-                        .get(DataComponents.CUSTOM_DATA)
-                        .copyTag()
-                        .getCompound(ShellPersistence.KEY)
-                        .equals(unknown),
-                "editing shell preserves preexisting unknown metadata without failing save");
-        check(
-                editedFuture.has(DataComponents.CUSTOM_DATA),
-                "explicit empty outer component survives with unknown original data");
-        // Exercise the explicit migration path for nested shell snapshots.
-        var legacy = SealedItems.originalForSave(sword);
-        var legacyData = legacy.get(DataComponents.CUSTOM_DATA).copyTag();
-        var legacyShell = new CompoundTag();
-        legacyShell.putString("id", "minecraft:paper");
-        legacyShell.putByte("Count", (byte) 1);
-        var tag = new CompoundTag();
-        tag.putString("legacy_marker", "preserved");
-        legacyShell.put("tag", tag);
-        var record = new CompoundTag();
-        record.putInt("schema", 1);
-        record.putInt("data_version", 3700);
-        record.putBoolean("had_custom_data", true);
-        record.put("shell", legacyShell);
-        legacyData.put(ShellPersistence.KEY, record);
-        legacy.set(DataComponents.CUSTOM_DATA, CustomData.of(legacyData));
-        var migrated =
-                ItemStack.CODEC
-                        .parse(
-                                nbtOps,
-                                StorageBoundary.raw().encodeStart(nbtOps, legacy).getOrThrow())
-                        .getOrThrow();
-        check(
-                migrated.get(DataComponents.CUSTOM_DATA)
-                        .copyTag()
-                        .getString("legacy_marker")
-                        .equals("preserved"),
-                "legacy shell snapshot is upgraded through Minecraft data fixers");
-        check(
-                SealedItems.originalForSave(migrated)
-                        .get(DataComponents.CUSTOM_DATA)
-                        .copyTag()
-                        .equals(originalData),
-                "shell migration does not change original opaque data");
         // Actual input remains sealed while the menu calculates against private snapshots.
         var menu = new AnvilMenu(7, player.getInventory(), ContainerLevelAccess.NULL);
         player.experienceLevel = 30;
@@ -204,9 +65,6 @@ public final class MoreSafetyTests {
                         .getString("other_mod_owner")
                         .equals("retained"),
                 "taken result keeps original metadata");
-        check(
-                taken.get(DataComponents.CUSTOM_DATA).copyTag().contains(ShellPersistence.KEY),
-                "taken result retains shell annotations without overwriting original metadata");
         var crafting =
                 net.minecraft.world.item.crafting.CraftingInput.of(
                         2, 1, java.util.List.of(sword.copy(), sword.copy()));
@@ -292,14 +150,6 @@ public final class MoreSafetyTests {
                         .set(DataComponents.DAMAGE, patchStack.getMaxDamage())
                         .build());
         Fixtures.check(SealedItems.isSealed(patchStack), "component patch seals immediately");
-        taken.setDamageValue(taken.getMaxDamage() - 1);
-        taken.hurtAndBreak(1, s.overworld(), null, item -> {});
-        check(
-                SealedItems.isSealed(taken)
-                        && taken.get(DataComponents.CUSTOM_DATA)
-                                .copyTag()
-                                .getBoolean("third_party_marker"),
-                "repair followed by another actual break restores shell annotations");
     }
 
     private MoreSafetyTests() {}

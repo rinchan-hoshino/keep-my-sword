@@ -2,180 +2,139 @@
   "version": "1.1.0-dev",
   "date": "2026-09-19",
   "status": "LOCAL_VALIDATION_PASSED_UNPUBLISHED",
+  "architecture": "vanilla_recovery_compass_opaque_snapshot",
   "branch": "codex/keep-my-sword-inert-items",
-  "base_commit": "f4322a3b690b75b872c76c2d71542b02093c8d8b",
+  "production_base": "f4322a3b690b75b872c76c2d71542b02093c8d8b",
   "evidence_root": "../keep-my-sword-evidence/safety-research",
   "server": [
     {
-      "minecraft": "1.21.1",
-      "loader": "fabric",
-      "phases": [
-        {
-          "case": "1.21.1-fabric",
-          "phase": "save",
-          "passed": true,
-          "assertions": 63,
-          "log": "fabric-resource-final/1.21.1-fabric/save.log"
-        },
-        {
-          "case": "1.21.1-fabric",
-          "phase": "unload",
-          "passed": true,
-          "assertions": 15,
-          "log": "fabric-resource-final/1.21.1-fabric/unload.log"
-        },
-        {
-          "case": "1.21.1-fabric",
-          "phase": "reinstall",
-          "passed": true,
-          "assertions": 14,
-          "log": "fabric-resource-final/1.21.1-fabric/reinstall.log"
-        }
-      ],
-      "assertions": 92
+      "case": "1.21.1-fabric",
+      "phase": "save",
+      "passed": true,
+      "assertions": 64,
+      "log": "carrier-matrix-v1/1.21.1-fabric/save.log"
     },
     {
-      "minecraft": "1.21.1",
-      "loader": "neoforge",
-      "phases": [
-        {
-          "case": "1.21.1-neoforge",
-          "phase": "save",
-          "passed": true,
-          "assertions": 59,
-          "log": "matrix-final/1.21.1-neoforge/save.log"
-        },
-        {
-          "case": "1.21.1-neoforge",
-          "phase": "unload",
-          "passed": true,
-          "assertions": 13,
-          "log": "matrix-final/1.21.1-neoforge/unload.log"
-        },
-        {
-          "case": "1.21.1-neoforge",
-          "phase": "reinstall",
-          "passed": true,
-          "assertions": 11,
-          "log": "matrix-final/1.21.1-neoforge/reinstall.log"
-        }
-      ],
-      "assertions": 83
+      "case": "1.21.1-fabric",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "carrier-matrix-v1/1.21.1-fabric/unload.log"
     },
     {
-      "minecraft": "26.1.2",
-      "loader": "fabric",
-      "phases": [
-        {
-          "case": "26.1.2-fabric",
-          "phase": "save",
-          "passed": true,
-          "assertions": 64,
-          "log": "fabric-resource-final/26.1.2-fabric/save.log"
-        },
-        {
-          "case": "26.1.2-fabric",
-          "phase": "unload",
-          "passed": true,
-          "assertions": 15,
-          "log": "fabric-resource-final/26.1.2-fabric/unload.log"
-        },
-        {
-          "case": "26.1.2-fabric",
-          "phase": "reinstall",
-          "passed": true,
-          "assertions": 14,
-          "log": "fabric-resource-final/26.1.2-fabric/reinstall.log"
-        }
-      ],
-      "assertions": 93
+      "case": "1.21.1-fabric",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 36,
+      "log": "carrier-matrix-v1/1.21.1-fabric/reinstall.log"
     },
     {
-      "minecraft": "26.1.2",
-      "loader": "neoforge",
-      "phases": [
-        {
-          "case": "26.1.2-neoforge",
-          "phase": "save",
-          "passed": true,
-          "assertions": 64,
-          "log": "neoforge-resource-final/26.1.2-neoforge/save.log"
-        },
-        {
-          "case": "26.1.2-neoforge",
-          "phase": "unload",
-          "passed": true,
-          "assertions": 15,
-          "log": "neoforge-resource-final/26.1.2-neoforge/unload.log"
-        },
-        {
-          "case": "26.1.2-neoforge",
-          "phase": "reinstall",
-          "passed": true,
-          "assertions": 14,
-          "log": "neoforge-resource-final/26.1.2-neoforge/reinstall.log"
-        }
-      ],
-      "assertions": 93
+      "case": "1.21.1-neoforge",
+      "phase": "save",
+      "passed": true,
+      "assertions": 63,
+      "log": "carrier-matrix-v1/1.21.1-neoforge/save.log"
     },
     {
-      "minecraft": "26.2",
-      "loader": "fabric",
-      "phases": [
-        {
-          "case": "26.2-fabric",
-          "phase": "save",
-          "passed": true,
-          "assertions": 64,
-          "log": "fabric-resource-final/26.2-fabric/save.log"
-        },
-        {
-          "case": "26.2-fabric",
-          "phase": "unload",
-          "passed": true,
-          "assertions": 15,
-          "log": "fabric-resource-final/26.2-fabric/unload.log"
-        },
-        {
-          "case": "26.2-fabric",
-          "phase": "reinstall",
-          "passed": true,
-          "assertions": 14,
-          "log": "fabric-resource-final/26.2-fabric/reinstall.log"
-        }
-      ],
-      "assertions": 93
+      "case": "1.21.1-neoforge",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 25,
+      "log": "carrier-matrix-v1/1.21.1-neoforge/unload.log"
     },
     {
-      "minecraft": "26.2",
-      "loader": "neoforge",
-      "phases": [
-        {
-          "case": "26.2-neoforge",
-          "phase": "save",
-          "passed": true,
-          "assertions": 64,
-          "log": "neoforge-resource-final/26.2-neoforge/save.log"
-        },
-        {
-          "case": "26.2-neoforge",
-          "phase": "unload",
-          "passed": true,
-          "assertions": 15,
-          "log": "neoforge-resource-final/26.2-neoforge/unload.log"
-        },
-        {
-          "case": "26.2-neoforge",
-          "phase": "reinstall",
-          "passed": true,
-          "assertions": 14,
-          "log": "neoforge-resource-final/26.2-neoforge/reinstall.log"
-        }
-      ],
-      "assertions": 93
+      "case": "1.21.1-neoforge",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 35,
+      "log": "carrier-matrix-v1/1.21.1-neoforge/reinstall.log"
+    },
+    {
+      "case": "26.1.2-fabric",
+      "phase": "save",
+      "passed": true,
+      "assertions": 64,
+      "log": "carrier-matrix-v1/26.1.2-fabric/save.log"
+    },
+    {
+      "case": "26.1.2-fabric",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "carrier-matrix-v1/26.1.2-fabric/unload.log"
+    },
+    {
+      "case": "26.1.2-fabric",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 36,
+      "log": "carrier-matrix-v1/26.1.2-fabric/reinstall.log"
+    },
+    {
+      "case": "26.1.2-neoforge",
+      "phase": "save",
+      "passed": true,
+      "assertions": 64,
+      "log": "carrier-matrix-v1/26.1.2-neoforge/save.log"
+    },
+    {
+      "case": "26.1.2-neoforge",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "carrier-matrix-v1/26.1.2-neoforge/unload.log"
+    },
+    {
+      "case": "26.1.2-neoforge",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 36,
+      "log": "carrier-matrix-v1/26.1.2-neoforge/reinstall.log"
+    },
+    {
+      "case": "26.2-fabric",
+      "phase": "save",
+      "passed": true,
+      "assertions": 64,
+      "log": "carrier-matrix-v1/26.2-fabric/save.log"
+    },
+    {
+      "case": "26.2-fabric",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "carrier-matrix-v1/26.2-fabric/unload.log"
+    },
+    {
+      "case": "26.2-fabric",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 36,
+      "log": "carrier-matrix-v1/26.2-fabric/reinstall.log"
+    },
+    {
+      "case": "26.2-neoforge",
+      "phase": "save",
+      "passed": true,
+      "assertions": 64,
+      "log": "carrier-matrix-v1/26.2-neoforge/save.log"
+    },
+    {
+      "case": "26.2-neoforge",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "carrier-matrix-v1/26.2-neoforge/unload.log"
+    },
+    {
+      "case": "26.2-neoforge",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 36,
+      "log": "carrier-matrix-v1/26.2-neoforge/reinstall.log"
     }
   ],
-  "server_assertions": 547,
+  "server_assertions": 753,
   "clients": [
     {
       "minecraft": "1.21.1",
@@ -183,9 +142,9 @@
       "side": "client",
       "passed": true,
       "exit_code": 0,
-      "screenshots": [
-        "client-v2/1.21.1-fabric-client/screenshots/2026-09-19_17.24.55.png"
-      ]
+      "assertions": 0,
+      "screenshot": "carrier-clients-v1/1.21.1-fabric-client/screenshots/2026-09-19_21.01.30.png",
+      "log": "carrier-clients-v1/1.21.1-fabric-client/run.log"
     },
     {
       "minecraft": "1.21.1",
@@ -193,9 +152,9 @@
       "side": "client",
       "passed": true,
       "exit_code": 0,
-      "screenshots": [
-        "client-v2/1.21.1-neoforge-client/screenshots/2026-09-19_17.25.23.png"
-      ]
+      "assertions": 0,
+      "screenshot": "carrier-clients-v1/1.21.1-neoforge-client/screenshots/2026-09-19_21.01.56.png",
+      "log": "carrier-clients-v1/1.21.1-neoforge-client/run.log"
     },
     {
       "minecraft": "26.1.2",
@@ -203,9 +162,9 @@
       "side": "client",
       "passed": true,
       "exit_code": 0,
-      "screenshots": [
-        "client-v2/26.1.2-fabric-client/screenshots/2026-09-19_17.25.49.png"
-      ]
+      "assertions": 0,
+      "screenshot": "carrier-clients-v1/26.1.2-fabric-client/screenshots/2026-09-19_21.02.22.png",
+      "log": "carrier-clients-v1/26.1.2-fabric-client/run.log"
     },
     {
       "minecraft": "26.1.2",
@@ -213,9 +172,9 @@
       "side": "client",
       "passed": true,
       "exit_code": 0,
-      "screenshots": [
-        "client-v2/26.1.2-neoforge-client/screenshots/2026-09-19_17.26.17.png"
-      ]
+      "assertions": 0,
+      "screenshot": "carrier-clients-v1/26.1.2-neoforge-client/screenshots/2026-09-19_21.02.50.png",
+      "log": "carrier-clients-v1/26.1.2-neoforge-client/run.log"
     },
     {
       "minecraft": "26.2",
@@ -223,9 +182,9 @@
       "side": "client",
       "passed": true,
       "exit_code": 0,
-      "screenshots": [
-        "client-v2/26.2-fabric-client/screenshots/2026-09-19_17.26.42.png"
-      ]
+      "assertions": 0,
+      "screenshot": "carrier-clients-v1/26.2-fabric-client/screenshots/2026-09-19_21.03.15.png",
+      "log": "carrier-clients-v1/26.2-fabric-client/run.log"
     },
     {
       "minecraft": "26.2",
@@ -233,9 +192,9 @@
       "side": "client",
       "passed": true,
       "exit_code": 0,
-      "screenshots": [
-        "client-v2/26.2-neoforge-client/screenshots/2026-09-19_17.27.10.png"
-      ]
+      "assertions": 0,
+      "screenshot": "carrier-clients-v1/26.2-neoforge-client/screenshots/2026-09-19_21.03.48.png",
+      "log": "carrier-clients-v1/26.2-neoforge-client/run.log"
     }
   ],
   "packaged_fabric": [
@@ -243,166 +202,194 @@
       "minecraft": "1.21.1",
       "passed": true,
       "exit_code": 0,
-      "jar_sha256": "a789b5825783f8fd0dde017d3a0ad4bd1db6e14489a436c0deef976469c715cd",
+      "jar_sha256": "3c13b91c7429d98883daaf6a3c2e3a1c9681554db43506891057be38d34e5245",
       "mods": [
         "keep-my-sword-1.1.0-dev+1.21.1-fabric.jar",
         "rinlib-1.0.2+1.21.1-fabric.jar"
       ],
-      "log": "packaged-final/1.21.1/run.log"
+      "log": "carrier-packaged-v1/1.21.1/run.log"
     },
     {
       "minecraft": "26.1.2",
       "passed": true,
       "exit_code": 0,
-      "jar_sha256": "562bda88ab27d4b1f2dc8fb409a82c5e744a64d87c8ed8c07a7e91dce4ef2f93",
+      "jar_sha256": "8e2ef05778942f66d116dc1feb141c14d488ec198bceeb88ba860161a66b676c",
       "mods": [
         "keep-my-sword-1.1.0-dev+26.1.2-fabric.jar",
         "rinlib-1.0.2+26.1.2-fabric.jar"
       ],
-      "log": "packaged-final/26.1.2/run.log"
+      "log": "carrier-packaged-v1/26.1.2/run.log"
     },
     {
       "minecraft": "26.2",
       "passed": true,
       "exit_code": 0,
-      "jar_sha256": "e585641cb3ba18956eb2d03f025858969326873987cd76035086065888f701a1",
+      "jar_sha256": "90010b93dbed364b6589c1e863c3d31077ba1695a48f16b56997d1684fa6f9a6",
       "mods": [
         "rinlib-1.0.2+26.2-fabric.jar",
         "keep-my-sword-1.1.0-dev+26.2-fabric.jar"
       ],
-      "log": "packaged-final/26.2/run.log"
+      "log": "carrier-packaged-v1/26.2/run.log"
     }
   ],
   "unit_tests": [
     {
-      "file": "build/profiles/26.1.2/neoforge/test-results/test/TEST-dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest.xml",
-      "tests": 1
+      "minecraft": "26.1.2",
+      "suite": "dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
     },
     {
-      "file": "build/profiles/26.1.2/neoforge/test-results/test/TEST-dev.rinchan.keepmysword.client.BrokenVisualStyleTest.xml",
-      "tests": 1
+      "minecraft": "26.1.2",
+      "suite": "dev.rinchan.keepmysword.client.BrokenVisualStyleTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
     },
     {
-      "file": "build/profiles/26.2/neoforge/test-results/test/TEST-dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest.xml",
-      "tests": 1
+      "minecraft": "26.2",
+      "suite": "dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
     },
     {
-      "file": "build/profiles/26.2/neoforge/test-results/test/TEST-dev.rinchan.keepmysword.client.BrokenVisualStyleTest.xml",
-      "tests": 1
+      "minecraft": "26.2",
+      "suite": "dev.rinchan.keepmysword.client.BrokenVisualStyleTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
     },
     {
-      "file": "build/profiles/1.21.1/neoforge/test-results/test/TEST-dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest.xml",
-      "tests": 1
+      "minecraft": "1.21.1",
+      "suite": "dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
     },
     {
-      "file": "build/profiles/1.21.1/neoforge/test-results/test/TEST-dev.rinchan.keepmysword.client.BrokenVisualStyleTest.xml",
-      "tests": 1
+      "minecraft": "1.21.1",
+      "suite": "dev.rinchan.keepmysword.client.BrokenVisualStyleTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
     }
   ],
   "artifacts": [
     {
       "minecraft": "1.21.1",
       "loader": "fabric",
-      "file": "build/releases/keep-my-sword-1.1.0-dev+1.21.1-fabric.jar",
-      "sha256": "a789b5825783f8fd0dde017d3a0ad4bd1db6e14489a436c0deef976469c715cd",
-      "sha512": "f3ea99111329399d2b553869254caa866491e4b65e135421f2caf3c5345e0af75918e5214904dbca6b4767d9194934f776a65d54193ce1ef9ccaf03282bad4d4"
+      "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0-dev+1.21.1-fabric.jar",
+      "sha256": "3c13b91c7429d98883daaf6a3c2e3a1c9681554db43506891057be38d34e5245",
+      "sha512": "fc34b721d47ef6a644599a73a71dd5771e45213ae81e83932d0e57279e8b61541b508f939a918378bda018ba2faf02ee7b9317ebae4ce71e418eef24a2f1fb8f"
     },
     {
       "minecraft": "1.21.1",
       "loader": "neoforge",
-      "file": "build/releases/keep-my-sword-1.1.0-dev+1.21.1-neoforge.jar",
-      "sha256": "ff1d251e8ccd199d4cdd60c8b72c1fad3013de6588ee2bad6ceee364982d4d80",
-      "sha512": "f8fa9189ac5654e0d61ffbec32854bb063c05342b4c910b9b8efa356b34eaa0b79fe062bbbb77e2643ffb8c90477bf2e5f4dd695113ba7575a74d788cabdbe1c"
+      "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0-dev+1.21.1-neoforge.jar",
+      "sha256": "c3bd553a46f3697036bc45baa3d12231a0115f47b88c3f35381b1451669ad6ab",
+      "sha512": "7137e8190fd59c57411feeb07a0f6c5165b8078ee4402efa8a3d18138926e0c97199dec567cd87e001437348af8b4708ea7bae128373975be7dc053cf81709b3"
     },
     {
       "minecraft": "26.1.2",
       "loader": "fabric",
-      "file": "build/releases/keep-my-sword-1.1.0-dev+26.1.2-fabric.jar",
-      "sha256": "562bda88ab27d4b1f2dc8fb409a82c5e744a64d87c8ed8c07a7e91dce4ef2f93",
-      "sha512": "7ec9ed2fc1896bd1c1e09feeef3f4ee567caa78746cb03541abb100aed894fd582c53fe69beab99ded8174168e5e23e74a06dcc0b95ba8594ccbd9c94186afbb"
+      "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0-dev+26.1.2-fabric.jar",
+      "sha256": "8e2ef05778942f66d116dc1feb141c14d488ec198bceeb88ba860161a66b676c",
+      "sha512": "0b9eb4fd7624f43178d8d0b2fbac93c6dace295731809bbbbda6d5b1c5821d26639c84db20381fa7ca3c40f2bd0b6a3e88442e70837f8953bdf0079f4e5dfba3"
     },
     {
       "minecraft": "26.1.2",
       "loader": "neoforge",
-      "file": "build/releases/keep-my-sword-1.1.0-dev+26.1.2-neoforge.jar",
-      "sha256": "c65cb789eb38656431ab4e1d552a84c872c75b498ad02ab502c89d66a306797b",
-      "sha512": "d15e3b97d62f7b5664994aeeb4979d5e59e6e1a29c8aca1836aa68d3db29926712ddf98e8d3f2d55d60bff305364a397d252c2a80440bb198fc3930754d74366"
+      "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0-dev+26.1.2-neoforge.jar",
+      "sha256": "cb0b2b627d41a4990c69cc1e0b95fca18e0cf212ad914b87090a9898c5ab01f3",
+      "sha512": "9be1f6697457b205b51818b0afc53e686ca08f098be06a3422ca4bc6736e89fee80b524ac0f95b30353070d7c48bed11c3d35e83d82086fc3104938de8e32523"
     },
     {
       "minecraft": "26.2",
       "loader": "fabric",
-      "file": "build/releases/keep-my-sword-1.1.0-dev+26.2-fabric.jar",
-      "sha256": "e585641cb3ba18956eb2d03f025858969326873987cd76035086065888f701a1",
-      "sha512": "16afc8388c72d017398dd6ce27e0ed70e60f646ffe099c8deb46057a5e7158c868b2c1ee01371d6451c38f20cb6c0ee3b3290de39f546bb019e85dd873f56517"
+      "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0-dev+26.2-fabric.jar",
+      "sha256": "90010b93dbed364b6589c1e863c3d31077ba1695a48f16b56997d1684fa6f9a6",
+      "sha512": "35df6c2ecbbc6f4001b51c558a38f7149b8d6995c6ee017dda1c98cd81449cdfb81965bbd7aea0870f1ee734b8f16a0e734a577471f559369546c39b5dc1fa5d"
     },
     {
       "minecraft": "26.2",
       "loader": "neoforge",
-      "file": "build/releases/keep-my-sword-1.1.0-dev+26.2-neoforge.jar",
-      "sha256": "9173ea272c10f6fa3324c0bd9605bc80386ef1edc23996f08d4d5a92edbdd59e",
-      "sha512": "e3b6c7b25f6fd8b4cdd8b4917b56b730848ab343fba26ddc95bb3213c1a4eceb6e8bddda865794ff36c0562eb76772aa8e55502a9f78b084a4d5be05c780b1b2"
+      "file": "/Users/rin/Documents/ChatGPT/rin 2/keep-my-sword-sealed-prototype/build/releases/keep-my-sword-1.1.0-dev+26.2-neoforge.jar",
+      "sha256": "3ed9b2796b8866d569a7a727feb44f178dab2edcceb56ec1c5821daef4b79acf",
+      "sha512": "707a438aecb0876a6799a7566fa6aef1c08cd106385a772fc867444c57313c84e490fe27319e92c9251928451b6c49b5fc2d479c66a134b3646d12f0401b2ed2"
     }
   ],
+  "source_fingerprint": "1bd32c24ebc7e2f5ae4de0dd8772b5c6c78f9ed45f51530e187e91c4cb2e52a2",
   "source_sha256": {
-    "common/src/main/resources/icon.png": "8ab96b9a928bfd67bfe9341941df316d1bbb6c988f1126e90bbb2731e3f8a3bd",
-    "common/src/main/resources/keep_my_sword.client.mixins.json": "31459766fad6fcfed8a2cd9e1390b21e0c7e3a6299ec4073f00cfb57d7d3f8ea",
-    "common/src/main/resources/keep_my_sword.mixins.json": "7c821e80bd4db6201ef035dd4c4176a19bb31645c0068165af6f0d43c6219154",
-    "common/src/main/resources/data/keep_my_sword/tags/item/excluded.json": "0c615d27d6e7932dab70603593b0d4b2098f06e605c17c7e8549a677ec84ef94",
-    "common/src/main/resources/assets/keep_my_sword/lang/zh_cn.json": "a751f65670ddc2356f51f9e4e6efb23c3bd423f1f6cc1ed4055446bb90285aa8",
-    "common/src/main/resources/assets/keep_my_sword/lang/en_us.json": "5454f7fb39e9d2846bb57e6754dc53cfbf766ff3adf957b4b192755722fe9ae6",
-    "common/src/main/java/dev/rinchan/keepmysword/KeepMySword.java": "ead4894b016b11b15ebe28e3017f6a5b99a9fe0c2c71cc4d909ba9925ad46b96",
-    "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneRepairMixin.java": "ea4c4cc0a91d4361b3fae6d584a803245c9a92a1c2490daff2e28330c11c6d35",
-    "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneExperienceMixin.java": "0e948d92d613dd5f3ea9685ec484154534bed3094dd17ca591db359502beaa5c",
-    "common/src/main/java/dev/rinchan/keepmysword/mixin/DurabilityMutationMixin.java": "988cf88d22568af6c7c71b0e30899e9a53eb36c2ade2e506aadd7b2c17a95e4e",
-    "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneInputMixin.java": "176a17e7f6309d03b243a2bab2386a6d50f6a3c6e1f2b1e166ba47a057941115",
-    "common/src/main/java/dev/rinchan/keepmysword/item/SealedRegistry.java": "9b0cc2665a7ee76e25d7f42c6d356c7ea396fdc4cc1b6443f6897cedc74785f0",
-    "common/src/main/java/dev/rinchan/keepmysword/item/SnapshotScope.java": "63e47a93e084d7b85009d37c77ebff30f65512ad0ccb2de3f7071f6f452d7e94",
-    "common/src/main/java/dev/rinchan/keepmysword/item/StorageBoundary.java": "04186ecb76cae1f12ca7c319eee33132a342ebf4102fd3d179416e4c650bd425",
-    "common/src/main/java/dev/rinchan/keepmysword/item/ShellPersistence.java": "10c07072f869d6937e18290a0aa495d096a34606b6326de3207d9299c2bb98a3",
-    "common/src/main/java/dev/rinchan/keepmysword/item/ReplaceableStack.java": "e1f2812ffc9b6bf301a700e887a51ddebc2eb55c3d1cb88ac3909ee02c33de05",
-    "common/src/main/java/dev/rinchan/keepmysword/item/SealedItems.java": "c86c6f16ff6800162eed6324382528f68167b07428d9e0157a200b4f9ee3f552",
-    "common/src/main/java/dev/rinchan/keepmysword/item/OriginalPayload.java": "6285b2248c992e811284252cf8b6150eb3b0112ac277be2ff4c822f503c15b2c",
-    "common/src/main/java/dev/rinchan/keepmysword/client/BrokenVisualStyle.java": "0c331fc477ed7ca1969a858054d59cffdaec87c6d2879f400d5a9ea4ae93f4ce",
-    "adapters/1.21.1-fabric/dev/rinchan/keepmysword/fabric/mixin/FabricItemStackDamageMixin.java": "d41e8539ed8a48f9823d202dbc221e0c6cc8e9f7186954bba988f6e5c2702607",
-    "adapters/26-fabric/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java": "fbf5c23b5d6211ff8d79c1bd9608e0d8aa76b9209f58e2d84b5444f392a95e93",
-    "adapters/26-fabric/dev/rinchan/keepmysword/fabric/mixin/FabricItemStackDamageMixin.java": "a129013179bc899e644f09f95383f21c0e7848f90112a8bd4aecf6ea6b66b3b7",
-    "adapters/26-resources/keep_my_sword.templates.mixins.json": "e34740aeeaf4ccb8901939eda7b5fd1d5d5de71c13213e5b12bbba4f6e963ce4",
-    "adapters/1.21.1-neoforge/dev/rinchan/keepmysword/neoforge/mixin/NeoForgeItemStackDamageMixin.java": "860088e502abe8800c0f804f815e7e29f84969935024ff0ffa9133481d1fb9a0",
-    "adapters/26-neoforge-resources/keep_my_sword.neoforge_resources.mixins.json": "8b577992e5a2ac5cf93b799c9b86dece2c4646fd12b779b5952af0fc94de7f21",
-    "adapters/26/dev/rinchan/keepmysword/VersionTags.java": "b43bfd701cd96ab6b21efd10cbea9c8f44fe8456a6f14c1cdabde2c14f180073",
-    "adapters/26/dev/rinchan/keepmysword/mixin/StorageCodecMixin.java": "55d53143f905be31dab1abd7e4e4b9603bbfb4f9677ef7b0599b30272bdcb6d6",
-    "adapters/26/dev/rinchan/keepmysword/mixin/CraftingRepairMixin.java": "b3b00b5c984bf75b18a487251964ad6407b3da49277dc5461488ebe49dd12fdc",
-    "adapters/26/dev/rinchan/keepmysword/mixin/StackReplacementMixin.java": "ec697ebcf32f5657c146faac41b564705f8e52c50c863e7b0005447c1f1f1298",
-    "adapters/26/dev/rinchan/keepmysword/mixin/TemplateStorageMixin.java": "63fd8f4783b2b5cf02587fc7709fc9f242854bf8b0e3f06e730eefee65cca622",
-    "adapters/26/dev/rinchan/keepmysword/item/VersionSupport.java": "a427bb0bd8fa66e342871a08495ef525b8f16d469463b6848232f6438b8db6b2",
-    "adapters/26/dev/rinchan/keepmysword/item/TemplateContext.java": "a6f7b7cc5bead204f2a4360f10e5ea655d2ded6e79032db58063cc5ac536102f",
-    "adapters/26/dev/rinchan/keepmysword/client/mixin/SealedTooltipMixin.java": "e9c1f3054da31d3f1962930922a9e62a6b9d5f9d666cb5010ba70c9bbb90a14a",
-    "adapters/26/dev/rinchan/keepmysword/client/mixin/SealedItemRendererMixin.java": "d6d7de19f32c9d77f1f79930f38a7fbbbef918ab2134b969cecaab2d6df09d4a",
-    "adapters/26/dev/rinchan/keepmysword/client/mixin/GuiGraphicsMixin.java": "8a4e958e4332affd5de03530db55ce65d33d59d8dc5688cc58217e037e8bc12b",
-    "adapters/26-neoforge/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java": "755c278635488a8d656b153d3f0bccdfc05c8b36030e938311ccf8eeb5e2a932",
-    "adapters/26-neoforge/dev/rinchan/keepmysword/neoforge/mixin/NeoForgeItemStackDamageMixin.java": "e8f441af41e2ca073ee8e339793ea382affdc6f0c627cddcc656b70a36d5a413",
-    "adapters/26-neoforge/dev/rinchan/keepmysword/neoforge/mixin/ItemResourceStorageMixin.java": "027ea9d98cfd09b794f5441a9da7dd86fec4b7d7953d74a2e8fd9e93b453a138",
     "adapters/1.21.1/dev/rinchan/keepmysword/VersionTags.java": "5d503f375ed118faf0ce98428dc84bc9747ff72c5969397e2ecc352855b9b852",
-    "adapters/1.21.1/dev/rinchan/keepmysword/mixin/StorageCodecMixin.java": "35073370ccb408e1f2ad27304959d2fbf5e9ce52a92f7de62910357b0d117333",
-    "adapters/1.21.1/dev/rinchan/keepmysword/mixin/CraftingRepairMixin.java": "876bf0ae47502213b350c59901bde9b312fe77bf4e4473694b145f6bdb5a46f9",
-    "adapters/1.21.1/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java": "e7ff69beebd9e8847e4eb22c02d44a6fc8cc50d6c1c0ab1b458be1bacbd489c1",
-    "adapters/1.21.1/dev/rinchan/keepmysword/mixin/StackReplacementMixin.java": "e37b9ce24ef49b5e9d11b9a62f3ec74c822556be059d12f4ef912de3fe2fba82",
-    "adapters/1.21.1/dev/rinchan/keepmysword/item/VersionSupport.java": "bbbfbf3f90fda44f445a14297d5a249d841fc49eb640cda620f828ea1d944193",
-    "adapters/1.21.1/dev/rinchan/keepmysword/client/mixin/SealedTooltipMixin.java": "e9c1f3054da31d3f1962930922a9e62a6b9d5f9d666cb5010ba70c9bbb90a14a",
-    "adapters/1.21.1/dev/rinchan/keepmysword/client/mixin/SealedItemRendererMixin.java": "5a27803c0bbf8aac5d2bbda00f95093d4d282c3839696a602d1defd78b4443b5",
     "adapters/1.21.1/dev/rinchan/keepmysword/client/mixin/GuiGraphicsMixin.java": "c73c071dcb16e39ddab55bef6386bac4345004f6a78f87c0e6d3311e5b806b79",
-    "fabric/src/main/resources/fabric.mod.json": "669573f9afa3ce1b5029bdcb8afcc45d269f1390ec3a5b7d0ace552478bca842",
-    "fabric/src/main/resources/keep_my_sword.fabric.mixins.json": "531d2b653eee507959a781f98af160878a7420d79de2867d11f500b831ee7ed7",
-    "fabric/src/main/java/dev/rinchan/keepmysword/fabric/OptionalTransferMixins.java": "480e33644d2c24156a0528a22064584a3b750f76c05f580064a69dc948fc69d8",
-    "fabric/src/main/java/dev/rinchan/keepmysword/fabric/KeepMySwordFabric.java": "ac88e50c2a8f56e0c357e1e13576c81394d17421294a6dba38005666ba2e21c0",
-    "fabric/src/main/java/dev/rinchan/keepmysword/fabric/mixin/TransferStorageMixin.java": "ddcf6ab04710c627916f6d03536f5348ac82799654ec7a5a025bf7825d3bad69",
+    "adapters/1.21.1/dev/rinchan/keepmysword/client/mixin/SealedItemRendererMixin.java": "5a27803c0bbf8aac5d2bbda00f95093d4d282c3839696a602d1defd78b4443b5",
+    "adapters/1.21.1/dev/rinchan/keepmysword/client/mixin/SealedTooltipMixin.java": "0f5480ab4643f93db16d5a0c5a8559ee0c6d7032002de9bd37d457490d2080a6",
+    "adapters/1.21.1/dev/rinchan/keepmysword/item/VersionSupport.java": "01228d3dd1668b63596d1722487f1eeb91f3e675de008240eaac5274e21c966a",
+    "adapters/1.21.1/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java": "57f5cf6e6f66ad6f8be064a587a146c872fac3d2603d3a2383f45ff07bc83850",
+    "adapters/1.21.1/dev/rinchan/keepmysword/mixin/CraftingRepairMixin.java": "72fc1bdd06f4bf6a96feaa321957161362aefb6df4faf2440879b06808fae3bd",
+    "adapters/1.21.1/dev/rinchan/keepmysword/mixin/StackReplacementMixin.java": "e37b9ce24ef49b5e9d11b9a62f3ec74c822556be059d12f4ef912de3fe2fba82",
+    "adapters/1.21.1-fabric/dev/rinchan/keepmysword/fabric/mixin/FabricItemStackDamageMixin.java": "525fedac6400127f5222a3a6515e2391701ade18fa1a1f0ac4aca5178a6c4179",
+    "adapters/1.21.1-neoforge/dev/rinchan/keepmysword/neoforge/mixin/NeoForgeItemStackDamageMixin.java": "630b3d85303844a1e2936fe621b320148921629507fc9e80d91f15cbb62f7a0e",
+    "adapters/26/dev/rinchan/keepmysword/VersionTags.java": "b43bfd701cd96ab6b21efd10cbea9c8f44fe8456a6f14c1cdabde2c14f180073",
+    "adapters/26/dev/rinchan/keepmysword/client/mixin/GuiGraphicsMixin.java": "8a4e958e4332affd5de03530db55ce65d33d59d8dc5688cc58217e037e8bc12b",
+    "adapters/26/dev/rinchan/keepmysword/client/mixin/SealedItemRendererMixin.java": "d6d7de19f32c9d77f1f79930f38a7fbbbef918ab2134b969cecaab2d6df09d4a",
+    "adapters/26/dev/rinchan/keepmysword/client/mixin/SealedTooltipMixin.java": "0f5480ab4643f93db16d5a0c5a8559ee0c6d7032002de9bd37d457490d2080a6",
+    "adapters/26/dev/rinchan/keepmysword/item/VersionSupport.java": "adeab67739adc900a62acaf862ab6bbff1201ddd584c5cbd8fc7b7b500db822a",
+    "adapters/26/dev/rinchan/keepmysword/mixin/CraftingRepairMixin.java": "9ae8c0765fb57d7fa82efaf228949dbd22e8f5ad646bf3d03a28561b016686d6",
+    "adapters/26/dev/rinchan/keepmysword/mixin/StackReplacementMixin.java": "ec697ebcf32f5657c146faac41b564705f8e52c50c863e7b0005447c1f1f1298",
+    "adapters/26-fabric/dev/rinchan/keepmysword/fabric/mixin/FabricItemStackDamageMixin.java": "2d8b2f2169b52824ea524e5ffa6e4c23ebb176d0145e2e9797ceea1ff6a5f488",
+    "adapters/26-fabric/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java": "fc33a7114bf4b32e26d75a15da974275c15e8ea96496cf37cc54331989408380",
+    "adapters/26-neoforge/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java": "e61904e75cdc079d068b789f3153d56b4c203cacbe11fca035773ce411ab8ce7",
+    "adapters/26-neoforge/dev/rinchan/keepmysword/neoforge/mixin/NeoForgeItemStackDamageMixin.java": "118f25e0be8d532b020e113c2b5c7d91c697aeead9bfae2da6e7c8a0c178e355",
+    "build.gradle": "4d525ec3fec5ea1f7d1ae77947624600695c860b5706a71ad67608bbc2e0b4f6",
+    "common/src/main/java/dev/rinchan/keepmysword/KeepMySword.java": "ead4894b016b11b15ebe28e3017f6a5b99a9fe0c2c71cc4d909ba9925ad46b96",
+    "common/src/main/java/dev/rinchan/keepmysword/client/BrokenVisualStyle.java": "0c331fc477ed7ca1969a858054d59cffdaec87c6d2879f400d5a9ea4ae93f4ce",
+    "common/src/main/java/dev/rinchan/keepmysword/client/mixin/ClientContextMixin.java": "6852ea0570f577693f73dfda451f49bb107d9b453c276f8e8aeee270d1438918",
+    "common/src/main/java/dev/rinchan/keepmysword/item/CarrierSnapshot.java": "c09a4f3b8f7627a29b3589932a5fc5d9d15484b9e2d1bbd0c59aba028e69d87e",
+    "common/src/main/java/dev/rinchan/keepmysword/item/EquipmentRefresh.java": "e0daab638723b4925d2b8e3d94fab300a9554bf85238d7deaccf2ec0bff86861",
+    "common/src/main/java/dev/rinchan/keepmysword/item/RegistryContext.java": "6e2385ebba8fe0fdbdb3e34fd7f80d532d3186d03e3da9e484284aac6f35c23b",
+    "common/src/main/java/dev/rinchan/keepmysword/item/ReplaceableStack.java": "e1f2812ffc9b6bf301a700e887a51ddebc2eb55c3d1cb88ac3909ee02c33de05",
+    "common/src/main/java/dev/rinchan/keepmysword/item/SealedItems.java": "35abe75f10562e3fff697fdd6014159bbd761bedde8c52d51b33392ee89fa0a5",
+    "common/src/main/java/dev/rinchan/keepmysword/item/SnapshotCache.java": "5c1a94b4cb28c463b206cb90c5cef85abcee92c84957cd21947bcfc2718a0981",
+    "common/src/main/java/dev/rinchan/keepmysword/item/SnapshotScope.java": "63e47a93e084d7b85009d37c77ebff30f65512ad0ccb2de3f7071f6f452d7e94",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/CarrierDataProtectionMixin.java": "57f6330fd7f681d1b30b8688f112168f42d7561ac11e092eb8250f5ce3136ca3",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/DurabilityMutationMixin.java": "988cf88d22568af6c7c71b0e30899e9a53eb36c2ade2e506aadd7b2c17a95e4e",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/EquipmentRefreshMixin.java": "182ef473ea32675ff640c7e564ce0ccc6e25a810718ad511855475c08928ce23",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/EquippedBreakMixin.java": "13e003ddc889cf5f00e5722f7ff9e137eee751523dfeba634e4e11283fe4a81e",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneExperienceMixin.java": "8ac3e11f2945e81e68a7828576eaaad446799795b8de8d381fd4f1159ac34a08",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneInputMixin.java": "a12704055e4ef243b9001287e58db06615938f135cc22b894f8cd6adcece3fc2",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneRepairMixin.java": "241f29318b2f534027929f13ae5de188d36005b61692db019f04dc7bdc5c96a8",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/IngredientProtectionMixin.java": "3b2f9d594f02e39d0c8d33c5240d9503693428fd773fc5cf74f5dfab09206aef",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/RecipeProtectionMixin.java": "98439876cb9478f837878d23e3f17c4cd76b7b7a9cc70bf6f337e5f8eb47347d",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/ServerContextMixin.java": "863d905c9cdb88f4ac3fbf6ccab31baec852703a112d0726900b8232d0536164",
+    "common/src/main/java/dev/rinchan/keepmysword/mixin/SnapshotCacheMixin.java": "d7705d6dd0a60931d08564298e3b65949857b8f25766976cc52dad1fd108dd97",
+    "common/src/main/resources/assets/keep_my_sword/lang/en_us.json": "5eb05360a7fce4cf0db57d168bef5da0ae6535efb6c57a6e64fc1be7aecbc327",
+    "common/src/main/resources/assets/keep_my_sword/lang/zh_cn.json": "3c9912f2de17b647de8b764e26426caec85b0a709f4e31801212c28413114154",
+    "common/src/main/resources/data/keep_my_sword/tags/item/excluded.json": "0c615d27d6e7932dab70603593b0d4b2098f06e605c17c7e8549a677ec84ef94",
+    "common/src/main/resources/icon.png": "8ab96b9a928bfd67bfe9341941df316d1bbb6c988f1126e90bbb2731e3f8a3bd",
+    "common/src/main/resources/keep_my_sword.client.mixins.json": "6e3007988ac2d7f35e68cd2a4470e01d9dfb99f2be9ca7e0c5c50816825b7671",
+    "common/src/main/resources/keep_my_sword.mixins.json": "0bc7a17f58de6c6fd0df28c27db66d2948b7bcdab1717f6c37c288622d2db889",
+    "fabric/build.gradle": "88d013c14c1178f4c058c3a620895b05e0ff89c2df0cfa907b5a4d4557660c49",
+    "fabric/src/main/resources/fabric.mod.json": "53acd4d2994fea4c968d410623dc717b707c6f28ef79702a8d6d963f06be5045",
+    "fabric/src/main/resources/keep_my_sword.fabric.mixins.json": "ad81fc73310a9ee55ae56f7698399d79629e01c7b7241e5ec59949ca6bf65e0f",
+    "gradle.properties": "d7c8d6e345f50ed2be505d4af938742380a2a34973714873e41656892dbd1874",
+    "neoforge/build.gradle": "f4744d6ea585b543192ac22f37c63c672fec1dfdd9fb193ac3533b4c3a2de7a1",
+    "neoforge/src/main/java/dev/rinchan/keepmysword/neoforge/KeepMySwordNeoForge.java": "291d65ad99c3577ad9a8e8e8e150fffd07168ca27023dcf4e30badfc22459dd5",
     "neoforge/src/main/resources/keep_my_sword.neoforge.mixins.json": "bbe760c5fe4ae8dcf61cc351be7a96de95af8e4ef67f198da860024536ea9514",
-    "neoforge/src/main/java/dev/rinchan/keepmysword/neoforge/KeepMySwordNeoForge.java": "cbcda4bb0dc8f70829ff6a9f209a455f452f525525be6f77818b93221fa245bf",
-    "neoforge/src/main/templates/META-INF/neoforge.mods.toml": "9100e9751f84d70c90c241ace87be8f4866ac92611161e4729d98bca4ad9d74b"
+    "neoforge/src/main/templates/META-INF/neoforge.mods.toml": "9100e9751f84d70c90c241ace87be8f4866ac92611161e4729d98bca4ad9d74b",
+    "profiles.json": "d50e41b1835094c128ee45829391eb279a431b960ab5cd71a0b0a967d5eb3146"
   },
   "limitations": [
-    "Custom serializers bypassing native ItemStack/ItemStackTemplate and covered platform resource codecs need a concrete compatibility adapter.",
-    "Third-party repair systems need their own explicit snapshot integration.",
-    "Client checks load real worlds and render controlled fixtures; they are not a manual gameplay playthrough."
+    "Local development validation; no publication or player-world migration.",
+    "Uninstall retains native carriers and snapshots; reinstall enables original rendering and repair.",
+    "Unsupported original encoding cancels destruction and retains the original instead of deleting it.",
+    "Vanilla repair loss rules still apply; arbitrary third-party metadata-discarding systems are not covered."
+  ],
+  "notes": [
+    "A deliberately oversized native NBT string logs an expected encoding error in the save-phase failure check.",
+    "Server matrix preceded formatting, removal of unused helpers and an outer encoding-exception guard. The final source compiled on all targets, ran all six clients, and was clean-built; final packaged Fabric JAR hashes were verified.",
+    "Clean release builds remove stale classes left by prior development source layouts."
   ]
 }

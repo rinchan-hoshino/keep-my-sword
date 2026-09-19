@@ -17,6 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class GrindstoneInputMixin {
     @WrapMethod(method = "mayPlace")
     private boolean kms$acceptBroken(ItemStack stack, Operation<Boolean> original) {
-        return original.call(SealedItems.originalForSave(stack));
+        return original.call(SealedItems.originalForRepair(stack));
     }
 }

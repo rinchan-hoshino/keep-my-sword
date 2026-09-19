@@ -21,6 +21,6 @@ public abstract class CraftingRepairMixin {
                                     "Lnet/minecraft/world/item/crafting/CraftingInput;getItem(I)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack kms$repairSnapshot(
             CraftingInput input, int index, Operation<ItemStack> original) {
-        return SealedItems.originalForSave(original.call(input, index));
+        return SealedItems.originalForRepair(original.call(input, index));
     }
 }

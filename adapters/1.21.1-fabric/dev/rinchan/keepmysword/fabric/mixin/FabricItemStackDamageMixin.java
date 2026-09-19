@@ -38,8 +38,8 @@ public abstract class FabricItemStackDamageMixin {
             net.minecraft.server.level.ServerPlayer player,
             java.util.function.Consumer<net.minecraft.world.item.Item> onBreak,
             CallbackInfo ci) {
-        if (SealedItems.isSealed((ItemStack) (Object) this)
-                || SealedItems.sealInPlace((ItemStack) (Object) this, level.registryAccess())) {
+        SealedItems.sealInPlace((ItemStack) (Object) this, level.registryAccess());
+        if (dev.rinchan.keepmysword.KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
     }

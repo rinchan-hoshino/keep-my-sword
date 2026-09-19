@@ -64,6 +64,24 @@ for mc in a.minecraft or profiles:
                 (tags / "excluded.json").write_text(
                     json.dumps({"values": ["minecraft:iron_sword"]})
                 )
+            if phase == "save":
+                recipes = instance / "world/datapacks/kms-test/data/kms_probe/recipe"
+                recipes.mkdir(parents=True, exist_ok=True)
+                ingredient = (
+                    {"item": "minecraft:recovery_compass"}
+                    if mc == "1.21.1"
+                    else "minecraft:recovery_compass"
+                )
+                (recipes / "carrier_consumption.json").write_text(
+                    json.dumps(
+                        {
+                            "type": "minecraft:crafting_shapeless",
+                            "category": "misc",
+                            "ingredients": [ingredient],
+                            "result": {"id": "minecraft:diamond", "count": 1},
+                        }
+                    )
+                )
             marker = instance / (
                 {
                     "save": "prototype-saved.pass",
