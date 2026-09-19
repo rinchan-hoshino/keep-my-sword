@@ -12,6 +12,7 @@ plugins {
 }
 
 rootProject.name = 'keep-my-sword'
-include 'fabric'
-include 'neoforge'
-include 'policy'
+def selectedLoader = providers.gradleProperty('loader').getOrElse('all')
+if (!(selectedLoader in ['all', 'fabric', 'neoforge'])) throw new GradleException("Unsupported loader: ${selectedLoader}")
+if (selectedLoader in ['all', 'fabric']) include 'fabric'
+if (selectedLoader in ['all', 'neoforge']) include 'neoforge'

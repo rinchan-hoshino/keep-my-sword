@@ -4,7 +4,8 @@
   "package": "dev.rinchan.keepmysword.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "VersionItemStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

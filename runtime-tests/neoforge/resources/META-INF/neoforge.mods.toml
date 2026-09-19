@@ -1,0 +1,7 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="GPL-3.0-or-later"
+[[mods]]
+modId="kms_probe"
+version="1.0.0"
+displayName="Keep My Sword Runtime Probe"

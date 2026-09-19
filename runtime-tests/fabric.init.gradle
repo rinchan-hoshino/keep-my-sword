@@ -1,0 +1,29 @@
+allprojects {
+    afterEvaluate { p ->
+        if (p.plugins.hasPlugin('fabric-loom') || p.plugins.hasPlugin('net.fabricmc.fabric-loom')) {
+            def base = new File(System.getProperty('probe.sources'))
+            p.dependencies.add(p.rootProject.minecraft_version.startsWith('26.') ? 'implementation' : 'modImplementation',
+                    "net.fabricmc.fabric-api:fabric-api:${System.getProperty('probe.fabricApi')}")
+            def probe = p.sourceSets.create('runtimeProbe') {
+                java.srcDirs new File(base, 'common/java'), new File(base, 'fabric/java'), new File(base, 'players-modern/java')
+                java.srcDir new File(base, p.rootProject.minecraft_version == '26.2' ? 'client-26.2/java' : 'client-modern/java')
+                resources.srcDir new File(base, 'fabric/resources')
+                compileClasspath += p.sourceSets.main.output + p.sourceSets.main.compileClasspath
+                runtimeClasspath += output + p.sourceSets.main.output + p.sourceSets.main.runtimeClasspath
+            }
+            p.loom.mods {
+                keep_my_sword { sourceSet(p.sourceSets.main) }
+                kms_probe { sourceSet(probe) }
+            }
+            ['server', 'client'].each { side ->
+                p.tasks.named('run' + side.capitalize()).configure {
+                    doFirst { workingDir = p.file(System.getProperty('probe.instance')) }
+                }
+                p.loom.runs.named(side) {
+                    source(probe)
+                    runDir(p.projectDir.toPath().relativize(p.file(System.getProperty('probe.instance')).toPath()).toString())
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "kms_probe",
+  "version": "1.0.0",
+  "name": "Keep My Sword Runtime Probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.rinchan.rinlibprobe.ProbeEntrypoint"
+    ],
+    "client": [
+      "dev.rinchan.rinlibprobe.ClientEntrypoint"
+    ]
+  }
+}

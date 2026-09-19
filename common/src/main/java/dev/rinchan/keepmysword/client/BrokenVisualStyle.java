@@ -5,6 +5,5 @@ public final class BrokenVisualStyle {
     /** A light warning red that leaves the original icon readable. */
     public static final int SLOT_OVERLAY_ARGB = 0x33FF6B6B;
 
-    private BrokenVisualStyle() {
-    }
+    private BrokenVisualStyle() {}
 }

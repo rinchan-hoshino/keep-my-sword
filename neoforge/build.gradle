@@ -9,6 +9,8 @@ base {
 }
 
 sourceSets.main.java.srcDir rootProject.file('common/src/main/java')
+sourceSets.main.java.srcDir rootProject.file('adapters/' + rootProject.source_adapter)
+sourceSets.main.java.srcDir rootProject.file('adapters/' + rootProject.source_adapter + '-neoforge')
 sourceSets.main.resources.srcDir rootProject.file('common/src/main/resources')
 sourceSets.test.java.srcDir rootProject.file('common/src/test/java')
 sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessResources) {
@@ -22,7 +24,8 @@ sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessRe
         mod_license            : rootProject.mod_license,
         mod_version            : rootProject.mod_version,
         mod_authors            : rootProject.mod_authors,
-        mod_description        : rootProject.mod_description
+        mod_description        : rootProject.mod_description,
+        icon_property          : rootProject.minecraft_version == '26.2' ? 'iconFile' : 'logoFile'
     ]
     inputs.properties replaceProperties
     filteringCharset = 'UTF-8'
@@ -53,7 +56,7 @@ neoForge {
 neoForge.ideSyncTask tasks.named('generateModMetadata')
 
 dependencies {
-    implementation "dev.rinchan:rinlib-neoforge:${rootProject.rinlib_version}"
+    implementation files(rootProject.file(providers.gradleProperty('rinlibDir').get() + '/rinlib-' + rootProject.rinlib_version + '+' + rootProject.minecraft_version + '-neoforge.jar'))
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

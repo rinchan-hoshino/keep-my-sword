@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.2 — 2026-09-19
+
+- Fix the item-destruction hook on Minecraft 26.1.2 and 26.2.
+- Share gameplay logic across all six supported Minecraft/loader targets, using RinLib 1.0.2 for durability state and clamping.
+- Build Fabric 26.x with the native unobfuscated Loom pipeline.
+- Remove the empty Fabric entrypoint, unnecessary Fabric API runtime dependency, and redundant policy wrapper.
+- Refresh the icon and project description; add exclusion-tag translations.
+- Add actual server checks for breakage, anvil repair, exclusions, excess damage and restored item behavior, plus client startup checks.
+
 ## 1.0.1 — 2026-08-31
 
 - Keeps the same broken-item behavior while routing the destruction boundary through the independently tested policy owner.

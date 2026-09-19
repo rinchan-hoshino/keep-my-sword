@@ -4,15 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import org.junit.jupiter.api.Test;
 
 class DefaultCompatibilityPolicyTest {
     @Test
     void defaultExcludedTagIsEmpty() throws IOException {
-        String json = readResource("/data/keep_my_sword/tags/item/excluded.json").replaceAll("\\s+", "");
+        String json =
+                readResource("/data/keep_my_sword/tags/item/excluded.json").replaceAll("\\s+", "");
         assertTrue(json.contains("\"values\":[]"));
     }
 

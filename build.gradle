@@ -1,17 +1,34 @@
 plugins {
-    id 'fabric-loom' version '1.14.7' apply false
-    id 'net.neoforged.moddev' version '2.0.141' apply false
+    id 'fabric-loom' version '1.14.10' apply false
+    id 'net.neoforged.moddev' version '2.0.143' apply false
 }
 
+def profiles = new groovy.json.JsonSlurper().parse(file('profiles.json'))
+def selected = providers.gradleProperty('minecraft_version').get()
+def target = profiles[selected]
+if (target == null) throw new GradleException("Unsupported Minecraft profile: ${selected}")
+ext.java_version = target.java
+ext.source_adapter = target.adapter
+ext.fabric_api_version = target.fabric
+ext.neo_version = target.neo
+ext.minecraft_version_range = target.range
+ext.neo_version_range = "[${target.neo},)"
+
 subprojects {
+    layout.buildDirectory = rootProject.layout.projectDirectory.dir("build/profiles/${rootProject.minecraft_version}/${project.name}")
     group = rootProject.mod_group_id
-    version = rootProject.mod_version
+    version = "${rootProject.mod_version}+${rootProject.minecraft_version}"
 
     repositories {
         mavenLocal()
         mavenCentral()
         maven { url = 'https://maven.fabricmc.net/' }
         maven { url = 'https://maven.neoforged.net/releases' }
+    }
+
+    tasks.withType(AbstractArchiveTask).configureEach {
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
     }
 
     plugins.withType(JavaPlugin).configureEach {
