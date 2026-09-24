@@ -1,5 +1,8 @@
-# Icon source
+# Current project icon
 
-The icon simplifies the palette of Minecraft Java Edition 1.21.1's vanilla `assets/minecraft/textures/item/diamond_sword.png`. It preserves the original 16×16 pixel silhouette. Cyan remains the blade color; the shadow palette is tinted red. Minecraft artwork belongs to Mojang/Microsoft.
+The current icon is AI-assisted artwork finalized on a native 32 × 32 pixel grid. Generated artwork was used together with pixel-grid linework/reconstruction and limited-palette processing. The final image contains only fully opaque or fully transparent pixels.
 
-`draw_icon.py` produces a 48×48 master and a 400×400 platform export using nearest-neighbor scaling only. No generative imagery or interpolated pixels are used.
+- Native file: `docs/artwork/icon-32.png`
+- Page/platform file: `docs/artwork/icon.png` (512 × 512, exact nearest-neighbor enlargement)
+
+The current artwork was selected by the project owner. Historical drawing scripts and earlier 48-pixel exports describe previous icon revisions, not the current file.
