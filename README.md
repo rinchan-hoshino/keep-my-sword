@@ -12,6 +12,6 @@ Items in the `#keep_my_sword:excluded` item tag are ignored by this mod.
 
 ## Screenshots
 
-![Holding a diamond sword with no durability remaining](https://cdn.modrinth.com/data/pPO0fpz4/images/19a5e5cc31889737b9e131680073323976d9f2c6.png)
+![Holding a diamond sword with no durability remaining](https://cdn.modrinth.com/data/pPO0fpz4/images/e0971797aee78a779a76036dd26df0320808efc2.png)
 
-![Repairing the diamond sword in an anvil](https://cdn.modrinth.com/data/pPO0fpz4/images/a8ccbc01b2984fc7a66f056d0e5397eab365ea6a.png)
+![Repairing the diamond sword in an anvil](https://cdn.modrinth.com/data/pPO0fpz4/images/8b706cf65c468aa224bccbdf6b2e49eab90d7d08.png)
