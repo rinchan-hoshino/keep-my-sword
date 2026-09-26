@@ -20,11 +20,15 @@ public final class SealedItems {
     }
 
     public static ItemStack seal(ItemStack source) {
+        var registries = RegistryContext.current();
+        // Packet decoding and other unscoped work cannot persist a carrier snapshot.
+        // Return before item queries can invoke enchantment hooks during login.
+        if (registries == null) return source;
         if (source.isEmpty()
                 || isSealed(source)
                 || KeepMySword.isExcluded(source)
                 || !dev.rinchan.rinlib.item.DamageState.isBroken(source)) return source;
-        var payload = CarrierSnapshot.encode(source, RegistryContext.current());
+        var payload = CarrierSnapshot.encode(source, registries);
         if (payload.result().isEmpty()) return source;
         return SnapshotScope.call(
                 () -> {

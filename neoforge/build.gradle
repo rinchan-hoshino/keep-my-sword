@@ -13,6 +13,8 @@ sourceSets.main.java.srcDir rootProject.file('adapters/' + rootProject.source_ad
 sourceSets.main.java.srcDir rootProject.file('adapters/' + rootProject.source_adapter + '-neoforge')
 sourceSets.main.resources.srcDir rootProject.file('common/src/main/resources')
 sourceSets.test.java.srcDir rootProject.file('common/src/test/java')
+sourceSets.test.compileClasspath += sourceSets.main.compileClasspath
+sourceSets.test.runtimeClasspath += sourceSets.main.runtimeClasspath
 sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessResources) {
     def replaceProperties = [
         minecraft_version_range: rootProject.minecraft_version_range,
@@ -42,6 +44,10 @@ neoForge {
             sourceSet(sourceSets.main)
         }
     }
+    unitTest {
+        enable()
+        testedMod = mods."${rootProject.mod_id}"
+    }
     runs {
         client { client() }
         server {
@@ -57,9 +63,14 @@ neoForge {
 neoForge.ideSyncTask tasks.named('generateModMetadata')
 
 dependencies {
-    implementation files(rootProject.file(providers.gradleProperty('rinlibDir').get() + '/rinlib-' + rootProject.rinlib_version + '+' + rootProject.minecraft_version + '-neoforge.jar'))
+    def rinlibArtifact = providers.gradleProperty('rinlibJar').orElse(
+            providers.gradleProperty('rinlibDir').map { directory ->
+                rootProject.file(directory + '/rinlib-' + rootProject.rinlib_version + '+' + rootProject.minecraft_version + '-neoforge.jar').path
+            })
+    implementation files(rinlibArtifact)
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

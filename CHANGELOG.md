@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1-wmf.1 — 2026-09-26
+
+- Avoid damage and enchantment queries while decoding login inventory packets before a registry context is available.
+- Preserve the original item and existing carrier format until snapshot encoding is possible.
+- Add a regression test for unscoped item decoding. This pack hotfix is verified on Minecraft 1.21.1 / NeoForge.
+
 ## 1.1.0 — 2026-09-19
 
 - Isolate broken items as vanilla carriers with complete original-item snapshots, stopping further original item callbacks, attributes and enchantments.
