@@ -1,0 +1,174 @@
+{
+  "version": "1.1.1",
+  "testResults": [
+    {
+      "minecraft": "26.1.2",
+      "test": "dev.rinchan.keepmysword.item.UnscopedSealingTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "26.1.2",
+      "test": "dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "26.1.2",
+      "test": "dev.rinchan.keepmysword.client.BrokenVisualStyleTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "26.2",
+      "test": "dev.rinchan.keepmysword.item.UnscopedSealingTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "26.2",
+      "test": "dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "26.2",
+      "test": "dev.rinchan.keepmysword.client.BrokenVisualStyleTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "1.21.1",
+      "test": "dev.rinchan.keepmysword.item.UnscopedSealingTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "1.21.1",
+      "test": "dev.rinchan.keepmysword.DefaultCompatibilityPolicyTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "minecraft": "1.21.1",
+      "test": "dev.rinchan.keepmysword.client.BrokenVisualStyleTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "matrix": [
+    {
+      "minecraft": "1.21.1",
+      "loader": "fabric",
+      "file": "/Users/rin/Documents/Codex/2026-10-08/1-season-01-2-maven-3/work/keep-my-sword-public-20261019/build/releases/keep-my-sword-1.1.1+1.21.1-fabric.jar",
+      "sha256": "460135c1a88a038a3344c0001493fabc603c862fbb1147e1b2d9bbd337bdc99e",
+      "sha512": "33123578430e524521c8e2efc67e51ccfa5fdff408ca8a9c257bfc1335440bf3c269990973f5adb0cd747ea04fbc5c73baa72601b4a7dd88587b83eefd241a2d"
+    },
+    {
+      "minecraft": "1.21.1",
+      "loader": "neoforge",
+      "file": "/Users/rin/Documents/Codex/2026-10-08/1-season-01-2-maven-3/work/keep-my-sword-public-20261019/build/releases/keep-my-sword-1.1.1+1.21.1-neoforge.jar",
+      "sha256": "dc8743afb6b55f2cd5625bef9e7fb81380f5cc9f9e1aa7d387cc4f37ebd4f708",
+      "sha512": "a5fb75b05e0946ea0ab840b1a43a7fecca1fa40f0446b5f97d81776f43f9da86e5dc562320b43b207feaa9dd1a0fd35f50be7af40f68008fabeeb164d162cf06"
+    },
+    {
+      "minecraft": "26.1.2",
+      "loader": "fabric",
+      "file": "/Users/rin/Documents/Codex/2026-10-08/1-season-01-2-maven-3/work/keep-my-sword-public-20261019/build/releases/keep-my-sword-1.1.1+26.1.2-fabric.jar",
+      "sha256": "922e0d1da660be83d298b178a4e45df6e2de1ca2c691176b1132ff2ab2482280",
+      "sha512": "ba33cc6d67e2e900fdd2f0ac2e07570d0856daae52bf8128502f3ebbf99bbd7569f3137dce641e4ee3782fb9945a233d1927f05298766538477959da2d369be8"
+    },
+    {
+      "minecraft": "26.1.2",
+      "loader": "neoforge",
+      "file": "/Users/rin/Documents/Codex/2026-10-08/1-season-01-2-maven-3/work/keep-my-sword-public-20261019/build/releases/keep-my-sword-1.1.1+26.1.2-neoforge.jar",
+      "sha256": "c92e18d21822ea1e596deb68c3c52fbb044e80b3e21e979526efa69d12ddd025",
+      "sha512": "bb9b10973ef4858a681c902191fcb466731b2fc622f9583d208facb41e80ff134afc52dce47ed2c70a702730667238c25f7ead5ee10f60557266049064a226a8"
+    },
+    {
+      "minecraft": "26.2",
+      "loader": "fabric",
+      "file": "/Users/rin/Documents/Codex/2026-10-08/1-season-01-2-maven-3/work/keep-my-sword-public-20261019/build/releases/keep-my-sword-1.1.1+26.2-fabric.jar",
+      "sha256": "007bd78cbc92c4ed8a8ff23c11443562f323f56d4304f49cb0884edff3dead8f",
+      "sha512": "15b7659e8610a1b7e5c61b9f15d8f3b9e60b01f933335790aa1fd2faa5b2996632730ceec65edfdeb1c926eb63e49801f86e0d438ba75f08133e1df3e5ce0c1b"
+    },
+    {
+      "minecraft": "26.2",
+      "loader": "neoforge",
+      "file": "/Users/rin/Documents/Codex/2026-10-08/1-season-01-2-maven-3/work/keep-my-sword-public-20261019/build/releases/keep-my-sword-1.1.1+26.2-neoforge.jar",
+      "sha256": "f8d043da25530942faa5cf1d4f3571e3160e74a8fe593ad2c8d4b3c3db7f526c",
+      "sha512": "b5aba8b5b498c493a22496201f9f08a13b70891564947393043f6be0c8b66b15f43b9a791b1a1653abeb3012eb5ae600f63359d9235630c6abfac3f39ad6bf6c"
+    }
+  ],
+  "modrinth": [
+    {
+      "versionId": "g7xds0Lq",
+      "version": "1.1.1+1.21.1-fabric",
+      "url": "https://modrinth.com/mod/keep-my-sword/version/g7xds0Lq",
+      "download": "https://cdn.modrinth.com/data/pPO0fpz4/versions/g7xds0Lq/keep-my-sword-1.1.1%2B1.21.1-fabric.jar",
+      "sha512": "33123578430e524521c8e2efc67e51ccfa5fdff408ca8a9c257bfc1335440bf3c269990973f5adb0cd747ea04fbc5c73baa72601b4a7dd88587b83eefd241a2d",
+      "sha256": "460135c1a88a038a3344c0001493fabc603c862fbb1147e1b2d9bbd337bdc99e",
+      "publicReadback": true
+    },
+    {
+      "versionId": "1L61uUE4",
+      "version": "1.1.1+1.21.1-neoforge",
+      "url": "https://modrinth.com/mod/keep-my-sword/version/1L61uUE4",
+      "download": "https://cdn.modrinth.com/data/pPO0fpz4/versions/1L61uUE4/keep-my-sword-1.1.1%2B1.21.1-neoforge.jar",
+      "sha512": "a5fb75b05e0946ea0ab840b1a43a7fecca1fa40f0446b5f97d81776f43f9da86e5dc562320b43b207feaa9dd1a0fd35f50be7af40f68008fabeeb164d162cf06",
+      "sha256": "dc8743afb6b55f2cd5625bef9e7fb81380f5cc9f9e1aa7d387cc4f37ebd4f708",
+      "publicReadback": true
+    },
+    {
+      "versionId": "akwj7xBP",
+      "version": "1.1.1+26.1.2-fabric",
+      "url": "https://modrinth.com/mod/keep-my-sword/version/akwj7xBP",
+      "download": "https://cdn.modrinth.com/data/pPO0fpz4/versions/akwj7xBP/keep-my-sword-1.1.1%2B26.1.2-fabric.jar",
+      "sha512": "ba33cc6d67e2e900fdd2f0ac2e07570d0856daae52bf8128502f3ebbf99bbd7569f3137dce641e4ee3782fb9945a233d1927f05298766538477959da2d369be8",
+      "sha256": "922e0d1da660be83d298b178a4e45df6e2de1ca2c691176b1132ff2ab2482280",
+      "publicReadback": true
+    },
+    {
+      "versionId": "ivaNg4KX",
+      "version": "1.1.1+26.1.2-neoforge",
+      "url": "https://modrinth.com/mod/keep-my-sword/version/ivaNg4KX",
+      "download": "https://cdn.modrinth.com/data/pPO0fpz4/versions/ivaNg4KX/keep-my-sword-1.1.1%2B26.1.2-neoforge.jar",
+      "sha512": "bb9b10973ef4858a681c902191fcb466731b2fc622f9583d208facb41e80ff134afc52dce47ed2c70a702730667238c25f7ead5ee10f60557266049064a226a8",
+      "sha256": "c92e18d21822ea1e596deb68c3c52fbb044e80b3e21e979526efa69d12ddd025",
+      "publicReadback": true
+    },
+    {
+      "versionId": "rTi8ZNss",
+      "version": "1.1.1+26.2-fabric",
+      "url": "https://modrinth.com/mod/keep-my-sword/version/rTi8ZNss",
+      "download": "https://cdn.modrinth.com/data/pPO0fpz4/versions/rTi8ZNss/keep-my-sword-1.1.1%2B26.2-fabric.jar",
+      "sha512": "15b7659e8610a1b7e5c61b9f15d8f3b9e60b01f933335790aa1fd2faa5b2996632730ceec65edfdeb1c926eb63e49801f86e0d438ba75f08133e1df3e5ce0c1b",
+      "sha256": "007bd78cbc92c4ed8a8ff23c11443562f323f56d4304f49cb0884edff3dead8f",
+      "publicReadback": true
+    },
+    {
+      "versionId": "R7XRgI5G",
+      "version": "1.1.1+26.2-neoforge",
+      "url": "https://modrinth.com/mod/keep-my-sword/version/R7XRgI5G",
+      "download": "https://cdn.modrinth.com/data/pPO0fpz4/versions/R7XRgI5G/keep-my-sword-1.1.1%2B26.2-neoforge.jar",
+      "sha512": "b5aba8b5b498c493a22496201f9f08a13b70891564947393043f6be0c8b66b15f43b9a791b1a1653abeb3012eb5ae600f63359d9235630c6abfac3f39ad6bf6c",
+      "sha256": "f8d043da25530942faa5cf1d4f3571e3160e74a8fe593ad2c8d4b3c3db7f526c",
+      "publicReadback": true
+    }
+  ],
+  "curseforge": {
+    "status": "blocked-by-site-security-verification",
+    "projectId": 1674316
+  },
+  "nativeProofReuse": "docs/validation.md: unchanged 1.1.0 native persistence scenarios; new unscoped decode regression exercised on all three NeoForge SDKs",
+  "testTooling": "Byte Buddy 1.17.8 supports Java 25; tests-only dependency update"
+}
