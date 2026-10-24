@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+- Aligned Fabric and NeoForge loader manifests to SPDX `GPL-3.0-only` and bundled the repository `LICENSE` file in both JAR distributions.
+- Corrected platform license metadata on Modrinth and CurseForge to match the project's GNU General Public License v3.0.
+- Released version 1.1.2 for Minecraft 1.21.1, 26.1.2, and 26.2 on Fabric and NeoForge with no gameplay changes.
+
 ## 1.1.1-wmf.1 — 2026-09-26
 
 - Avoid damage and enchantment queries while decoding login inventory packets before a registry context is available.

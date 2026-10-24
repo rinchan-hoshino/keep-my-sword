@@ -31,6 +31,10 @@ subprojects {
         reproducibleFileOrder = true
     }
 
+    tasks.withType(Jar).configureEach {
+        from(rootProject.file('LICENSE'))
+    }
+
     plugins.withType(JavaPlugin).configureEach {
         java.toolchain.languageVersion = JavaLanguageVersion.of(rootProject.java_version as int)
         tasks.withType(JavaCompile).configureEach {
