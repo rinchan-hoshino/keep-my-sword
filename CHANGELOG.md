@@ -1,4 +1,4 @@
-## Keep My Sword 1.2.0 (Minecraft 1.21.1 / NeoForge)
+## Keep My Sword 1.2.0
 
 ### Features & Improvements
 - **TOML configuration**: Added `config/keep_my_sword.toml` loaded via NightConfig on game startup (restart required after edits).

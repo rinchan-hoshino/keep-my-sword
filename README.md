@@ -8,7 +8,7 @@ Items in the `#keep_my_sword:excluded` item tag are ignored by this mod.
 
 ## Configuration
 
-Starting in 1.2.0 (Minecraft 1.21.1 / NeoForge), configuration is available at `config/keep_my_sword.toml` and loaded on game startup (restart the game after editing):
+Starting in 1.2.0, configuration is available at `config/keep_my_sword.toml` and loaded on game startup (restart the game after editing):
 
 ```toml
 # List of item IDs or item tags excluded from broken-item protection.

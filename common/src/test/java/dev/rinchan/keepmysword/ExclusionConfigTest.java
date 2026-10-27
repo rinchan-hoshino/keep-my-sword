@@ -1,6 +1,7 @@
 package dev.rinchan.keepmysword;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import java.nio.file.*;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,12 @@ class ExclusionConfigTest {
         Files.writeString(directory.resolve("keep_my_sword.toml"), "excludedItems = [\"minecraft:diamond_sword\"]\n");
         try {
             KeepMySword.initialize(directory);
-            assertTrue(KeepMySword.isExcluded(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD)));
-            assertFalse(KeepMySword.isExcluded(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_SWORD)));
+            var excluded = mock(net.minecraft.world.item.ItemStack.class);
+            when(excluded.getItem()).thenReturn(net.minecraft.world.item.Items.DIAMOND_SWORD);
+            var managed = mock(net.minecraft.world.item.ItemStack.class);
+            when(managed.getItem()).thenReturn(net.minecraft.world.item.Items.IRON_SWORD);
+            assertTrue(KeepMySword.isExcluded(excluded));
+            assertFalse(KeepMySword.isExcluded(managed));
         } finally {
             Files.writeString(directory.resolve("keep_my_sword.toml"), "excludedItems = []\n");
             KeepMySword.initialize(directory);

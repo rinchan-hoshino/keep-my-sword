@@ -21,7 +21,7 @@ public final class KeepMySword {
     public static boolean isExcluded(ItemStack stack) {
         return stack.is(VersionTags.EXCLUDED_ITEMS) || config.matches(
                 BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(),
-                stack.getTags().map(tag -> tag.location().toString()));
+                stack.getItem().builtInRegistryHolder().tags().map(tag -> tag.location().toString()));
     }
 
     public static boolean isManagedBroken(ItemStack stack) {
