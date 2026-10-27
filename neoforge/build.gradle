@@ -63,6 +63,7 @@ neoForge {
 neoForge.ideSyncTask tasks.named('generateModMetadata')
 
 dependencies {
+    implementation 'com.electronwill.night-config:toml:3.8.3'
     def rinlibArtifact = providers.gradleProperty('rinlibJar').orElse(
             providers.gradleProperty('rinlibDir').map { directory ->
                 rootProject.file(directory + '/rinlib-' + rootProject.rinlib_version + '+' + rootProject.minecraft_version + '-neoforge.jar').path

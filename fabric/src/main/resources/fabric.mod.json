@@ -9,6 +9,7 @@
   ],
   "license": "${mod_license}",
   "environment": "*",
+  "entrypoints": { "main": ["dev.rinchan.keepmysword.fabric.KeepMySwordFabric"] },
   "mixins": [
     "keep_my_sword.mixins.json",
     "keep_my_sword.fabric.mixins.json",

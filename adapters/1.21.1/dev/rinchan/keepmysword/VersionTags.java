@@ -12,4 +12,8 @@ final class VersionTags {
                     ResourceLocation.fromNamespaceAndPath(KeepMySword.MOD_ID, "excluded"));
 
     private VersionTags() {}
+
+    static boolean validSelector(String value) {
+        return ResourceLocation.tryParse(value.startsWith("#") ? value.substring(1) : value) != null;
+    }
 }

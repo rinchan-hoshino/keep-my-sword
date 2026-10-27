@@ -12,4 +12,8 @@ final class VersionTags {
                     Identifier.fromNamespaceAndPath(KeepMySword.MOD_ID, "excluded"));
 
     private VersionTags() {}
+
+    static boolean validSelector(String value) {
+        return Identifier.tryParse(value.startsWith("#") ? value.substring(1) : value) != null;
+    }
 }

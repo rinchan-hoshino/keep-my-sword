@@ -1,3 +1,11 @@
+## Keep My Sword 1.2.0 (Minecraft 1.21.1 / NeoForge)
+
+### Features & Improvements
+- **TOML configuration**: Added `config/keep_my_sword.toml` loaded via NightConfig on game startup (restart required after edits).
+- **Item exclusion list**: Added `excludedItems` to configure items that bypass broken-item protection. Supports item IDs (such as `"minecraft:diamond_sword"`) and item tags (such as `"#slashblade:swords"`). Defaults to an empty list `[]`.
+- **Existing compatibility**: The native `#keep_my_sword:excluded` item tag remains fully supported alongside the configuration file.
+- **Core behavior preserved**: Broken equipment protection, anvil repair mechanics, and item data persistence remain unchanged.
+
 # Changelog
 
 ## 1.1.2

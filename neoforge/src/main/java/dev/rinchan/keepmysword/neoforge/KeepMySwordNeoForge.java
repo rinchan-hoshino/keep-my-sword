@@ -5,4 +5,8 @@ import dev.rinchan.keepmysword.KeepMySword;
 import net.neoforged.fml.common.Mod;
 
 @Mod(KeepMySword.MOD_ID)
-public final class KeepMySwordNeoForge {}
+public final class KeepMySwordNeoForge {
+    public KeepMySwordNeoForge() throws java.io.IOException {
+        KeepMySword.initialize(net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get());
+    }
+}
