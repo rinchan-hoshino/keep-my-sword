@@ -26,8 +26,7 @@ public abstract class AnvilSnapshotMixin extends ItemCombinerMenu {
         for (int i = 0; i < inputSlots.getContainerSize(); i++) {
             var input = inputSlots.getItem(i);
             if (SealedItems.isSealed(input)
-                    && SealedItems.originalForRepair(input, player.level().registryAccess())
-                            .isEmpty()) {
+                    && SealedItems.originalForRepair(input, player.level()).isEmpty()) {
                 resultSlots.setItem(0, ItemStack.EMPTY);
                 return;
             }
@@ -44,7 +43,7 @@ public abstract class AnvilSnapshotMixin extends ItemCombinerMenu {
                                     "Lnet/minecraft/world/Container;getItem(I)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack kms$snapshot(Container container, int slot, Operation<ItemStack> original) {
         var stack = original.call(container, slot);
-        return SealedItems.originalForRepair(stack, player.level().registryAccess());
+        return SealedItems.originalForRepair(stack, player.level());
     }
 
     @Inject(method = "createResult", at = @At("TAIL"))

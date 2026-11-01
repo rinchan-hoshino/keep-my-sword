@@ -23,7 +23,7 @@ public abstract class CraftingRepairMixin {
             net.minecraft.world.level.Level level,
             CallbackInfoReturnable<Boolean> cir) {
         for (int i = 0; i < input.size(); i++)
-            SealedItems.originalForRepair(input.getItem(i), level.registryAccess());
+            SealedItems.originalForRepair(input.getItem(i), level);
     }
 
     @WrapOperation(

@@ -29,7 +29,7 @@ public abstract class SealedTooltipMixin {
         if (!SealedItems.isSealed(stack)) return;
         var level = net.minecraft.client.Minecraft.getInstance().level;
         if (level == null) return;
-        var original = SealedItems.originalForRepair(stack, level.registryAccess());
+        var original = SealedItems.originalForRepair(stack, level);
         if (original.isEmpty()) return;
         var lines = new ArrayList<>(original.getTooltipLines(context, player, flag));
         lines.add(

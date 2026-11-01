@@ -70,7 +70,7 @@ public final class CarrierChecks {
             var before = ItemStack.CODEC.encodeStart(ops, broken).getOrThrow();
             check(
                     SealedItems.isSealed(broken)
-                            && SealedItems.originalForRepair(broken, s.registryAccess()).isEmpty(),
+                            && SealedItems.originalForRepair(broken, s.overworld()).isEmpty(),
                     "unknown snapshot remains sealed");
             check(!ingredient.test(broken), "unknown snapshot still rejects ingredients");
             var anvil = new AnvilMenu(21, player.getInventory(), ContainerLevelAccess.NULL);
@@ -105,23 +105,17 @@ public final class CarrierChecks {
         corruptData.put(CarrierSnapshot.KEY, badLegacy);
         corrupt.set(DataComponents.CUSTOM_DATA, CustomData.of(corruptData));
         check(
-                SealedItems.originalForRepair(corrupt, s.registryAccess()).isEmpty()
-                        && SealedItems.visualCopy(corrupt, s.registryAccess()) == corrupt,
+                SealedItems.originalForRepair(corrupt, s.overworld()).isEmpty()
+                        && SealedItems.visualCopy(corrupt, s.overworld()) == corrupt,
                 "corrupted payload is retained and renders carrier fallback");
-        var legacy =
-                TagParser.parseTag(
-                        "{id:\"minecraft:diamond_sword\",Count:1b,tag:{Damage:1561,other_mod_owner:\"legacy\"}}");
-        var bytes = new java.io.ByteArrayOutputStream();
-        NbtIo.writeCompressed(legacy, bytes);
-        var payload = new CompoundTag();
-        payload.putInt("schema", 1);
-        payload.putInt("data_version", 3700);
-        var chunks = new ListTag();
-        String encoded = Base64.getEncoder().encodeToString(bytes.toByteArray());
-        chunks.add(StringTag.valueOf(encoded.substring(0, 16)));
-        chunks.add(StringTag.valueOf(encoded.substring(16)));
-        payload.put("chunks", chunks);
-        var migrated = CarrierSnapshot.decode(payload, s.registryAccess()).getOrThrow();
+        var legacy = LegacyFixtures.original();
+        var legacyCarrier = LegacyFixtures.carrier();
+        var legacyData = legacyCarrier.get(DataComponents.CUSTOM_DATA).copyTag();
+        var payload = (CompoundTag) legacyData.get(CarrierSnapshot.KEY);
+        check(
+                CarrierSnapshot.decode(payload, s.registryAccess()).result().isEmpty(),
+                "native snapshot decoder rejects legacy envelopes");
+        var migrated = LegacyCarrierMigration.decode(payload, s.registryAccess()).getOrThrow();
         check(
                 migrated.is(Items.DIAMOND_SWORD)
                         && migrated.getDamageValue() == 1561
@@ -130,14 +124,29 @@ public final class CarrierChecks {
                                 .getString("other_mod_owner")
                                 .equals("legacy"),
                 "old chunked snapshot upgrades through Minecraft data fixer");
-        var legacyCarrier = new ItemStack(Items.RECOVERY_COMPASS);
-        var legacyData = new CompoundTag();
-        legacyData.put(CarrierSnapshot.KEY, payload);
-        legacyCarrier.set(DataComponents.CUSTOM_DATA, CustomData.of(legacyData));
         var anvil = new AnvilMenu(23, player.getInventory(), ContainerLevelAccess.NULL);
         player.experienceLevel = 30;
         anvil.getSlot(0).set(legacyCarrier);
         anvil.getSlot(1).set(new ItemStack(Items.DIAMOND));
+        var upgradedData = legacyCarrier.get(DataComponents.CUSTOM_DATA);
+        var upgradedPayload = (CompoundTag) upgradedData.copyTag().get(CarrierSnapshot.KEY);
+        check(
+                upgradedPayload.contains("DataVersion")
+                        && upgradedPayload.contains("id")
+                        && !upgradedPayload.contains("chunks")
+                        && !upgradedPayload.contains("schema")
+                        && !upgradedPayload.contains("data_version")
+                        && upgradedData.copyTag().getString("other_mod_carrier").equals("retained"),
+                "first legacy repair read immediately rewrites carrier as native snapshot");
+        check(
+                ItemStack.matches(
+                                migrated,
+                                SealedItems.originalForRepair(legacyCarrier, s.overworld()))
+                        && legacyCarrier.get(DataComponents.CUSTOM_DATA) == upgradedData
+                        && ItemStack.matches(
+                                migrated,
+                                SealedItems.originalForRepair(legacyCarrier.copy(), s.overworld())),
+                "repeat and uncached reads use native snapshot without another migration write");
         var repaired = anvil.getSlot(2).getItem();
         check(
                 repaired.is(Items.DIAMOND_SWORD)
@@ -155,6 +164,28 @@ public final class CarrierChecks {
                         && anvil.getSlot(1).getItem().isEmpty()
                         && player.experienceLevel == 30 - cost,
                 "legacy repair consumes carrier material and experience once");
+        var readCarrier = LegacyFixtures.carrier();
+        readCarrier.setCount(2);
+        check(
+                SealedItems.originalForRepair(readCarrier, s.overworld()).getCount() == 2
+                        && ((CompoundTag)
+                                        readCarrier
+                                                .get(DataComponents.CUSTOM_DATA)
+                                                .copyTag()
+                                                .get(CarrierSnapshot.KEY))
+                                .contains("DataVersion"),
+                "first direct read migrates carrier and preserves its count");
+        var poisonedData = readCarrier.get(DataComponents.CUSTOM_DATA).copyTag();
+        var nativePayload = (CompoundTag) poisonedData.get(CarrierSnapshot.KEY);
+        nativePayload.put("chunks", new ListTag());
+        nativePayload.putInt("schema", 999);
+        nativePayload.putInt("data_version", Integer.MAX_VALUE);
+        readCarrier.set(DataComponents.CUSTOM_DATA, CustomData.of(poisonedData));
+        check(
+                SealedItems.originalForRepair(readCarrier.copy(), s.overworld())
+                        .is(Items.DIAMOND_SWORD),
+                "uncached native read never re-enters legacy decoder even with stale legacy"
+                        + " fields");
         var nativeOld = legacy.copy();
         nativeOld.putInt("DataVersion", 3700);
         check(

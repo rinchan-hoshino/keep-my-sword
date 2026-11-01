@@ -1,7 +1,7 @@
 package dev.rinchan.keepmysword.item;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.Level;
 
 public interface RepairSlot {
-    void kms$setRegistries(HolderLookup.Provider registries);
+    void kms$setLevel(Level level);
 }

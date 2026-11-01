@@ -42,7 +42,7 @@ public final class RuntimeProbe {
                                             .encodeStart(
                                                     ops,
                                                     SealedItems.originalForRepair(
-                                                            item, s.registryAccess()))
+                                                            item, s.overworld()))
                                             .getOrThrow()
                                             .equals(
                                                     TagParser.parseTag(
@@ -54,7 +54,7 @@ public final class RuntimeProbe {
                                     player,
                                     item,
                                     item,
-                                    SealedItems.originalForRepair(item, s.registryAccess())
+                                    SealedItems.originalForRepair(item, s.overworld())
                                             .get(DataComponents.CUSTOM_DATA)
                                             .copyTag());
                             PlatformStorage.verify(s);
@@ -109,8 +109,7 @@ public final class RuntimeProbe {
                                 ItemStack.CODEC
                                         .encodeStart(
                                                 ops,
-                                                SealedItems.originalForRepair(
-                                                        sword, s.registryAccess()))
+                                                SealedItems.originalForRepair(sword, s.overworld()))
                                         .getOrThrow()
                                         .equals(expected),
                                 "snapshot preserves exact original NBT");
@@ -145,7 +144,7 @@ public final class RuntimeProbe {
                                         .encodeStart(
                                                 jsonOps,
                                                 SealedItems.originalForRepair(
-                                                        jsonCopy, s.registryAccess()))
+                                                        jsonCopy, s.overworld()))
                                         .getOrThrow()
                                         .equals(
                                                 ItemStack.CODEC
@@ -177,11 +176,10 @@ public final class RuntimeProbe {
                         check(
                                 splitSource.isEmpty() && Fixtures.encode(s, split).equals(encoded),
                                 "split does not lose or duplicate item");
-                        var originalCopy = SealedItems.originalForRepair(sword, s.registryAccess());
+                        var originalCopy = SealedItems.originalForRepair(sword, s.overworld());
                         originalCopy.setDamageValue(0);
                         check(
-                                SealedItems.originalForRepair(sword, s.registryAccess())
-                                                .getDamageValue()
+                                SealedItems.originalForRepair(sword, s.overworld()).getDamageValue()
                                         == max,
                                 "cached original is never exposed mutably");
                         CarrierChecks.run(s, player, sword);
@@ -254,7 +252,7 @@ public final class RuntimeProbe {
                                 ItemContainerContents.fromItems(
                                         List.of(sword.copy(), new ItemStack(Items.DIAMOND, 7))));
                         var invalid = CarrierChecks.invalid(sword, 999);
-                        var big = SealedItems.originalForRepair(sword, s.registryAccess());
+                        var big = SealedItems.originalForRepair(sword, s.overworld());
                         var tag = data.copy();
                         var noise = new byte[180000];
                         new java.util.Random(4815).nextBytes(noise);
@@ -282,7 +280,7 @@ public final class RuntimeProbe {
                                         .encodeStart(
                                                 ops,
                                                 SealedItems.originalForRepair(
-                                                        bigCopy, s.registryAccess()))
+                                                        bigCopy, s.overworld()))
                                         .getOrThrow()
                                         .equals(bigExpected),
                                 "large snapshot writes actual NBT without string overflow");

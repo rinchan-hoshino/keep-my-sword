@@ -4,8 +4,10 @@ import dev.rinchan.keepmysword.item.SealedItems;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomData;
 
 public final class PreviewScreen extends Screen {
     private final ItemStack[] healthy = {
@@ -14,6 +16,7 @@ public final class PreviewScreen extends Screen {
         new ItemStack(Items.DIAMOND_CHESTPLATE)
     };
     private final ItemStack[] broken = new ItemStack[healthy.length];
+    private final CustomData legacyData;
 
     public PreviewScreen() {
         super(Component.literal("Keep My Sword client validation"));
@@ -28,6 +31,15 @@ public final class PreviewScreen extends Screen {
             if (!SealedItems.isSealed(broken[i]))
                 throw new AssertionError("client item not sealed");
         }
+        try {
+            broken[0] = LegacyFixtures.carrier();
+        } catch (Exception error) {
+            throw new AssertionError("Cannot create legacy client fixture", error);
+        }
+        legacyData = broken[0].get(DataComponents.CUSTOM_DATA);
+        if (!SealedItems.visualCopy(broken[0], net.minecraft.client.Minecraft.getInstance().level)
+                .is(Items.DIAMOND_SWORD))
+            throw new AssertionError("legacy client snapshot did not decode");
     }
 
     @Override
@@ -50,5 +62,7 @@ public final class PreviewScreen extends Screen {
             graphics.drawString(font, line, 20, y, 0xffffffff);
             y += 11;
         }
+        if (broken[0].get(DataComponents.CUSTOM_DATA) != legacyData)
+            throw new AssertionError("client rendering or tooltip rewrote legacy snapshot");
     }
 }

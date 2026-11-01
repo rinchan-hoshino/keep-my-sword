@@ -1,13 +1,17 @@
 package dev.rinchan.keepmysword.item;
 
+import com.mojang.serialization.DataResult;
+
 import dev.rinchan.keepmysword.KeepMySword;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.*;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -48,14 +52,40 @@ public final class SealedItems {
         return originalForRepair(stack, null);
     }
 
-    public static ItemStack originalForRepair(ItemStack stack, HolderLookup.Provider registries) {
+    public static ItemStack originalForRepair(ItemStack stack, Level level) {
         if (!isSealed(stack)) return stack;
-        return ((SnapshotCache) (Object) stack).kms$original(registries);
+        return ((SnapshotCache) (Object) stack).kms$original(level);
     }
 
-    public static ItemStack visualCopy(ItemStack stack, HolderLookup.Provider registries) {
-        var original = originalForRepair(stack, registries);
+    public static ItemStack visualCopy(ItemStack stack, Level level) {
+        var original = originalForRepair(stack, level);
         return original.isEmpty() ? stack : original;
+    }
+
+    /** Shared cache miss path for repair, rendering and tooltips. */
+    public static DataResult<ItemStack> decodeSnapshot(ItemStack stack, Level level) {
+        var data = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+        if (!(data.get(CarrierSnapshot.KEY) instanceof CompoundTag payload))
+            return DataResult.error(() -> "Invalid item snapshot");
+        var registries = level.registryAccess();
+        if (!payload.contains("DataVersion") && payload.contains("chunks")) {
+            return LegacyCarrierMigration.decode(payload, registries)
+                    .flatMap(
+                            original -> {
+                                if (!(level instanceof ServerLevel))
+                                    return DataResult.success(original);
+                                return CarrierSnapshot.encode(original, registries)
+                                        .map(
+                                                upgraded -> {
+                                                    data.put(CarrierSnapshot.KEY, upgraded);
+                                                    stack.set(
+                                                            DataComponents.CUSTOM_DATA,
+                                                            CustomData.of(data));
+                                                    return original;
+                                                });
+                            });
+        }
+        return CarrierSnapshot.decode(payload, registries);
     }
 
     public static boolean sealInPlace(ItemStack stack, HolderLookup.Provider registries) {

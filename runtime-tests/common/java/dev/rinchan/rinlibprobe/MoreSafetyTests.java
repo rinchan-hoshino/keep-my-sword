@@ -128,7 +128,7 @@ public final class MoreSafetyTests {
         check(
                 SealedItems.isSealed(sealedRename.getSlot(2).getItem())
                         && SealedItems.originalForRepair(
-                                        sealedRename.getSlot(2).getItem(), s.registryAccess())
+                                        sealedRename.getSlot(2).getItem(), s.overworld())
                                 .getHoverName()
                                 .getString()
                                 .equals("Still sealed"),
