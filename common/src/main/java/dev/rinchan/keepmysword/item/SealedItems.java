@@ -19,63 +19,50 @@ public final class SealedItems {
         return data != null && data.copyTag().contains(CarrierSnapshot.KEY);
     }
 
-    public static ItemStack seal(ItemStack source) {
-        var registries = RegistryContext.current();
-        // Packet decoding and other unscoped work cannot persist a carrier snapshot.
-        // Return before item queries can invoke enchantment hooks during login.
-        if (registries == null) return source;
+    public static ItemStack seal(ItemStack source, HolderLookup.Provider registries) {
         if (source.isEmpty()
                 || isSealed(source)
                 || KeepMySword.isExcluded(source)
                 || !dev.rinchan.rinlib.item.DamageState.isBroken(source)) return source;
         var payload = CarrierSnapshot.encode(source, registries);
         if (payload.result().isEmpty()) return source;
-        return SnapshotScope.call(
-                () -> {
-                    var carrier = new ItemStack(Items.RECOVERY_COMPASS, source.getCount());
-                    var data = new CompoundTag();
-                    data.put(CarrierSnapshot.KEY, payload.result().orElseThrow());
-                    carrier.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
-                    carrier.set(DataComponents.MAX_STACK_SIZE, 1);
-                    carrier.set(DataComponents.CUSTOM_NAME, source.getHoverName());
-                    carrier.set(
-                            DataComponents.LORE,
-                            new ItemLore(
-                                    List.of(
-                                            Component.translatableWithFallback(
-                                                    "item.keep_my_sword.recovery",
-                                                    "Broken item — install Keep My Sword to repair"
-                                                        + " it."))));
-                    return carrier;
-                });
+        var carrier = new ItemStack(Items.RECOVERY_COMPASS, source.getCount());
+        var data = new CompoundTag();
+        data.put(CarrierSnapshot.KEY, payload.result().orElseThrow());
+        carrier.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
+        carrier.set(DataComponents.MAX_STACK_SIZE, 1);
+        carrier.set(DataComponents.CUSTOM_NAME, source.getHoverName());
+        carrier.set(
+                DataComponents.LORE,
+                new ItemLore(
+                        List.of(
+                                Component.translatableWithFallback(
+                                        "item.keep_my_sword.recovery",
+                                        "Broken item — install Keep My Sword to repair it."))));
+        return carrier;
     }
 
     /** Only explicit rendering/repair integrations may obtain a private original copy. */
     public static ItemStack originalForRepair(ItemStack stack) {
         if (!isSealed(stack)) return stack;
-        return ((SnapshotCache) (Object) stack).kms$original(RegistryContext.current());
+        return originalForRepair(stack, null);
     }
 
-    public static ItemStack visualCopy(ItemStack stack) {
-        var original = originalForRepair(stack);
+    public static ItemStack originalForRepair(ItemStack stack, HolderLookup.Provider registries) {
+        if (!isSealed(stack)) return stack;
+        return ((SnapshotCache) (Object) stack).kms$original(registries);
+    }
+
+    public static ItemStack visualCopy(ItemStack stack, HolderLookup.Provider registries) {
+        var original = originalForRepair(stack, registries);
         return original.isEmpty() ? stack : original;
     }
 
     public static boolean sealInPlace(ItemStack stack, HolderLookup.Provider registries) {
-        return RegistryContext.call(
-                registries,
-                () -> {
-                    var replacement = seal(stack);
-                    if (replacement == stack) return false;
-                    ((ReplaceableStack) (Object) stack).kms$replaceWith(replacement);
-                    return true;
-                });
-    }
-
-    public static void sealAfterMutation(ItemStack stack) {
-        if (SnapshotScope.active() || isSealed(stack)) return;
-        var replacement = seal(stack);
-        if (replacement != stack) ((ReplaceableStack) (Object) stack).kms$replaceWith(replacement);
+        var replacement = seal(stack, registries);
+        if (replacement == stack) return false;
+        ((ReplaceableStack) (Object) stack).kms$replaceWith(replacement);
+        return true;
     }
 
     private SealedItems() {}

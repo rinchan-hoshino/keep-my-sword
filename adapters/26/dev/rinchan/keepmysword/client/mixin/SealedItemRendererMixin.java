@@ -17,6 +17,7 @@ public abstract class SealedItemRendererMixin {
             at = @At("HEAD"),
             argsOnly = true)
     private ItemStack kms$displayOriginal(ItemStack stack) {
-        return SealedItems.visualCopy(stack);
+        var level = net.minecraft.client.Minecraft.getInstance().level;
+        return level == null ? stack : SealedItems.visualCopy(stack, level.registryAccess());
     }
 }

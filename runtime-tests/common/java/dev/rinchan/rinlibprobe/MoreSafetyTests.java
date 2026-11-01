@@ -113,8 +113,26 @@ public final class MoreSafetyTests {
                                 .set(DataComponents.DAMAGE, 1561)
                                 .build());
         check(
-                SealedItems.isSealed(constructed),
-                "construction from an exhausted component patch seals immediately");
+                constructed.is(Items.DIAMOND_SWORD) && constructed.getDamageValue() == 1561,
+                "construction from an exhausted component patch stays unsealed");
+        var rawRename = new AnvilMenu(10, player.getInventory(), ContainerLevelAccess.NULL);
+        rawRename.getSlot(0).set(constructed.copy());
+        rawRename.setItemName("Still unsealed");
+        check(
+                rawRename.getSlot(2).getItem().is(Items.DIAMOND_SWORD)
+                        && rawRename.getSlot(2).getItem().getDamageValue() == 1561,
+                "renaming a constructed exhausted item does not create a carrier");
+        var sealedRename = new AnvilMenu(11, player.getInventory(), ContainerLevelAccess.NULL);
+        sealedRename.getSlot(0).set(mutated.copy());
+        sealedRename.setItemName("Still sealed");
+        check(
+                SealedItems.isSealed(sealedRename.getSlot(2).getItem())
+                        && SealedItems.originalForRepair(
+                                        sealedRename.getSlot(2).getItem(), s.registryAccess())
+                                .getHoverName()
+                                .getString()
+                                .equals("Still sealed"),
+                "renaming an existing carrier preserves its sealed state and original name");
         var renamedMenu = new AnvilMenu(9, player.getInventory(), ContainerLevelAccess.NULL);
         renamedMenu.getSlot(0).set(mutated.copy());
         renamedMenu.getSlot(1).set(new ItemStack(Items.DIAMOND));
@@ -139,17 +157,17 @@ public final class MoreSafetyTests {
         check(excluded.isEmpty(), "excluded item retains vanilla break behavior");
         var direct = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
         direct.setDamageValue(direct.getMaxDamage());
-        Fixtures.check(SealedItems.isSealed(direct), "direct durability setter seals immediately");
+        Fixtures.check(direct.is(Items.DIAMOND_SWORD), "direct durability setter stays unsealed");
         var component = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
         component.set(DataComponents.DAMAGE, component.getMaxDamage());
         Fixtures.check(
-                SealedItems.isSealed(component), "direct damage component write seals immediately");
+                component.is(Items.DIAMOND_SWORD), "direct damage component write stays unsealed");
         var patchStack = new ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
         patchStack.applyComponents(
                 net.minecraft.core.component.DataComponentPatch.builder()
                         .set(DataComponents.DAMAGE, patchStack.getMaxDamage())
                         .build());
-        Fixtures.check(SealedItems.isSealed(patchStack), "component patch seals immediately");
+        Fixtures.check(patchStack.is(Items.DIAMOND_SWORD), "component patch stays unsealed");
     }
 
     private MoreSafetyTests() {}

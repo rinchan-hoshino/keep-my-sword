@@ -108,6 +108,23 @@ if a.minecraft.startswith("26."):
             "inventoryTick(s.overworld(), player, 0, true)",
             "inventoryTick(s.overworld(), player, EquipmentSlot.MAINHAND)",
         )
+        if p.name == "TriggerChecks.java":
+            s = s.replace(
+                "net.minecraft.world.entity.monster.Zombie",
+                "net.minecraft.world.entity.monster.zombie.Zombie",
+            )
+            s = s.replace(
+                "player.hurt(player.damageSources()",
+                "player.hurtServer(level, player.damageSources()",
+            )
+            s = re.sub(
+                r"        var grace =\s*net\.minecraft\.server\.level\.ServerPlayer\.class\.getDeclaredField\("
+                r'\s*"spawnInvulnerableTime"\);\s*grace\.setAccessible\(true\);'
+                r"\s*grace\.setInt\(player, 0\);\n",
+                "        player.connection.handleAcceptPlayerLoad("
+                "new net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket());\n",
+                s,
+            )
         if p.name == "PreviewScreen.java":
             s = (
                 s.replace("GuiGraphics", "GuiGraphicsExtractor")

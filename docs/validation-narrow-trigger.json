@@ -1,0 +1,576 @@
+{
+  "date": "2026-11-01",
+  "branch": "narrow-trigger",
+  "base_commit": "1a77295d2fac3a182ecd703e11f0c46fe6c18a8a",
+  "status": "LOCAL_VALIDATION_PASSED_UNPUBLISHED",
+  "production_java_lines": {
+    "before": 1532,
+    "after": 1306
+  },
+  "all_java_lines": {
+    "before": 3156,
+    "after": 3084
+  },
+  "builds": [
+    {
+      "minecraft": "1.21.1",
+      "loader": "fabric",
+      "file": "build/releases/keep-my-sword-1.2.0+1.21.1-fabric.jar",
+      "sha256": "fb3833ccf9b09e65454aac57374bd73c17e3b8565d6eff996bcbb6d6f7e833c8"
+    },
+    {
+      "minecraft": "1.21.1",
+      "loader": "neoforge",
+      "file": "build/releases/keep-my-sword-1.2.0+1.21.1-neoforge.jar",
+      "sha256": "a020232ef869b26fd7c6694dd56971dd46ab51bf4ad302e206e380d142faf491"
+    },
+    {
+      "minecraft": "26.1.2",
+      "loader": "fabric",
+      "file": "build/releases/keep-my-sword-1.2.0+26.1.2-fabric.jar",
+      "sha256": "e789d865f1e2dc52ce51b9f2d87e72937009449d34eb951f6c66e7806804d89d"
+    },
+    {
+      "minecraft": "26.1.2",
+      "loader": "neoforge",
+      "file": "build/releases/keep-my-sword-1.2.0+26.1.2-neoforge.jar",
+      "sha256": "5f68fb46e8d584f581fa8d8248dc66b9323a626fc950e79f89cc7f4bbc2a46d3"
+    },
+    {
+      "minecraft": "26.2",
+      "loader": "fabric",
+      "file": "build/releases/keep-my-sword-1.2.0+26.2-fabric.jar",
+      "sha256": "4e6a390ab57c15ba730700d24940212abed4b7f34c59547deafd9649bf7c599f"
+    },
+    {
+      "minecraft": "26.2",
+      "loader": "neoforge",
+      "file": "build/releases/keep-my-sword-1.2.0+26.2-neoforge.jar",
+      "sha256": "9769efa7331949c3c6ffc4f0d5c7bb128ad945d42b9fe0bc1b16ee123ece8760"
+    }
+  ],
+  "unit_tests": [
+    {
+      "minecraft": "1.21.1",
+      "loader": "neoforge",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "minecraft": "26.1.2",
+      "loader": "neoforge",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "minecraft": "26.2",
+      "loader": "neoforge",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "fabric_unit_tests": "No test source set; build and runtime suites passed.",
+  "server": [
+    {
+      "case": "1.21.1-fabric",
+      "phase": "save",
+      "passed": true,
+      "assertions": 81,
+      "log": "build/narrow-trigger/verified-server/1.21.1-fabric/save.log"
+    },
+    {
+      "case": "1.21.1-fabric",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "build/narrow-trigger/verified-server/1.21.1-fabric/unload.log"
+    },
+    {
+      "case": "1.21.1-fabric",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 38,
+      "log": "build/narrow-trigger/verified-server/1.21.1-fabric/reinstall.log"
+    },
+    {
+      "case": "1.21.1-neoforge",
+      "phase": "save",
+      "passed": true,
+      "assertions": 80,
+      "log": "build/narrow-trigger/verified-server/1.21.1-neoforge/save.log"
+    },
+    {
+      "case": "1.21.1-neoforge",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 25,
+      "log": "build/narrow-trigger/verified-server/1.21.1-neoforge/unload.log"
+    },
+    {
+      "case": "1.21.1-neoforge",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 37,
+      "log": "build/narrow-trigger/verified-server/1.21.1-neoforge/reinstall.log"
+    },
+    {
+      "case": "26.1.2-fabric",
+      "phase": "save",
+      "passed": true,
+      "assertions": 81,
+      "log": "build/narrow-trigger/verified-server/26.1.2-fabric/save.log"
+    },
+    {
+      "case": "26.1.2-fabric",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "build/narrow-trigger/verified-server/26.1.2-fabric/unload.log"
+    },
+    {
+      "case": "26.1.2-fabric",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 38,
+      "log": "build/narrow-trigger/verified-server/26.1.2-fabric/reinstall.log"
+    },
+    {
+      "case": "26.1.2-neoforge",
+      "phase": "save",
+      "passed": true,
+      "assertions": 81,
+      "log": "build/narrow-trigger/verified-server/26.1.2-neoforge/save.log"
+    },
+    {
+      "case": "26.1.2-neoforge",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "build/narrow-trigger/verified-server/26.1.2-neoforge/unload.log"
+    },
+    {
+      "case": "26.1.2-neoforge",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 38,
+      "log": "build/narrow-trigger/verified-server/26.1.2-neoforge/reinstall.log"
+    },
+    {
+      "case": "26.2-fabric",
+      "phase": "save",
+      "passed": true,
+      "assertions": 81,
+      "log": "build/narrow-trigger/verified-server/26.2-fabric/save.log"
+    },
+    {
+      "case": "26.2-fabric",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "build/narrow-trigger/verified-server/26.2-fabric/unload.log"
+    },
+    {
+      "case": "26.2-fabric",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 38,
+      "log": "build/narrow-trigger/verified-server/26.2-fabric/reinstall.log"
+    },
+    {
+      "case": "26.2-neoforge",
+      "phase": "save",
+      "passed": true,
+      "assertions": 81,
+      "log": "build/narrow-trigger/verified-server/26.2-neoforge/save.log"
+    },
+    {
+      "case": "26.2-neoforge",
+      "phase": "unload",
+      "passed": true,
+      "assertions": 26,
+      "log": "build/narrow-trigger/verified-server/26.2-neoforge/unload.log"
+    },
+    {
+      "case": "26.2-neoforge",
+      "phase": "reinstall",
+      "passed": true,
+      "assertions": 38,
+      "log": "build/narrow-trigger/verified-server/26.2-neoforge/reinstall.log"
+    }
+  ],
+  "clients": [
+    {
+      "minecraft": "1.21.1",
+      "loader": "fabric",
+      "side": "client",
+      "passed": true,
+      "exit_code": 0,
+      "assertions": 0,
+      "log": "build/narrow-trigger/verified-client/1.21.1-fabric-client/run.log",
+      "screenshot": "build/narrow-trigger/verified-client/1.21.1-fabric-client/screenshots/2026-11-01_19.24.57.png",
+      "screenshot_sha256": "9bf279df7d48e037187f7b4d94281b2595393eb3d7964759c12a790c64e72ebb",
+      "visual_review": "Original sword, shield and armor models, broken overlays and original tooltip with broken warning verified."
+    },
+    {
+      "minecraft": "1.21.1",
+      "loader": "neoforge",
+      "side": "client",
+      "passed": true,
+      "exit_code": 0,
+      "assertions": 0,
+      "log": "build/narrow-trigger/verified-client/1.21.1-neoforge-client/run.log",
+      "screenshot": "build/narrow-trigger/verified-client/1.21.1-neoforge-client/screenshots/2026-11-01_19.25.24.png",
+      "screenshot_sha256": "d3e609043bde29816068d52a547236b8f410a7cc9a422684c3b21acaf6463007",
+      "visual_review": "Original sword, shield and armor models, broken overlays and original tooltip with broken warning verified."
+    },
+    {
+      "minecraft": "26.1.2",
+      "loader": "fabric",
+      "side": "client",
+      "passed": true,
+      "exit_code": 0,
+      "assertions": 0,
+      "log": "build/narrow-trigger/verified-client/26.1.2-fabric-client/run.log",
+      "screenshot": "build/narrow-trigger/verified-client/26.1.2-fabric-client/screenshots/2026-11-01_19.27.17.png",
+      "screenshot_sha256": "09ab862467cc66f50255c05d96d4aba6c63a1717ff4ad397872b7b1cfd7c5917",
+      "visual_review": "Original sword, shield and armor models, broken overlays and original tooltip with broken warning verified."
+    },
+    {
+      "minecraft": "26.1.2",
+      "loader": "neoforge",
+      "side": "client",
+      "passed": true,
+      "exit_code": 0,
+      "assertions": 0,
+      "log": "build/narrow-trigger/verified-client/26.1.2-neoforge-client/run.log",
+      "screenshot": "build/narrow-trigger/verified-client/26.1.2-neoforge-client/screenshots/2026-11-01_19.27.45.png",
+      "screenshot_sha256": "0e29446a0f324e14870dc0bf0068af95f8192390e35d35497cf3b747cc6ed143",
+      "visual_review": "Original sword, shield and armor models, broken overlays and original tooltip with broken warning verified."
+    },
+    {
+      "minecraft": "26.2",
+      "loader": "fabric",
+      "side": "client",
+      "passed": true,
+      "exit_code": 0,
+      "assertions": 0,
+      "log": "build/narrow-trigger/verified-client/26.2-fabric-client/run.log",
+      "screenshot": "build/narrow-trigger/verified-client/26.2-fabric-client/screenshots/2026-11-01_19.28.22.png",
+      "screenshot_sha256": "e20b74cf07ba4eaa7360b3de6a5ba581c7396b169a2feb46a5ee98a99f7c28d4",
+      "visual_review": "Original sword, shield and armor models, broken overlays and original tooltip with broken warning verified."
+    },
+    {
+      "minecraft": "26.2",
+      "loader": "neoforge",
+      "side": "client",
+      "passed": true,
+      "exit_code": 0,
+      "assertions": 0,
+      "log": "build/narrow-trigger/verified-client/26.2-neoforge-client/run.log",
+      "screenshot": "build/narrow-trigger/verified-client/26.2-neoforge-client/screenshots/2026-11-01_19.28.51.png",
+      "screenshot_sha256": "31c81a3a3b3a9625d9dbed6c7d5b4062d6c77661c22c4ee395e9208966ccfd8d",
+      "visual_review": "Original sword, shield and armor models, broken overlays and original tooltip with broken warning verified."
+    }
+  ],
+  "decisions": [
+    "Only the native destruction path creates a carrier. Exhausted construction, setters, component patches and anvil renaming of raw exhausted items do not seal.",
+    "26.x delegates shrink to private applyDamage without ServerLevel. A stack-local level exists only around that native call and is restored in finally; the sole sealing hook remains immediately before shrink.",
+    "Fabric drops non-player owners from the lower signature. Its equipment caller refreshes only mobs; players refresh at the break hook, so there is no duplicate refresh.",
+    "Vanilla elytra flight stops with one durability remaining. Tests verify real flight stops unsealed, then an explicit destructive hurtAndBreak seals the elytra.",
+    "Repair entry points supply registries. Crafting matching primes private per-stack originals before native assembly. Grindstone slots receive the owning player registry provider.",
+    "Native snapshots preserve exact NBT. JSON checks preserve JSON representation; JSON converts typed NBT arrays to lists. The chunked format remains read-only.",
+    "The obsolete UnscopedSealingTest exercised the removed implicit-sealing API; real construction, codec and network runtime checks cover its former login concern."
+  ],
+  "reproduced_failures": [
+    {
+      "assertion": "new snapshot stores native item compound and DataVersion directly",
+      "log": "build/narrow-trigger/red/1.21.1-fabric/save.log"
+    },
+    {
+      "assertion": "constructed exhausted item is not a break event",
+      "log": "build/narrow-trigger/red-construction/1.21.1-fabric/save.log"
+    },
+    {
+      "assertion": "non-player equipped break refreshes attributes immediately",
+      "log": "build/narrow-trigger/red-mob/1.21.1-fabric/save.log"
+    },
+    {
+      "assertion": "renaming a constructed exhausted item does not create a carrier",
+      "log": "build/narrow-trigger/matrix-repair/26.1.2-fabric/save.log"
+    }
+  ],
+  "changed_files": [
+    {
+      "file": "adapters/1.21.1-fabric/dev/rinchan/keepmysword/fabric/mixin/FabricItemStackDamageMixin.java",
+      "status": "modified",
+      "before": 46,
+      "after": 48,
+      "sha256": "183caec6047eb8addef64cf6415754143af842e21420bf992cfd01ac97182205"
+    },
+    {
+      "file": "adapters/1.21.1-neoforge/dev/rinchan/keepmysword/neoforge/mixin/NeoForgeItemStackDamageMixin.java",
+      "status": "modified",
+      "before": 46,
+      "after": 32,
+      "sha256": "093a9361e4aca71abd16e3e985a410dc58d3fb8a7cd0e4e42f4700c1e6664bec"
+    },
+    {
+      "file": "adapters/1.21.1/dev/rinchan/keepmysword/client/mixin/SealedItemRendererMixin.java",
+      "status": "modified",
+      "before": 22,
+      "after": 23,
+      "sha256": "47502728c06b91bfba53087cc71226997744793d3a456be8484942d08a74b771"
+    },
+    {
+      "file": "adapters/1.21.1/dev/rinchan/keepmysword/client/mixin/SealedTooltipMixin.java",
+      "status": "modified",
+      "before": 38,
+      "after": 40,
+      "sha256": "a68ff3cb4efd1d641d6cdebc64a245d10b48ef5e34df5f0f7bb7d1cb4474719f"
+    },
+    {
+      "file": "adapters/1.21.1/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java",
+      "status": "modified",
+      "before": 58,
+      "after": 58,
+      "sha256": "2fe49ffdc5e366181257b1853555b5c74d68771353636c052a479e2a9f558ca5"
+    },
+    {
+      "file": "adapters/1.21.1/dev/rinchan/keepmysword/mixin/CraftingRepairMixin.java",
+      "status": "modified",
+      "before": 26,
+      "after": 40,
+      "sha256": "69d46a8fc7f8b0d2f8e2420c082e8bc435434b2b51d79b9226a0172f0f0d3dd9"
+    },
+    {
+      "file": "adapters/26-fabric/dev/rinchan/keepmysword/fabric/mixin/FabricItemStackDamageMixin.java",
+      "status": "modified",
+      "before": 48,
+      "after": 79,
+      "sha256": "56b5022a8c49e7f76d3de59414a5a9af3b042a14cefaeeacf708201f326c3a84"
+    },
+    {
+      "file": "adapters/26-fabric/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java",
+      "status": "modified",
+      "before": 62,
+      "after": 62,
+      "sha256": "bec3d6896a592f6eb9ca85b6187ae2c58ff3692a9c163a60b93f23e2beb43498"
+    },
+    {
+      "file": "adapters/26-neoforge/dev/rinchan/keepmysword/mixin/AnvilSnapshotMixin.java",
+      "status": "modified",
+      "before": 62,
+      "after": 62,
+      "sha256": "160b9dc0e11cac155800533315decf8173a58e71de9e1c90dd7c1257dff0d993"
+    },
+    {
+      "file": "adapters/26-neoforge/dev/rinchan/keepmysword/neoforge/mixin/NeoForgeItemStackDamageMixin.java",
+      "status": "modified",
+      "before": 48,
+      "after": 64,
+      "sha256": "f57cc15a4e324f3c5a3a2d9a93884970569629d25676a93f2354d263222de725"
+    },
+    {
+      "file": "adapters/26/dev/rinchan/keepmysword/client/mixin/SealedItemRendererMixin.java",
+      "status": "modified",
+      "before": 22,
+      "after": 23,
+      "sha256": "94d58432f9652ede6ae9da93b080f329ea74b549b47c979472b8c77c6f3b313b"
+    },
+    {
+      "file": "adapters/26/dev/rinchan/keepmysword/client/mixin/SealedTooltipMixin.java",
+      "status": "modified",
+      "before": 38,
+      "after": 40,
+      "sha256": "a68ff3cb4efd1d641d6cdebc64a245d10b48ef5e34df5f0f7bb7d1cb4474719f"
+    },
+    {
+      "file": "adapters/26/dev/rinchan/keepmysword/mixin/CraftingRepairMixin.java",
+      "status": "modified",
+      "before": 26,
+      "after": 40,
+      "sha256": "84ec7f90fd9eb6b9f09eaa507883f44a4d48a54ceebd8b3a202190b2369789aa"
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/client/mixin/ClientContextMixin.java",
+      "status": "deleted",
+      "before": 24,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/item/CarrierSnapshot.java",
+      "status": "modified",
+      "before": 122,
+      "after": 87,
+      "sha256": "1d6769c638c0d37ebf95a6fa97332640c88d896077e9d57966a5b58e0797bd2f"
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/item/RegistryContext.java",
+      "status": "deleted",
+      "before": 43,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/item/RepairSlot.java",
+      "status": "added",
+      "before": 0,
+      "after": 7,
+      "sha256": "e513903f61bc6bd1166d808a997516ce943aecbbd8eb2a896683981bf26cc62c"
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/item/SealedItems.java",
+      "status": "modified",
+      "before": 82,
+      "after": 69,
+      "sha256": "4f5d304d6be0de2ea94e848e16a4f606aaa5c14da3bb2869472d6e279e492fdf"
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/item/SnapshotScope.java",
+      "status": "deleted",
+      "before": 44,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/mixin/CarrierDataProtectionMixin.java",
+      "status": "deleted",
+      "before": 84,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/mixin/DurabilityMutationMixin.java",
+      "status": "deleted",
+      "before": 47,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/mixin/EquippedBreakMixin.java",
+      "status": "deleted",
+      "before": 25,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneInputMixin.java",
+      "status": "modified",
+      "before": 22,
+      "after": 30,
+      "sha256": "e9fe5158498773db8ceae1a8f45a0dbbdf457117a10ceae3d2a681b6ec98830d"
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/mixin/GrindstoneRepairMixin.java",
+      "status": "modified",
+      "before": 25,
+      "after": 45,
+      "sha256": "2aaa201cffdc22c04e70881b84492adc95cac2e986d37f0c4ce10162a4a8bf19"
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/mixin/ServerContextMixin.java",
+      "status": "deleted",
+      "before": 19,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "common/src/main/java/dev/rinchan/keepmysword/mixin/SnapshotCacheMixin.java",
+      "status": "modified",
+      "before": 35,
+      "after": 39,
+      "sha256": "e765b142551bbcd827933a826a6def518f9efc4f0a6cb76a37c0609c1488be62"
+    },
+    {
+      "file": "common/src/main/resources/keep_my_sword.client.mixins.json",
+      "status": "modified",
+      "before": 15,
+      "after": 14,
+      "sha256": "31459766fad6fcfed8a2cd9e1390b21e0c7e3a6299ec4073f00cfb57d7d3f8ea"
+    },
+    {
+      "file": "common/src/main/resources/keep_my_sword.mixins.json",
+      "status": "modified",
+      "before": 25,
+      "after": 21,
+      "sha256": "f77131ff1f98aeef7b4cde8fc6cb04dc162d564ca9e8a30239e5429c52b7b22b"
+    },
+    {
+      "file": "docs/sealed-items.md",
+      "status": "modified",
+      "before": 49,
+      "after": 49,
+      "sha256": "3ab85fed0aaf0e905d117e9fd76036b4d48f921eeeb8aea9c343d8960883dc7e"
+    },
+    {
+      "file": "neoforge/src/test/java/dev/rinchan/keepmysword/item/UnscopedSealingTest.java",
+      "status": "deleted",
+      "before": 26,
+      "after": 0,
+      "sha256": null
+    },
+    {
+      "file": "runtime-tests/README.md",
+      "status": "modified",
+      "before": 44,
+      "after": 44,
+      "sha256": "b5e30e8d74419239ec07c488d2283eba83490a9cffd641a099e4b70c96a9e41d"
+    },
+    {
+      "file": "runtime-tests/common/java/dev/rinchan/rinlibprobe/CarrierChecks.java",
+      "status": "modified",
+      "before": 167,
+      "after": 166,
+      "sha256": "0d5765dbec582c47c122f24e7b7b16ca54b4e2e46d211d3344658606d9a94b50"
+    },
+    {
+      "file": "runtime-tests/common/java/dev/rinchan/rinlibprobe/MoreSafetyTests.java",
+      "status": "modified",
+      "before": 156,
+      "after": 174,
+      "sha256": "803574ebefcc1c64060eaef18f56f46771ccaecff6b2ac028e6913d1a776ba65"
+    },
+    {
+      "file": "runtime-tests/common/java/dev/rinchan/rinlibprobe/PreviewScreen.java",
+      "status": "modified",
+      "before": 49,
+      "after": 54,
+      "sha256": "01f78a42d3a560c5741d2805e4ebbbee2952694103940ef382693c2638de9bd5"
+    },
+    {
+      "file": "runtime-tests/common/java/dev/rinchan/rinlibprobe/RuntimeProbe.java",
+      "status": "modified",
+      "before": 304,
+      "after": 322,
+      "sha256": "6da3ff6d781939fd634f949d3e4d75c7ff0844bcc20f0b5c0d88f85b4aff0939"
+    },
+    {
+      "file": "runtime-tests/common/java/dev/rinchan/rinlibprobe/TriggerChecks.java",
+      "status": "added",
+      "before": 0,
+      "after": 135,
+      "sha256": "fa5c57e3355c3ed5806370e76d08888d3c918d665f7c597dcf781fead7b88cc7"
+    },
+    {
+      "file": "runtime-tests/prepare.py",
+      "status": "modified",
+      "before": 145,
+      "after": 162,
+      "sha256": "196399816062a66306951633e7d1be127560a376be77b653d31e574b2193310a"
+    },
+    {
+      "file": "runtime-tests/unload/java/dev/rinchan/rinlibprobe/RuntimeProbe.java",
+      "status": "modified",
+      "before": 95,
+      "after": 100,
+      "sha256": "a4e9a49da541ffd9eedebd89c02cedabe688e4e3a389c6e758671358e2b9ae41"
+    }
+  ]
+}

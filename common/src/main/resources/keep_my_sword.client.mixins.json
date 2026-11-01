@@ -6,8 +6,7 @@
   "client": [
     "GuiGraphicsMixin",
     "SealedItemRendererMixin",
-    "SealedTooltipMixin",
-    "ClientContextMixin"
+    "SealedTooltipMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -15,55 +15,20 @@ import java.util.Base64;
 /** Native custom data only: no registered item/component is required to keep a snapshot. */
 public final class CarrierSnapshot {
     public static final String KEY = "keep_my_sword:sealed";
-    private static final int SCHEMA = 1;
-    private static final int CHUNK_SIZE = 16000;
-    private static final int MAX_BYTES = 16 * 1024 * 1024;
 
     public static DataResult<CompoundTag> encode(
             ItemStack original, HolderLookup.Provider registries) {
-        if (registries == null) return DataResult.error(() -> "No item registry context");
         try {
-            return SnapshotScope.call(
-                            () ->
-                                    ItemStack.CODEC.encodeStart(
-                                            registries.createSerializationContext(NbtOps.INSTANCE),
-                                            original.copyWithCount(1)))
+            return ItemStack.CODEC
+                    .encodeStart(
+                            registries.createSerializationContext(NbtOps.INSTANCE),
+                            original.copyWithCount(1))
                     .flatMap(
                             tag -> {
-                                try {
-                                    if (!(tag instanceof CompoundTag compound))
-                                        return DataResult.error(() -> "Invalid item snapshot");
-                                    var bytes = new ByteArrayOutputStream();
-                                    NbtIo.writeCompressed(compound, bytes);
-                                    if (bytes.size() > MAX_BYTES)
-                                        return DataResult.error(() -> "Item snapshot too large");
-                                    var verified =
-                                            NbtIo.readCompressed(
-                                                    new ByteArrayInputStream(bytes.toByteArray()),
-                                                    NbtAccounter.create(MAX_BYTES));
-                                    if (!verified.equals(compound))
-                                        return DataResult.error(
-                                                () -> "Native NBT encoding changed item data");
-                                    String encoded =
-                                            Base64.getEncoder().encodeToString(bytes.toByteArray());
-                                    var chunks = new ListTag();
-                                    for (int i = 0; i < encoded.length(); i += CHUNK_SIZE)
-                                        chunks.add(
-                                                StringTag.valueOf(
-                                                        encoded.substring(
-                                                                i,
-                                                                Math.min(
-                                                                        i + CHUNK_SIZE,
-                                                                        encoded.length()))));
-                                    var envelope = new CompoundTag();
-                                    envelope.putInt("schema", SCHEMA);
-                                    envelope.putInt("data_version", VersionSupport.dataVersion());
-                                    envelope.put("chunks", chunks);
-                                    return DataResult.success(envelope);
-                                } catch (IOException | RuntimeException failure) {
-                                    return DataResult.error(
-                                            () -> "Cannot preserve item: " + failure.getMessage());
-                                }
+                                if (!(tag instanceof CompoundTag compound))
+                                    return DataResult.error(() -> "Invalid item snapshot");
+                                compound.putInt("DataVersion", VersionSupport.dataVersion());
+                                return DataResult.success(compound);
                             });
         } catch (RuntimeException failure) {
             return DataResult.error(() -> "Cannot preserve item: " + failure.getMessage());
@@ -71,31 +36,18 @@ public final class CarrierSnapshot {
     }
 
     public static DataResult<ItemStack> decode(
-            CompoundTag envelope, HolderLookup.Provider registries) {
+            CompoundTag payload, HolderLookup.Provider registries) {
         if (registries == null) return DataResult.error(() -> "No item registry context");
-        if (VersionSupport.integer(envelope, "schema") != SCHEMA
-                || !VersionSupport.has(envelope, "data_version", 99))
+        boolean legacy = payload.contains("chunks");
+        String versionKey = legacy ? "data_version" : "DataVersion";
+        if (!VersionSupport.has(payload, versionKey, 99)
+                || (legacy && VersionSupport.integer(payload, "schema") != 1))
             return DataResult.error(() -> "Unrecognized item snapshot");
-        int version = VersionSupport.integer(envelope, "data_version");
+        int version = VersionSupport.integer(payload, versionKey);
         if (version < 0 || version > VersionSupport.dataVersion())
             return DataResult.error(() -> "Item snapshot is from an unsupported version");
         try {
-            if (!(envelope.get("chunks") instanceof ListTag chunks) || chunks.isEmpty())
-                return DataResult.error(() -> "Missing item snapshot");
-            var encoded = new StringBuilder();
-            for (int i = 0; i < chunks.size(); i++) {
-                if (!(chunks.get(i) instanceof StringTag))
-                    return DataResult.error(() -> "Invalid snapshot chunk");
-                String chunk = VersionSupport.chunk(chunks, i);
-                if (chunk.length() > CHUNK_SIZE
-                        || encoded.length() + chunk.length() > MAX_BYTES * 4 / 3 + 4)
-                    return DataResult.error(() -> "Item snapshot too large");
-                encoded.append(chunk);
-            }
-            var bytes = Base64.getDecoder().decode(encoded.toString());
-            var tag =
-                    NbtIo.readCompressed(
-                            new ByteArrayInputStream(bytes), NbtAccounter.create(MAX_BYTES));
+            var tag = legacy ? readLegacy(payload) : payload;
             var upgraded =
                     DataFixers.getDataFixer()
                             .update(
@@ -103,11 +55,10 @@ public final class CarrierSnapshot {
                                     new Dynamic<>(NbtOps.INSTANCE, tag),
                                     version,
                                     VersionSupport.dataVersion());
-            return SnapshotScope.call(
-                            () ->
-                                    ItemStack.CODEC.parse(
-                                            registries.createSerializationContext(NbtOps.INSTANCE),
-                                            upgraded.getValue()))
+            return ItemStack.CODEC
+                    .parse(
+                            registries.createSerializationContext(NbtOps.INSTANCE),
+                            upgraded.getValue())
                     .flatMap(
                             stack ->
                                     stack.isEmpty() || SealedItems.isSealed(stack)
@@ -116,6 +67,20 @@ public final class CarrierSnapshot {
         } catch (IOException | RuntimeException failure) {
             return DataResult.error(() -> "Cannot recover item: " + failure.getMessage());
         }
+    }
+
+    private static CompoundTag readLegacy(CompoundTag payload) throws IOException {
+        if (!(payload.get("chunks") instanceof ListTag chunks) || chunks.isEmpty())
+            throw new IOException("Missing item snapshot");
+        var encoded = new StringBuilder();
+        for (int i = 0; i < chunks.size(); i++) {
+            if (!(chunks.get(i) instanceof StringTag))
+                throw new IOException("Invalid snapshot chunk");
+            encoded.append(VersionSupport.chunk(chunks, i));
+        }
+        return NbtIo.readCompressed(
+                new ByteArrayInputStream(Base64.getDecoder().decode(encoded.toString())),
+                NbtAccounter.unlimitedHeap());
     }
 
     private CarrierSnapshot() {}

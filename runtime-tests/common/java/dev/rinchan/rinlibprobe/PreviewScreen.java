@@ -20,6 +20,11 @@ public final class PreviewScreen extends Screen {
         for (int i = 0; i < healthy.length; i++) {
             broken[i] = healthy[i].copy();
             broken[i].setDamageValue(broken[i].getMaxDamage());
+            // Explicit render fixture; client-side setters are not live break events.
+            broken[i] =
+                    SealedItems.seal(
+                            broken[i],
+                            net.minecraft.client.Minecraft.getInstance().level.registryAccess());
             if (!SealedItems.isSealed(broken[i]))
                 throw new AssertionError("client item not sealed");
         }

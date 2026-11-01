@@ -25,16 +25,14 @@ public abstract class AnvilSnapshotMixin extends ItemCombinerMenu {
     private void kms$repairScope(Operation<Void> original) {
         for (int i = 0; i < inputSlots.getContainerSize(); i++) {
             var input = inputSlots.getItem(i);
-            if (SealedItems.isSealed(input) && SealedItems.originalForRepair(input).isEmpty()) {
+            if (SealedItems.isSealed(input)
+                    && SealedItems.originalForRepair(input, player.level().registryAccess())
+                            .isEmpty()) {
                 resultSlots.setItem(0, ItemStack.EMPTY);
                 return;
             }
         }
-        SnapshotScope.call(
-                () -> {
-                    original.call();
-                    return null;
-                });
+        original.call();
     }
 
     @WrapOperation(
@@ -46,13 +44,15 @@ public abstract class AnvilSnapshotMixin extends ItemCombinerMenu {
                                     "Lnet/minecraft/world/Container;getItem(I)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack kms$snapshot(Container container, int slot, Operation<ItemStack> original) {
         var stack = original.call(container, slot);
-        return SealedItems.originalForRepair(stack);
+        return SealedItems.originalForRepair(stack, player.level().registryAccess());
     }
 
     @Inject(method = "createResult", at = @At("TAIL"))
     private void kms$keepBrokenOutputSealed(CallbackInfo ci) {
+        if (!SealedItems.isSealed(inputSlots.getItem(0))
+                && !SealedItems.isSealed(inputSlots.getItem(1))) return;
         var result = resultSlots.getItem(0);
-        var sealed = SealedItems.seal(result);
+        var sealed = SealedItems.seal(result, player.level().registryAccess());
         if (sealed != result) resultSlots.setItem(0, sealed);
     }
 }

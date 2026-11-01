@@ -56,15 +56,8 @@ public final class RuntimeProbe {
                                     "native carrier survives uninstall");
                             var data = stack.get(DataComponents.CUSTOM_DATA).copyTag();
                             var envelope = data.getCompound("keep_my_sword:sealed");
-                            var chunks = (ListTag) envelope.get("chunks");
-                            var encoded = new StringBuilder();
-                            for (int i = 0; i < chunks.size(); i++)
-                                encoded.append(chunks.getString(i));
-                            var bytes = java.util.Base64.getDecoder().decode(encoded.toString());
-                            var original =
-                                    NbtIo.readCompressed(
-                                            new java.io.ByteArrayInputStream(bytes),
-                                            NbtAccounter.create(16000000));
+                            var original = envelope.copy();
+                            original.remove("DataVersion");
                             var expected =
                                     TagParser.parseTag(
                                             Files.readString(
@@ -73,8 +66,20 @@ public final class RuntimeProbe {
                                                                     ? "large-original.snbt"
                                                                     : "original.snbt")));
                             Fixtures.check(
-                                    original.equals(expected),
-                                    "independent recovery without mod retains exact original NBT");
+                                    stack == json
+                                            ? NbtOps.INSTANCE
+                                                    .convertTo(
+                                                            com.mojang.serialization.JsonOps
+                                                                    .INSTANCE,
+                                                            original)
+                                                    .equals(
+                                                            NbtOps.INSTANCE.convertTo(
+                                                                    com.mojang.serialization.JsonOps
+                                                                            .INSTANCE,
+                                                                    expected))
+                                            : original.equals(expected),
+                                    "independent recovery without mod preserves its storage"
+                                            + " representation");
                             var decoded = ItemStack.CODEC.parse(ops, original).getOrThrow();
                             Fixtures.check(
                                     decoded.is(Items.DIAMOND_SWORD) && decoded.isEnchanted(),

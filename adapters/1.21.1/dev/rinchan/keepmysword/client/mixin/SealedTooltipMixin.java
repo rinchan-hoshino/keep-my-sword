@@ -27,7 +27,9 @@ public abstract class SealedTooltipMixin {
             CallbackInfoReturnable<List<Component>> cir) {
         var stack = (ItemStack) (Object) this;
         if (!SealedItems.isSealed(stack)) return;
-        var original = SealedItems.originalForRepair(stack);
+        var level = net.minecraft.client.Minecraft.getInstance().level;
+        if (level == null) return;
+        var original = SealedItems.originalForRepair(stack, level.registryAccess());
         if (original.isEmpty()) return;
         var lines = new ArrayList<>(original.getTooltipLines(context, player, flag));
         lines.add(

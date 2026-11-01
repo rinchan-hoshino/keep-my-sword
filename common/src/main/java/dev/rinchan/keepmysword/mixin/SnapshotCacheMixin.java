@@ -19,6 +19,10 @@ public abstract class SnapshotCacheMixin implements SnapshotCache {
     public ItemStack kms$original(HolderLookup.Provider registries) {
         var stack = (ItemStack) (Object) this;
         var data = stack.get(DataComponents.CUSTOM_DATA);
+        if (registries == null)
+            return kms$data == data && kms$decoded != null
+                    ? kms$decoded.copyWithCount(stack.getCount())
+                    : ItemStack.EMPTY;
         if (kms$decoded == null || kms$data != data || kms$registries != registries) {
             kms$data = data;
             kms$registries = registries;
@@ -30,6 +34,6 @@ public abstract class SnapshotCacheMixin implements SnapshotCache {
                                     .orElse(ItemStack.EMPTY)
                             : ItemStack.EMPTY;
         }
-        return SnapshotScope.call(() -> kms$decoded.copyWithCount(stack.getCount()));
+        return kms$decoded.copyWithCount(stack.getCount());
     }
 }

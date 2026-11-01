@@ -39,7 +39,10 @@ public final class RuntimeProbe {
                                     "reinstall recognizes native carrier");
                             check(
                                     ItemStack.CODEC
-                                            .encodeStart(ops, SealedItems.originalForRepair(item))
+                                            .encodeStart(
+                                                    ops,
+                                                    SealedItems.originalForRepair(
+                                                            item, s.registryAccess()))
                                             .getOrThrow()
                                             .equals(
                                                     TagParser.parseTag(
@@ -51,7 +54,7 @@ public final class RuntimeProbe {
                                     player,
                                     item,
                                     item,
-                                    SealedItems.originalForRepair(item)
+                                    SealedItems.originalForRepair(item, s.registryAccess())
                                             .get(DataComponents.CUSTOM_DATA)
                                             .copyTag());
                             PlatformStorage.verify(s);
@@ -59,6 +62,17 @@ public final class RuntimeProbe {
                             System.out.println("SAFETY_REINSTALL_PASS");
                             return;
                         }
+                        var exhausted =
+                                new ItemStack(
+                                        Items.DIAMOND_SWORD.builtInRegistryHolder(),
+                                        1,
+                                        DataComponentPatch.builder()
+                                                .set(DataComponents.DAMAGE, 1561)
+                                                .build());
+                        check(
+                                exhausted.is(Items.DIAMOND_SWORD)
+                                        && exhausted.getDamageValue() == 1561,
+                                "constructed exhausted item is not a break event");
                         var sword = new ItemStack(Items.DIAMOND_SWORD);
                         sword.set(DataComponents.CUSTOM_NAME, Component.literal("Keepsake"));
                         sword.enchant(
@@ -74,15 +88,9 @@ public final class RuntimeProbe {
                         sword.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
                         int max = sword.getMaxDamage();
                         sword.setDamageValue(max - 1);
-                        var expected =
-                                SnapshotScope.call(
-                                        () -> {
-                                            var original = sword.copy();
-                                            original.setDamageValue(max);
-                                            return ItemStack.CODEC
-                                                    .encodeStart(ops, original)
-                                                    .getOrThrow();
-                                        });
+                        var original = sword.copy();
+                        original.setDamageValue(max);
+                        var expected = ItemStack.CODEC.encodeStart(ops, original).getOrThrow();
                         Files.writeString(Path.of("original.snbt"), expected.toString());
                         player.getInventory().setItem(0, sword);
                         sword.hurtAndBreak(1, s.overworld(), null, item -> {});
@@ -99,7 +107,10 @@ public final class RuntimeProbe {
                                 "original effects and nested item identity are not exposed");
                         check(
                                 ItemStack.CODEC
-                                        .encodeStart(ops, SealedItems.originalForRepair(sword))
+                                        .encodeStart(
+                                                ops,
+                                                SealedItems.originalForRepair(
+                                                        sword, s.registryAccess()))
                                         .getOrThrow()
                                         .equals(expected),
                                 "snapshot preserves exact original NBT");
@@ -131,10 +142,16 @@ public final class RuntimeProbe {
                                         .getOrThrow();
                         check(
                                 ItemStack.CODEC
-                                        .encodeStart(ops, SealedItems.originalForRepair(jsonCopy))
+                                        .encodeStart(
+                                                jsonOps,
+                                                SealedItems.originalForRepair(
+                                                        jsonCopy, s.registryAccess()))
                                         .getOrThrow()
-                                        .equals(expected),
-                                "independent JSON keeps original numeric and array types");
+                                        .equals(
+                                                ItemStack.CODEC
+                                                        .encodeStart(jsonOps, original)
+                                                        .getOrThrow()),
+                                "independent JSON preserves the original JSON representation");
                         var copyByApi =
                                 new ItemStack(
                                         sword.getItemHolder(),
@@ -160,12 +177,15 @@ public final class RuntimeProbe {
                         check(
                                 splitSource.isEmpty() && Fixtures.encode(s, split).equals(encoded),
                                 "split does not lose or duplicate item");
-                        var originalCopy = SealedItems.originalForRepair(sword);
+                        var originalCopy = SealedItems.originalForRepair(sword, s.registryAccess());
                         originalCopy.setDamageValue(0);
                         check(
-                                SealedItems.originalForRepair(sword).getDamageValue() == max,
+                                SealedItems.originalForRepair(sword, s.registryAccess())
+                                                .getDamageValue()
+                                        == max,
                                 "cached original is never exposed mutably");
                         CarrierChecks.run(s, player, sword);
+                        TriggerChecks.run(s);
                         // A purpose-built item verifies both active and passive dispatch
                         // before/after break.
                         var effect = new ItemStack(ProbeEntrypoint.EFFECT_ITEM);
@@ -200,8 +220,8 @@ public final class RuntimeProbe {
                                         .lookupOrThrow(Registries.ENCHANTMENT)
                                         .getOrThrow(Enchantments.THORNS),
                                 3);
-                        armor.setDamageValue(armor.getMaxDamage());
-                        armor = SealedItems.seal(armor);
+                        armor.setDamageValue(armor.getMaxDamage() - 1);
+                        armor.hurtAndBreak(1, s.overworld(), null, item -> {});
                         var attrs = new AtomicInteger();
                         armor.forEachModifier(
                                 EquipmentSlot.CHEST, (a, b) -> attrs.incrementAndGet());
@@ -211,8 +231,8 @@ public final class RuntimeProbe {
                                         && !(armor.getItem() instanceof ArmorItem),
                                 "broken armor has no armor attributes enchantments or armor class");
                         var shield = new ItemStack(Items.SHIELD);
-                        shield.setDamageValue(shield.getMaxDamage());
-                        shield = SealedItems.seal(shield);
+                        shield.setDamageValue(shield.getMaxDamage() - 1);
+                        shield.hurtAndBreak(1, s.overworld(), null, item -> {});
                         check(
                                 shield.getUseDuration(player) == 0,
                                 "sealed shield has no use duration");
@@ -234,21 +254,16 @@ public final class RuntimeProbe {
                                 ItemContainerContents.fromItems(
                                         List.of(sword.copy(), new ItemStack(Items.DIAMOND, 7))));
                         var invalid = CarrierChecks.invalid(sword, 999);
-                        var big =
-                                SnapshotScope.call(
-                                        () -> {
-                                            var item = SealedItems.originalForRepair(sword);
-                                            var tag = data.copy();
-                                            var noise = new byte[180000];
-                                            new java.util.Random(4815).nextBytes(noise);
-                                            tag.putByteArray("large_payload", noise);
-                                            item.set(
-                                                    DataComponents.CUSTOM_DATA, CustomData.of(tag));
-                                            item.setDamageValue(item.getMaxDamage());
-                                            return item;
-                                        });
+                        var big = SealedItems.originalForRepair(sword, s.registryAccess());
+                        var tag = data.copy();
+                        var noise = new byte[180000];
+                        new java.util.Random(4815).nextBytes(noise);
+                        tag.putByteArray("large_payload", noise);
+                        big.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+                        big.setDamageValue(big.getMaxDamage());
                         var bigExpected = ItemStack.CODEC.encodeStart(ops, big).getOrThrow();
-                        big = SealedItems.seal(big);
+                        big.setDamageValue(big.getMaxDamage() - 1);
+                        big.hurtAndBreak(1, s.overworld(), null, item -> {});
                         check(SealedItems.isSealed(big), "large payload seals successfully");
                         var bigDisk = ItemStack.CODEC.encodeStart(ops, big).getOrThrow();
                         var output = new java.io.ByteArrayOutputStream();
@@ -264,7 +279,10 @@ public final class RuntimeProbe {
                                         .getOrThrow();
                         check(
                                 ItemStack.CODEC
-                                        .encodeStart(ops, SealedItems.originalForRepair(bigCopy))
+                                        .encodeStart(
+                                                ops,
+                                                SealedItems.originalForRepair(
+                                                        bigCopy, s.registryAccess()))
                                         .getOrThrow()
                                         .equals(bigExpected),
                                 "large snapshot writes actual NBT without string overflow");

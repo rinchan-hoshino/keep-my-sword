@@ -11,20 +11,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemStack.class)
 public abstract class FabricItemStackDamageMixin {
-    @com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod(
+    // Vanilla's level overload receives only ServerPlayer, so mobs need their caller to refresh.
+    @Inject(
             method =
-                    "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V")
-    private void kms$damageTransaction(
+                    "hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V",
+            at = @At("TAIL"))
+    private void kms$refreshMob(
             int amount,
-            net.minecraft.server.level.ServerLevel level,
-            net.minecraft.server.level.ServerPlayer player,
-            java.util.function.Consumer<net.minecraft.world.item.Item> onBreak,
-            com.llamalad7.mixinextras.injector.wrapoperation.Operation<Void> original) {
-        dev.rinchan.keepmysword.item.SnapshotScope.call(
-                () -> {
-                    original.call(amount, level, player, onBreak);
-                    return null;
-                });
+            net.minecraft.world.entity.LivingEntity owner,
+            net.minecraft.world.entity.EquipmentSlot slot,
+            CallbackInfo ci) {
+        if (!(owner instanceof net.minecraft.server.level.ServerPlayer)
+                && owner.level() instanceof net.minecraft.server.level.ServerLevel
+                && SealedItems.isSealed((ItemStack) (Object) this))
+            ((dev.rinchan.keepmysword.item.EquipmentRefresh) owner).kms$refreshEquipment();
     }
 
     @Inject(
@@ -38,7 +38,9 @@ public abstract class FabricItemStackDamageMixin {
             net.minecraft.server.level.ServerPlayer player,
             java.util.function.Consumer<net.minecraft.world.item.Item> onBreak,
             CallbackInfo ci) {
-        SealedItems.sealInPlace((ItemStack) (Object) this, level.registryAccess());
+        if (SealedItems.sealInPlace((ItemStack) (Object) this, level.registryAccess())
+                && player != null)
+            ((dev.rinchan.keepmysword.item.EquipmentRefresh) player).kms$refreshEquipment();
         if (dev.rinchan.keepmysword.KeepMySword.isManagedBroken((ItemStack) (Object) this)) {
             ci.cancel();
         }
