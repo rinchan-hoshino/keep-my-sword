@@ -1,8 +1,9 @@
-# Current project icon
+# Project icon
 
-The current icon is AI-assisted artwork finalized on a native 32 × 32 pixel grid. Generated artwork was used together with pixel-grid linework/reconstruction and limited-palette processing. The final image contains only fully opaque or fully transparent pixels.
+A diamond sword broken in two and bound with a bandage: broken, but kept. Drawn pixel by pixel on a native 32 × 32 grid; every pixel is fully opaque or fully transparent.
 
 - Native file: `docs/artwork/icon-32.png`
-- Page/platform file: `docs/artwork/icon.png` (512 × 512, exact nearest-neighbor enlargement)
+- Page/platform file: `docs/artwork/icon.png` (512 × 512, exact nearest-neighbor enlargement; also `common/src/main/resources/icon.png`)
+- Source: `docs/artwork/draw_icon.py` (standard library only) regenerates both files.
 
-The current artwork was selected by the project owner. Historical drawing scripts and earlier 48-pixel exports describe previous icon revisions, not the current file.
+The current artwork was selected by the project owner.
