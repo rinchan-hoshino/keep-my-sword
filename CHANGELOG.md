@@ -1,6 +1,6 @@
 ## 未发布
 
-- 不再需要 RinLib。
+- 内置 RinLib 2.0，玩家无需另装。
 
 ## Keep My Sword 1.2.0
 

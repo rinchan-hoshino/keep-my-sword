@@ -35,3 +35,10 @@ ordering="NONE"
 side="BOTH"
 
 ${extra_mixins}
+
+[[dependencies.${mod_id}]]
+modId="rinlib"
+type="required"
+versionRange="[${rinlib_version},)"
+ordering="NONE"
+side="BOTH"

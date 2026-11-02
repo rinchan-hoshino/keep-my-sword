@@ -16,8 +16,6 @@ base {
 }
 
 sourceSets.main.java.srcDir root.file('common/src/main/java')
-sourceSets.main.java.srcDir rootProject.file('adapters/' + rootProject.source_adapter)
-sourceSets.main.java.srcDir rootProject.file('adapters/' + rootProject.source_adapter + '-fabric')
 sourceSets.main.resources.srcDir root.file('common/src/main/resources')
 
 if (!unobfuscated) loom {
@@ -28,11 +26,21 @@ if (!unobfuscated) loom {
 }
 
 dependencies {
+    def rinlib = "maven.modrinth:rinlib:${rootProject.rinlib_version}+${rootProject.minecraft_version}-fabric"
+    if (rootProject.hasProperty('rinlibJar')) {
+        def localJar = file(rootProject.property('rinlibJar'))
+        repositories { flatDir { dirs localJar.parentFile } }
+        rinlib = dependencies.create("dev.rinchan:rinlib-fabric:${rootProject.rinlib_version}+${rootProject.minecraft_version}") {
+            artifact { name = localJar.name - '.jar'; type = 'jar'; extension = 'jar' }
+        }
+    }
+    add(Boolean.getBoolean('probe.bundled') ? (unobfuscated ? 'compileOnly' : 'modCompileOnly') : (unobfuscated ? 'implementation' : 'modImplementation'), rinlib)
+    include rinlib
+
     implementation 'com.electronwill.night-config:toml:3.8.3'
     include 'com.electronwill.night-config:core:3.8.3'
     include 'com.electronwill.night-config:toml:3.8.3'
-    // API is available to development probes only; the shipped mod registers no content.
-    add(unobfuscated ? 'localRuntime' : 'modLocalRuntime', "net.fabricmc.fabric-api:fabric-api:${root.fabric_api_version}")
+    add(unobfuscated ? 'implementation' : 'modImplementation', "net.fabricmc.fabric-api:fabric-api:${root.fabric_api_version}")
     compileOnly "net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7"
     minecraft "com.mojang:minecraft:${root.property('minecraft_version')}"
     if (!unobfuscated) mappings loom.officialMojangMappings()
@@ -40,6 +48,7 @@ dependencies {
 }
 
 def resourceProperties = [
+    rinlib_version: root.property('rinlib_version'),
     mod_id: modId,
     mod_name: root.property('mod_name'),
     mod_version: root.property('mod_version'),

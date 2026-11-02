@@ -1,5 +1,7 @@
 package dev.rinchan.keepmysword.item;
 
+import dev.rinchan.rinlib.v2.GameVersion;
+import dev.rinchan.rinlib.v2.Nbt;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 
@@ -24,7 +26,7 @@ public final class CarrierSnapshot {
                             tag -> {
                                 if (!(tag instanceof CompoundTag compound))
                                     return DataResult.error(() -> "Invalid item snapshot");
-                                compound.putInt("DataVersion", VersionSupport.dataVersion());
+                                compound.putInt("DataVersion", GameVersion.dataVersion());
                                 return DataResult.success(compound);
                             });
         } catch (RuntimeException failure) {
@@ -37,8 +39,8 @@ public final class CarrierSnapshot {
         if (registries == null) return DataResult.error(() -> "No item registry context");
         if (!VersionSupport.has(payload, "DataVersion", 99))
             return DataResult.error(() -> "Unrecognized item snapshot");
-        int version = VersionSupport.integer(payload, "DataVersion");
-        if (version < 0 || version > VersionSupport.dataVersion())
+        int version = Nbt.getInt(payload, "DataVersion");
+        if (version < 0 || version > GameVersion.dataVersion())
             return DataResult.error(() -> "Item snapshot is from an unsupported version");
         try {
             var upgraded =
@@ -47,7 +49,7 @@ public final class CarrierSnapshot {
                                     References.ITEM_STACK,
                                     new Dynamic<>(NbtOps.INSTANCE, payload),
                                     version,
-                                    VersionSupport.dataVersion());
+                                    GameVersion.dataVersion());
             return ItemStack.CODEC
                     .parse(
                             registries.createSerializationContext(NbtOps.INSTANCE),

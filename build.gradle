@@ -8,7 +8,6 @@ def selected = providers.gradleProperty('minecraft_version').get()
 def target = profiles[selected]
 if (target == null) throw new GradleException("Unsupported Minecraft profile: ${selected}")
 ext.java_version = target.java
-ext.source_adapter = target.adapter
 ext.fabric_api_version = target.fabric
 ext.neo_version = target.neo
 ext.minecraft_version_range = target.range
@@ -22,6 +21,7 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven { url = "https://api.modrinth.com/maven" }
         maven { url = 'https://maven.fabricmc.net/' }
         maven { url = 'https://maven.neoforged.net/releases' }
     }

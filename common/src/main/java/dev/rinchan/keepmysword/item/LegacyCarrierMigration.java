@@ -1,5 +1,7 @@
 package dev.rinchan.keepmysword.item;
 
+import dev.rinchan.rinlib.v2.GameVersion;
+import dev.rinchan.rinlib.v2.Nbt;
 import com.mojang.serialization.DataResult;
 
 import net.minecraft.core.HolderLookup;
@@ -15,10 +17,10 @@ public final class LegacyCarrierMigration {
             CompoundTag payload, HolderLookup.Provider registries) {
         if (registries == null) return DataResult.error(() -> "No item registry context");
         if (!VersionSupport.has(payload, "data_version", 99)
-                || VersionSupport.integer(payload, "schema") != 1)
+                || Nbt.getInt(payload, "schema") != 1)
             return DataResult.error(() -> "Unrecognized item snapshot");
-        int version = VersionSupport.integer(payload, "data_version");
-        if (version < 0 || version > VersionSupport.dataVersion())
+        int version = Nbt.getInt(payload, "data_version");
+        if (version < 0 || version > GameVersion.dataVersion())
             return DataResult.error(() -> "Item snapshot is from an unsupported version");
         try {
             var tag = readLegacy(payload);
@@ -36,7 +38,7 @@ public final class LegacyCarrierMigration {
         for (int i = 0; i < chunks.size(); i++) {
             if (!(chunks.get(i) instanceof StringTag))
                 throw new IOException("Invalid snapshot chunk");
-            encoded.append(VersionSupport.chunk(chunks, i));
+            encoded.append(Nbt.getString(chunks, i));
         }
         return NbtIo.readCompressed(
                 new ByteArrayInputStream(Base64.getDecoder().decode(encoded.toString())),

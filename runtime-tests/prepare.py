@@ -25,6 +25,10 @@ for folder in [
     "unload-entry",
 ]:
     shutil.copytree(root / folder, out / folder, dirs_exist_ok=True)
+# These fixtures use native client/identifier types; materialize them before version aliases.
+for template in out.rglob("*.java.in"):
+    template.with_suffix("").write_bytes(template.read_bytes())
+    template.unlink()
 for name in ["IndependentStorage.java", "PlatformStorage.java"]:
     shutil.copy2(
         out / "common/java/dev/rinchan/kmsprobe" / name,

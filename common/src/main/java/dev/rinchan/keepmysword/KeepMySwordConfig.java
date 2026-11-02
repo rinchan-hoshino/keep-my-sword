@@ -1,5 +1,6 @@
 package dev.rinchan.keepmysword;
 
+import dev.rinchan.rinlib.v2.Ids;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +23,7 @@ public record KeepMySwordConfig(Set<String> excludedItems) {
             }
             Object value = file.get("excludedItems");
             if (!(value instanceof List<?> entries) || entries.stream().anyMatch(entry ->
-                    !(entry instanceof String selector) || !VersionTags.validSelector(selector))) {
+                    !(entry instanceof String selector) || !Ids.isValid(selector.startsWith("#") ? selector.substring(1) : selector))) {
                 throw new IllegalArgumentException("keep_my_sword.toml: excludedItems must contain item IDs or #item_tag IDs");
             }
             return new KeepMySwordConfig(entries.stream().map(String.class::cast).collect(Collectors.toSet()));

@@ -4,9 +4,6 @@
   "package": "dev.rinchan.keepmysword.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "StackReplacementMixin",
-    "AnvilSnapshotMixin",
-    "CraftingRepairMixin",
     "GrindstoneRepairMixin",
     "GrindstoneInputMixin",
     "GrindstoneExperienceMixin",

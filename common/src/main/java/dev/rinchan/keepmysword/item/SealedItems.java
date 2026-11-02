@@ -91,7 +91,7 @@ public final class SealedItems {
     public static boolean sealInPlace(ItemStack stack, HolderLookup.Provider registries) {
         var replacement = seal(stack, registries);
         if (replacement == stack) return false;
-        ((ReplaceableStack) (Object) stack).kms$replaceWith(replacement);
+        dev.rinchan.rinlib.v2.Items.replaceContents(stack, replacement);
         return true;
     }
 

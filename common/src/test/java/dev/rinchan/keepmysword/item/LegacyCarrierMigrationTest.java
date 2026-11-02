@@ -1,5 +1,6 @@
 package dev.rinchan.keepmysword.item;
 
+import dev.rinchan.rinlib.v2.GameVersion;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -21,7 +22,7 @@ class LegacyCarrierMigrationTest {
         var level = mock(ServerLevel.class);
         when(level.registryAccess()).thenReturn(registries);
         var payload = new CompoundTag();
-        payload.putInt("DataVersion", VersionSupport.dataVersion());
+        payload.putInt("DataVersion", GameVersion.dataVersion());
         payload.putString("id", "minecraft:diamond_sword");
         var data = new CompoundTag();
         data.put(CarrierSnapshot.KEY, payload);

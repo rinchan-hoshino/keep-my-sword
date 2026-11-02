@@ -3,9 +3,7 @@
   "minVersion": "0.8",
   "package": "dev.rinchan.keepmysword.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "NeoForgeItemStackDamageMixin"
-  ],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
   }
