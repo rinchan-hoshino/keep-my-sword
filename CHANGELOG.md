@@ -1,6 +1,6 @@
-## 未发布
+## Keep My Sword 1.2.1
 
-- 内置 RinLib 2.0，玩家无需另装。
+- RinLib is now bundled inside Keep My Sword — no separate RinLib download needed.
 
 ## Keep My Sword 1.2.0
 
