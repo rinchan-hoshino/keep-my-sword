@@ -3,10 +3,10 @@ package dev.rinchan.keepmysword.item;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class DamageStateTest {
     @BeforeAll
@@ -17,13 +17,12 @@ class DamageStateTest {
 
     @Test
     void newToolIsIntact() {
-        assertFalse(DamageState.isBroken(new ItemStack(Items.IRON_PICKAXE)));
+        assertFalse(DamageState.isBroken(tool(0)));
     }
 
     @Test
     void exhaustedToolIsBroken() {
-        var stack = new ItemStack(Items.IRON_PICKAXE);
-        stack.setDamageValue(stack.getMaxDamage());
+        var stack = tool(250);
         assertTrue(DamageState.isBroken(stack));
     }
 
@@ -34,13 +33,22 @@ class DamageStateTest {
 
     @Test
     void damageIsBounded() {
-        var stack = new ItemStack(Items.IRON_PICKAXE);
+        var stack = tool(0);
         assertEquals(0, DamageState.clampDamage(stack, -1));
-        assertEquals(stack.getMaxDamage(), DamageState.clampDamage(stack, Integer.MAX_VALUE));
+        assertEquals(250, DamageState.clampDamage(stack, Integer.MAX_VALUE));
     }
 
     @Test
     void nonDamageableValuesRemainUnchanged() {
-        assertEquals(10, DamageState.clampDamage(new ItemStack(Items.STONE), 10));
+        assertEquals(10, DamageState.clampDamage(mock(ItemStack.class), 10));
+    }
+
+    private static ItemStack tool(int damage) {
+        // Only durability inputs matter here; 26.x registry components bind on world load.
+        var stack = mock(ItemStack.class);
+        when(stack.isDamageableItem()).thenReturn(true);
+        when(stack.getMaxDamage()).thenReturn(250);
+        when(stack.getDamageValue()).thenReturn(damage);
+        return stack;
     }
 }
