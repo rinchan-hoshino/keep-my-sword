@@ -14,8 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--rinlib-dir", type=Path, required=True)
-    args = parser.parse_args()
+    parser.parse_args()
     profiles = json.loads((ROOT / "profiles.json").read_text())
     version = next(
         line.split("=", 1)[1]
@@ -43,7 +42,6 @@ def main():
             ":neoforge:build",
             "-Pminecraft_version=" + minecraft,
             "-Ploader=all",
-            "-PrinlibDir=" + str(args.rinlib_dir.resolve()),
             "-Porg.gradle.java.installations.paths=" + paths,
             "--no-configuration-cache",
             "--max-workers=2",

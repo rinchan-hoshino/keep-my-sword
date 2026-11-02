@@ -1,6 +1,6 @@
 package dev.rinchan.keepmysword;
 
-import dev.rinchan.rinlib.item.DamageState;
+import dev.rinchan.keepmysword.item.DamageState;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.registries.BuiltInRegistries;

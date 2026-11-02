@@ -10,10 +10,9 @@ if ! command -v docker >/dev/null 2>&1; then
 fi
 
 image_tag="$(basename "$repo_root")-local-ci:latest"
-branch_name="$(git rev-parse --abbrev-ref HEAD)"
 
 echo "minecraft mod local ci: building container image..."
-docker build -f .ci/local-ci/Dockerfile --build-arg RINLIB_REF="$branch_name" -t "$image_tag" .
+docker build -f .ci/local-ci/Dockerfile -t "$image_tag" .
 
 tree_id="$(git write-tree)"
 archive_file="$(mktemp)"

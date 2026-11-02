@@ -6,10 +6,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.rinchan.rinlibprobe.ProbeEntrypoint"
+      "dev.rinchan.kmsprobe.ProbeEntrypoint"
     ],
     "client": [
-      "dev.rinchan.rinlibprobe.ClientEntrypoint"
+      "dev.rinchan.kmsprobe.ClientEntrypoint"
     ]
   }
 }

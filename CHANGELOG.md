@@ -1,3 +1,7 @@
+## 未发布
+
+- 不再需要 RinLib。
+
 ## Keep My Sword 1.2.0
 
 ### Features & Improvements

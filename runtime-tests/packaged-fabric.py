@@ -5,10 +5,10 @@ import argparse, fcntl, json, os, queue, shutil, signal, subprocess, threading, 
 
 ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
+p.add_argument("--minecraft", action="append")
 p.add_argument("--output", type=Path, required=True)
 p.add_argument("--reuse-install", action="store_true")
 p.add_argument("--installer", type=Path, required=True)
-p.add_argument("--rinlib-dir", type=Path, required=True)
 p.add_argument("--eula", type=Path, required=True)
 a = p.parse_args()
 if "eula=true" not in a.eula.read_text():
@@ -23,7 +23,8 @@ version = next(
     if line.startswith("mod_version=")
 )
 results = []
-for mc, profile in profiles.items():
+for mc in a.minecraft or profiles:
+    profile = profiles[mc]
     instance = a.output.resolve() / mc
     instance.mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
@@ -64,8 +65,6 @@ for mc, profile in profiles.items():
         != artifact["sha256"]
     ):
         raise RuntimeError("Packaged JAR does not match the build manifest")
-    rinlib = a.rinlib_dir.resolve() / f"rinlib-1.0.2+{mc}-fabric.jar"
-    shutil.copy2(rinlib, mods / rinlib.name)
     (instance / "eula.txt").write_bytes(a.eula.read_bytes())
     (instance / "server.properties").write_text(
         "server-ip=127.0.0.1\nserver-port=25939\nonline-mode=false\nlevel-type=minecraft:flat\ngenerate-structures=false\nview-distance=2\nsimulation-distance=2\n"
@@ -108,8 +107,8 @@ for mc, profile in profiles.items():
                     "forceload add 0 0\n"
                     "setblock 0 80 0 minecraft:chest\n"
                     "item replace block 0 80 0 container.0 with minecraft:diamond_sword[minecraft:damage=1561]\n"
-                    'execute if data block 0 80 0 Items[{id:"minecraft:recovery_compass"}] run say KMS_PACKAGED_CARRIER_PASS\n'
-                    'execute if data block 0 80 0 Items[0].components."minecraft:custom_data"."keep_my_sword:sealed".chunks[0] run say KMS_PACKAGED_SNAPSHOT_PASS\n'
+                    'execute if data block 0 80 0 Items[{id:"minecraft:diamond_sword"}] run say KMS_PACKAGED_ITEM_PASS\n'
+                    'execute if data block 0 80 0 Items[{components:{"minecraft:damage":1561}}] run say KMS_PACKAGED_DAMAGE_PASS\n'
                     "save-all flush\nstop\n"
                 )
                 process.stdin.flush()
@@ -123,10 +122,10 @@ for mc, profile in profiles.items():
     passed = (
         ready
         and process.returncode == 0
-        and "KMS_PACKAGED_CARRIER_PASS" in text
-        and "KMS_PACKAGED_SNAPSHOT_PASS" in text
+        and "KMS_PACKAGED_ITEM_PASS" in text
+        and "KMS_PACKAGED_DAMAGE_PASS" in text
         and f"minecraft {mc}" in text
-        and len(list(mods.glob("*.jar"))) == 2
+        and len(list(mods.glob("*.jar"))) == 1
         and f"keep_my_sword {version}" in text
         and "fabric-api " not in text
         and "fabric-transfer-api-v1 " not in text

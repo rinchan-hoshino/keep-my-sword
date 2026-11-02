@@ -9,7 +9,6 @@ p.add_argument("--minecraft", action="append")
 p.add_argument("--loader", action="append")
 p.add_argument("--output", type=Path, required=True)
 p.add_argument("--phase", action="append", choices=["save", "unload", "reinstall"])
-p.add_argument("--rinlib-dir", type=Path, required=True)
 p.add_argument("--eula", type=Path, required=True)
 a = p.parse_args()
 if "eula=true" not in a.eula.read_text():
@@ -102,7 +101,6 @@ for mc in a.minecraft or profiles:
                 str(ROOT / f"runtime-tests/{loader}.init.gradle"),
                 f"-Pminecraft_version={mc}",
                 f"-Ploader={loader}",
-                f"-PrinlibDir={a.rinlib_dir.resolve()}",
                 f"-Dprobe.sources={sources}",
                 f"-Dprobe.instance={instance}",
                 f"-Dprobe.fabricApi={profile['fabric']}",

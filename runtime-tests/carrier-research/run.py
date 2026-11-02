@@ -12,7 +12,6 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument("--output", type=Path, required=True)
-p.add_argument("--rinlib-dir", type=Path, required=True)
 p.add_argument("--eula", type=Path, required=True)
 p.add_argument("--minecraft", action="append")
 p.add_argument("--retry", action="store_true")
@@ -40,7 +39,7 @@ for mc in a.minecraft or profiles:
         ],
         check=True,
     )
-    target = sources / "unload/java/dev/rinchan/rinlibprobe"
+    target = sources / "unload/java/dev/rinchan/kmsprobe"
     for java_file in target.glob("*.java"):
         java_file.unlink()
     source = (Path(__file__).parent / "RuntimeProbe.java").read_text()
@@ -65,11 +64,11 @@ for mc in a.minecraft or profiles:
         source = source.replace("player, 0, true)", "player, EquipmentSlot.MAINHAND)")
     (target / "RuntimeProbe.java").write_text(source)
     shutil.copy2(
-        sources / "common/java/dev/rinchan/rinlibprobe/ProbeEffectItem.java", target
+        sources / "common/java/dev/rinchan/kmsprobe/ProbeEffectItem.java", target
     )
     shutil.copy2(
-        sources / "fabric/java/dev/rinchan/rinlibprobe/ProbeEntrypoint.java",
-        sources / "unload-entry/java/dev/rinchan/rinlibprobe/ProbeEntrypoint.java",
+        sources / "fabric/java/dev/rinchan/kmsprobe/ProbeEntrypoint.java",
+        sources / "unload-entry/java/dev/rinchan/kmsprobe/ProbeEntrypoint.java",
     )
     (instance / "eula.txt").write_bytes(a.eula.read_bytes())
     (instance / "server.properties").write_text(
@@ -87,7 +86,6 @@ for mc in a.minecraft or profiles:
             str(ROOT / "runtime-tests/fabric.init.gradle"),
             f"-Pminecraft_version={mc}",
             "-Ploader=fabric",
-            f"-PrinlibDir={a.rinlib_dir.resolve()}",
             f"-Dprobe.sources={sources}",
             f"-Dprobe.instance={instance}",
             f'-Dprobe.fabricApi={profile["fabric"]}',

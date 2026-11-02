@@ -1,12 +1,12 @@
 # Runtime verification
 
-Set `JAVA_21_HOME` and `JAVA_25_HOME`. Supply matching published RinLib JARs and an existing accepted EULA file. Every test uses an isolated world; no player save is selected.
+Set `JAVA_21_HOME` and `JAVA_25_HOME`. Supply an existing accepted EULA file. Every test uses an isolated world; no player save is selected.
 
 ## Server behavior and persistence
 
 ```sh
 python3 runtime-tests/run.py --side server \
-  --rinlib-dir /path/to/rinlib-jars --eula /path/to/eula.txt \
+  --eula /path/to/eula.txt \
   --output /path/to/server-results
 ```
 
@@ -20,7 +20,7 @@ Read `results.json`, per-phase logs and pass markers. A successful Gradle exit w
 
 ```sh
 python3 runtime-tests/run.py --side client \
-  --rinlib-dir /path/to/rinlib-jars --eula /path/to/eula.txt \
+  --eula /path/to/eula.txt \
   --worlds /path/to/server-results --output /path/to/client-results
 ```
 
@@ -35,10 +35,10 @@ After `scripts/build-matrix.py`, use the official Fabric installer to check the 
 ```sh
 python3 runtime-tests/packaged-fabric.py \
   --installer /path/to/fabric-installer.jar \
-  --rinlib-dir /path/to/rinlib-jars --eula /path/to/eula.txt \
+  --eula /path/to/eula.txt \
   --output /path/to/packaged-results
 ```
 
-Only Keep My Sword and RinLib are placed in `mods`. Keep My Sword bundles no Fabric API modules. The test checks server startup, creates a zero-durability sword, saves and shuts down. Neither Fabric API nor Transfer API is supplied.
+Only Keep My Sword is placed in `mods`. Keep My Sword bundles no Fabric API modules. The test checks server startup, constructs a zero-durability sword without sealing it, saves and shuts down. Neither Fabric API nor Transfer API is supplied.
 
 Test items, entrypoints, datapacks and fake players are outside production source sets.

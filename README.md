@@ -16,10 +16,6 @@ Starting in 1.2.0, configuration is available at `config/keep_my_sword.toml` and
 excludedItems = []
 ```
 
-## Requirements
-
-- [RinLib](https://modrinth.com/mod/rinlib)
-
 ## Screenshots
 
 ![Holding a diamond sword with no durability remaining](https://cdn.modrinth.com/data/pPO0fpz4/images/e0971797aee78a779a76036dd26df0320808efc2.png)

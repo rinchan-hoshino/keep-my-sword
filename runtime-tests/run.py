@@ -62,7 +62,6 @@ def run_case(args, minecraft, loader, profile):
         str(ROOT / "runtime-tests" / f"{loader}.init.gradle"),
         "-Pminecraft_version=" + minecraft,
         "-Ploader=" + loader,
-        "-PrinlibDir=" + str(args.rinlib_dir.resolve()),
         "-Dprobe.sources=" + str(sources),
         "-Dprobe.instance=" + str(instance),
         "-Dprobe.players="
@@ -118,7 +117,6 @@ def main():
     parser.add_argument("--minecraft", action="append")
     parser.add_argument("--loader", action="append", choices=["fabric", "neoforge"])
     parser.add_argument("--side", choices=["server", "client"], default="server")
-    parser.add_argument("--rinlib-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--eula", type=Path, required=True)
     parser.add_argument(
@@ -135,8 +133,6 @@ def main():
             str(ROOT / "runtime-tests/sealed-matrix.py"),
             "--output",
             str(args.output),
-            "--rinlib-dir",
-            str(args.rinlib_dir),
             "--eula",
             str(args.eula),
         ]

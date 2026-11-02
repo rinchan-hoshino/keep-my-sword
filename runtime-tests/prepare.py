@@ -27,11 +27,11 @@ for folder in [
     shutil.copytree(root / folder, out / folder, dirs_exist_ok=True)
 for name in ["IndependentStorage.java", "PlatformStorage.java"]:
     shutil.copy2(
-        out / "common/java/dev/rinchan/rinlibprobe" / name,
-        out / "unload/java/dev/rinchan/rinlibprobe" / name,
+        out / "common/java/dev/rinchan/kmsprobe" / name,
+        out / "unload/java/dev/rinchan/kmsprobe" / name,
     )
 if a.loader == "neoforge":
-    p = out / "neoforge/java/dev/rinchan/rinlibprobe/ProbeEntrypoint.java"
+    p = out / "neoforge/java/dev/rinchan/kmsprobe/ProbeEntrypoint.java"
     p.write_text(
         p.read_text().replace(
             "    public ProbeEntrypoint() {",
@@ -45,7 +45,7 @@ if a.loader == "neoforge":
         });""",
         )
     )
-    p = out / "unload/java/dev/rinchan/rinlibprobe/RuntimeProbe.java"
+    p = out / "unload/java/dev/rinchan/kmsprobe/RuntimeProbe.java"
     p.write_text(
         p.read_text()
         .replace("import net.fabricmc.loader.api.FabricLoader;", "")
@@ -54,9 +54,9 @@ if a.loader == "neoforge":
             "net.neoforged.fml.ModList.get().isLoaded(",
         )
     )
-    p = out / "unload-entry/java/dev/rinchan/rinlibprobe/ProbeEntrypoint.java"
+    p = out / "unload-entry/java/dev/rinchan/kmsprobe/ProbeEntrypoint.java"
     p.write_text(
-        'package dev.rinchan.rinlibprobe; @net.neoforged.fml.common.Mod("kms_probe") public final class ProbeEntrypoint { public ProbeEntrypoint() { net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event) -> new RuntimeProbe().run(event.getServer())); } }'
+        'package dev.rinchan.kmsprobe; @net.neoforged.fml.common.Mod("kms_probe") public final class ProbeEntrypoint { public ProbeEntrypoint() { net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event) -> new RuntimeProbe().run(event.getServer())); } }'
     )
     shutil.copytree(
         out / "neoforge/resources", out / "unload/resources", dirs_exist_ok=True
@@ -73,7 +73,7 @@ if a.loader == "neoforge":
             )
         else:
             p.write_text(
-                "package dev.rinchan.rinlibprobe; public final class PlatformStorage { public static void save(net.minecraft.server.MinecraftServer s, net.minecraft.world.item.ItemStack stack) {} public static void verify(net.minecraft.server.MinecraftServer s) {} }"
+                "package dev.rinchan.kmsprobe; public final class PlatformStorage { public static void save(net.minecraft.server.MinecraftServer s, net.minecraft.world.item.ItemStack stack) {} public static void verify(net.minecraft.server.MinecraftServer s) {} }"
             )
 if a.minecraft.startswith("26."):
     for p in out.rglob("*.java"):

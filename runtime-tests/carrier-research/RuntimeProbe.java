@@ -1,4 +1,4 @@
-package dev.rinchan.rinlibprobe;
+package dev.rinchan.kmsprobe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

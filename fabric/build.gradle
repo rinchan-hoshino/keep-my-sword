@@ -37,7 +37,6 @@ dependencies {
     minecraft "com.mojang:minecraft:${root.property('minecraft_version')}"
     if (!unobfuscated) mappings loom.officialMojangMappings()
     add(unobfuscated ? 'implementation' : 'modImplementation', "net.fabricmc:fabric-loader:${root.property('fabric_loader_version')}")
-    add(unobfuscated ? 'implementation' : 'modImplementation', files(rootProject.file(providers.gradleProperty('rinlibDir').get() + '/rinlib-' + rootProject.rinlib_version + '+' + rootProject.minecraft_version + '-fabric.jar')))
 }
 
 def resourceProperties = [
@@ -49,8 +48,7 @@ def resourceProperties = [
     mod_description: root.property('mod_description'),
     minecraft_version: root.property('minecraft_version'),
     java_version: root.java_version,
-    fabric_loader_version: root.property('fabric_loader_version'),
-    rinlib_version: root.property('rinlib_version')
+    fabric_loader_version: root.property('fabric_loader_version')
 ]
 
 processResources {

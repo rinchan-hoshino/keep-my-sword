@@ -27,7 +27,7 @@ public final class SealedItems {
         if (source.isEmpty()
                 || isSealed(source)
                 || KeepMySword.isExcluded(source)
-                || !dev.rinchan.rinlib.item.DamageState.isBroken(source)) return source;
+                || !dev.rinchan.keepmysword.item.DamageState.isBroken(source)) return source;
         var payload = CarrierSnapshot.encode(source, registries);
         if (payload.result().isEmpty()) return source;
         var carrier = new ItemStack(Items.RECOVERY_COMPASS, source.getCount());
