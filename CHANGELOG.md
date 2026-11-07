@@ -1,8 +1,8 @@
 ## Keep My Sword 1.3.0
 
-- Expose sealed equipment as its exact exhausted original inside open work menus so new repair mods can use their normal transactions.
-- Reseal still-broken items on pickup, inventory transfer, menu close, disconnect, death and player drops; sweep player inventories once per second.
-- Keep pure storage sealed, with automatic ordinary-slot block-storage detection and configurable `repairViewExcludedMenus` exclusions (menu IDs or class names).
+- Let anvils, Enchanting Infusers, Repair Stations and other repair workstations repair sealed equipment by exposing its exact exhausted original while the work menu is open. New repair mods can generally use their normal transactions without a separate compatibility patch.
+- Reseal still-broken items when taken out, transferred to inventory, the menu closes, the player disconnects, or items are thrown or dropped on death; sweep player inventories once per second.
+- Keep items sealed in chests, hoppers, dispensers and shulker boxes, with automatic ordinary-slot block-storage detection. Register unusual storage menus in `repairViewExcludedMenus` using menu IDs or class names (restart required).
 - Remove the Infuser-specific repair accessor; retain sealed-input enchanting and anvil snapshot protections. Snapshot encoding and native persistence are unchanged.
 
 ## Keep My Sword 1.2.2
