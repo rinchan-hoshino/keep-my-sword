@@ -42,3 +42,9 @@ python3 runtime-tests/packaged-fabric.py \
 Only Keep My Sword is placed in `mods`. Keep My Sword bundles no Fabric API modules. The test checks server startup, constructs a zero-durability sword without sealing it, saves and shuts down. Neither Fabric API nor Transfer API is supplied.
 
 Test items, entrypoints, datapacks and fake players are outside production source sets.
+
+## Generic work-menu repairs
+
+See [repair-view/README.md](repair-view/README.md) for actual anvil, Advanced Infuser
+and third-party Repair Station transactions on both 1.21.1 loaders. The common
+menu boundary also runs in the six-target server matrix above.

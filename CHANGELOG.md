@@ -1,3 +1,10 @@
+## Keep My Sword 1.3.0
+
+- Expose sealed equipment as its exact exhausted original inside open work menus so new repair mods can use their normal transactions.
+- Reseal still-broken items on pickup, inventory transfer, menu close, disconnect, death and player drops; sweep player inventories once per second.
+- Keep pure storage sealed, with automatic ordinary-slot block-storage detection and configurable `repairViewExcludedMenus` exclusions (menu IDs or class names).
+- Remove the Infuser-specific repair accessor; retain sealed-input enchanting and anvil snapshot protections. Snapshot encoding and native persistence are unchanged.
+
 ## Keep My Sword 1.2.2
 
 - Fix Advanced Enchanting Infuser repair of sealed broken equipment on Minecraft 1.21.1 while preserving repair costs and item data.

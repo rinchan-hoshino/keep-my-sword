@@ -89,8 +89,15 @@ public final class ProbeEntrypoint {
                                     : SealedItems.originalForRepair(sword, server.overworld())));
             var container = new SimpleContainer(1);
             var menu = menu(server, player, container, InfuserType.ADVANCED);
-            container.setItem(0, sword);
+            container.setItem(0, sword.copy());
+            if (!baseline) {
+                player.containerMenu = menu;
+                player.tick();
+            }
             menu.slotsChanged(container);
+            var expectedInput = expected.copy();
+            expectedInput.setDamageValue(1561);
+            var preview = encode(server, expectedInput);
             System.out.println(
                     "INFUSER_STATE baseline="
                             + baseline
@@ -103,8 +110,8 @@ public final class ProbeEntrypoint {
             check(menu.canRepair(player), "advanced infuser accepts exhausted sword");
             check(menu.getRepairCost() == 8, "full durability repair costs eight levels");
             check(
-                    encode(server, container.getItem(0)).equals(input),
-                    "preview leaves stored input unchanged");
+                    encode(server, container.getItem(0)).equals(preview),
+                    "preview preserves exact exposed input");
             player.experienceLevel = 7;
             check(
                     !menu.canRepair(player)
@@ -112,7 +119,7 @@ public final class ProbeEntrypoint {
                     "insufficient levels cannot repair");
             check(
                     player.experienceLevel == 7
-                            && encode(server, container.getItem(0)).equals(input),
+                            && encode(server, container.getItem(0)).equals(preview),
                     "rejected repair preserves levels and input");
             player.experienceLevel = 30;
             check(
@@ -176,6 +183,9 @@ public final class ProbeEntrypoint {
         check(
                 encode(server, container.getItem(0)).equals(input),
                 "enchant attempt preserves sealed snapshot");
+        player.containerMenu = menu;
+        player.tick();
+        menu.slotsChanged(container);
         var config = menu.getConfig();
         config.increaseAnvilRepairCost = true;
         try {
@@ -191,6 +201,8 @@ public final class ProbeEntrypoint {
         }
         container.setItem(0, sealed.copy());
         var normal = menu(server, player, container, InfuserType.NORMAL);
+        player.containerMenu = normal;
+        player.tick();
         normal.slotsChanged(container);
         check(
                 !normal.canRepair(player)

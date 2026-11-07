@@ -84,6 +84,7 @@ if a.minecraft.startswith("26."):
         s = (
             p.read_text()
             .replace("ResourceLocation", "Identifier")
+            .replace("ClickType", "ContainerInput")
             .replace("getItemHolder()", "typeHolder()")
             .replace("MobEffects.DAMAGE_BOOST", "MobEffects.STRENGTH")
             .replace("TagParser.parseTag", "TagParser.parseCompoundFully")

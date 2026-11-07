@@ -42,6 +42,29 @@ class ExclusionConfigTest {
         }
     }
 
+    @Test void storageDefaultsSurviveAnExistingItemOnlyConfig() throws Exception {
+        Files.writeString(directory.resolve("keep_my_sword.toml"), "excludedItems = []\n");
+        var config = KeepMySwordConfig.load(directory);
+        assertTrue(config.excludesRepairView(Object.class, "minecraft:hopper"));
+        assertTrue(config.excludesRepairView(Object.class, "minecraft:generic_9x6"));
+        assertFalse(config.excludesRepairView(Object.class, "minecraft:anvil"));
+        assertEquals(config, KeepMySwordConfig.load(directory));
+    }
+
+    @Test void repairViewConfigOverridesDefaultsAndMatchesSubclasses() throws Exception {
+        Files.writeString(directory.resolve("keep_my_sword.toml"),
+                "repairViewExcludedMenus = [\"mod:backpack\", \"java.util.AbstractList\"]\n");
+        var config = KeepMySwordConfig.load(directory);
+        assertTrue(config.excludesRepairView(Object.class, "mod:backpack"));
+        assertTrue(config.excludesRepairView(java.util.ArrayList.class, "mod:workbench"));
+        assertFalse(config.excludesRepairView(Object.class, "minecraft:hopper"));
+    }
+
+    @Test void malformedMenuSelectorsAreRejected() throws Exception {
+        Files.writeString(directory.resolve("keep_my_sword.toml"), "repairViewExcludedMenus = [42]\n");
+        assertThrows(IllegalArgumentException.class, () -> KeepMySwordConfig.load(directory));
+    }
+
     @Test void malformedSelectorsAreRejectedAtTheConfigurationBoundary() throws Exception {
         Files.writeString(directory.resolve("keep_my_sword.toml"), "excludedItems = [\"not an item\"]\n");
         assertThrows(IllegalArgumentException.class, () -> KeepMySwordConfig.load(directory));

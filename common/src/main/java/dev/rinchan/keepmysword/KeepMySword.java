@@ -63,6 +63,10 @@ public final class KeepMySword implements RinMod {
         });
     }
 
+    public static boolean isRepairViewExcluded(Class<?> menuClass, String menuId) {
+        return config.excludesRepairView(menuClass, menuId);
+    }
+
     public static boolean isExcluded(ItemStack stack) {
         return stack.is(EXCLUDED_ITEMS) || config.matches(
                 BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(),

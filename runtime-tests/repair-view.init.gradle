@@ -1,0 +1,39 @@
+allprojects {
+    afterEvaluate { p ->
+        def fabric = p.plugins.hasPlugin('fabric-loom')
+        if (fabric || p.plugins.hasPlugin('net.neoforged.moddev')) {
+            p.dependencies.add(fabric ? 'modImplementation' : 'implementation',
+                    p.fileTree(System.getProperty('repairView.mods')) { include '*.jar' })
+            def loader = fabric ? 'fabric' : 'neoforge'
+            def probe = p.sourceSets.create('repairViewProbe') {
+                java.srcDirs p.rootProject.file('runtime-tests/repair-view/common/java'),
+                        p.rootProject.file("runtime-tests/repair-view/${loader}/java"),
+                        p.rootProject.file('runtime-tests/players-modern/java')
+                resources.srcDir p.rootProject.file("runtime-tests/${loader}/resources")
+                compileClasspath += p.sourceSets.main.compileClasspath + p.sourceSets.main.output
+                runtimeClasspath += p.sourceSets.main.runtimeClasspath
+            }
+            if (fabric) {
+                p.loom.mods {
+                    keep_my_sword { sourceSet(p.sourceSets.main) }
+                    kms_probe { sourceSet(probe) }
+                }
+                p.loom.runs.named('server') {
+                    source(probe)
+                    runDir(p.projectDir.toPath().relativize(p.file(System.getProperty('repairView.instance')).toPath()).toString())
+                }
+                p.tasks.named('runServer').configure {
+                    doFirst { workingDir = p.file(System.getProperty('repairView.instance')) }
+                }
+            } else {
+                p.neoForge.mods.create('kms_probe') { sourceSet(probe) }
+                p.neoForge.runs.create('repairViewServer') {
+                    sourceSet = probe
+                    server()
+                    gameDirectory = p.file(System.getProperty('repairView.instance'))
+                    programArgument '--nogui'
+                }
+            }
+        }
+    }
+}

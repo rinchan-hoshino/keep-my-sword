@@ -57,3 +57,13 @@ The normal six-target build used the repository's Gradle 9.2.1 / Loom 1.14.10.
 
 Upstream repair checks: [InfuserMenu](https://github.com/Fuzss/enchanting-infuser/blob/ff3921953ce4cf1294e9cd502aca69adfe0c6e5b/common/src/main/java/fuzs/enchantinginfuser/world/inventory/InfuserMenu.java)
 and [AllowedRepairItems](https://github.com/Fuzss/enchanting-infuser/blob/ff3921953ce4cf1294e9cd502aca69adfe0c6e5b/common/src/main/java/fuzs/enchantinginfuser/config/AllowedRepairItems.java).
+
+## Generic view in 1.3.0
+
+Open Infuser menus now receive live originals through the shared menu boundary.
+The probe opens its repair menus and expects exact exposed-input previews; it
+still checks the sealed-input enchanting guard before opening that extra-check
+menu. The optional mixin no longer supplies an Infuser-specific repair accessor.
+Use the [generic repair suite](../repair-view/README.md) for native clicks,
+enchantment changes followed by resealing, machine close, and another repair mod.
+The table above records the earlier 1.2.2 behavior.

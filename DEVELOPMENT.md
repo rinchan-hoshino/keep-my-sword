@@ -17,6 +17,6 @@ Fabric development runs include Fabric API for the probes. Release JARs do not b
 - [Current validation](docs/validation.md)
 - [Historical 1.0.2 validation](docs/validation-1.0.2.md)
 
-Keep original gameplay data private while an item is broken. Repair calculations may inspect snapshots but must not reactivate input slots. Verify an encoded snapshot before changing the live item; unknown or invalid snapshots remain protected. Storage saves the native carrier directly, without identity conversion or loader-specific adapters. Existing timed effects expire naturally. Exclusion tags belong to modpacks; the default tag stays empty.
+Keep original gameplay data private while an item is broken. Open work menus may expose exact originals through the [generic repair view](docs/generic-repair-view.md); broken items must be sealed again at its exit boundaries. Detached repair calculations use private snapshots. Verify an encoded snapshot before changing the live item; unknown or invalid snapshots remain protected. Storage saves the native carrier directly, without identity conversion or loader-specific adapters. Existing timed effects expire naturally. Exclusion tags belong to modpacks; the default tag stays empty.
 
 Do not package runtime probes or test-only registry objects. Development validation does not publish a release.

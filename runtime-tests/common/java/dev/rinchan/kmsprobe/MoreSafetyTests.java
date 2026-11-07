@@ -25,6 +25,7 @@ public final class MoreSafetyTests {
             ItemStack mutated,
             CompoundTag originalData)
             throws Exception {
+        RepairViewChecks.run(s, sword);
         var ops = s.registryAccess().createSerializationContext(JsonOps.INSTANCE);
         var serialized = ItemStack.CODEC.encodeStart(ops, mutated).getOrThrow();
         // Actual input remains sealed while the menu calculates against private snapshots.
