@@ -1,0 +1,25 @@
+allprojects {
+    afterEvaluate { p ->
+        if (p.plugins.hasPlugin('net.neoforged.moddev')) {
+            p.dependencies.add('implementation', p.fileTree(System.getProperty('infuser.mods')) { include '*.jar' })
+            def probe = p.sourceSets.create('infuserProbe') {
+                java.srcDirs p.rootProject.file('runtime-tests/infuser/java'), p.rootProject.file('runtime-tests/players-modern/java')
+                resources.srcDir p.rootProject.file('runtime-tests/neoforge/resources')
+                compileClasspath += p.sourceSets.main.compileClasspath + p.sourceSets.main.output
+                runtimeClasspath = output + (p.sourceSets.main.runtimeClasspath - p.sourceSets.main.output).filter {
+                    !Boolean.getBoolean('infuser.baseline') || !it.name.startsWith('rinlib-')
+                }
+                if (!Boolean.getBoolean('infuser.baseline')) runtimeClasspath += p.sourceSets.main.output
+            }
+            p.neoForge.mods.create('kms_probe') { sourceSet(probe) }
+            p.neoForge.runs.create('infuserServer') {
+                sourceSet = probe
+                loadedMods = Boolean.getBoolean('infuser.baseline') ? [p.neoForge.mods.kms_probe] : [p.neoForge.mods.kms_probe, p.neoForge.mods.keep_my_sword]
+                server()
+                gameDirectory = p.file(System.getProperty('infuser.instance'))
+                systemProperty 'infuser.baseline', System.getProperty('infuser.baseline', 'false')
+                programArgument '--nogui'
+            }
+        }
+    }
+}

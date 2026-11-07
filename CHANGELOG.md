@@ -1,3 +1,7 @@
+## Keep My Sword 1.2.2
+
+- Fix Advanced Enchanting Infuser repair of sealed broken equipment on Minecraft 1.21.1 while preserving repair costs and item data.
+
 ## Keep My Sword 1.2.1
 
 - RinLib is now bundled inside Keep My Sword — no separate RinLib download needed.
