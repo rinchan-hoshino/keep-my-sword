@@ -34,7 +34,7 @@ dependencies {
             artifact { name = localJar.name - '.jar'; type = 'jar'; extension = 'jar' }
         }
     }
-    add(Boolean.getBoolean('probe.bundled') ? (unobfuscated ? 'compileOnly' : 'modCompileOnly') : (unobfuscated ? 'implementation' : 'modImplementation'), rinlib)
+    add(unobfuscated ? 'implementation' : 'modImplementation', rinlib)
     include rinlib
 
     implementation 'com.electronwill.night-config:toml:3.8.3'

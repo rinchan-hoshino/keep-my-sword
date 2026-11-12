@@ -1,6 +1,6 @@
 package dev.rinchan.keepmysword;
 
-import dev.rinchan.keepmysword.item.DamageState;
+import dev.rinchan.rinlib.item.DamageState;
 import dev.rinchan.keepmysword.item.EquipmentRefresh;
 import dev.rinchan.keepmysword.item.SealedItems;
 import dev.rinchan.rinlib.v2.Ids;

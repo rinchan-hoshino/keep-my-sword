@@ -69,7 +69,7 @@ dependencies {
             artifact { name = localJar.name - '.jar'; type = 'jar'; extension = 'jar' }
         }
     }
-    add(Boolean.getBoolean('probe.bundled') ? 'compileOnly' : 'implementation', rinlib)
+    implementation rinlib
     jarJar rinlib
 
     implementation 'com.electronwill.night-config:toml:3.8.3'

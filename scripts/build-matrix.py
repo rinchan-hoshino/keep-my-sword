@@ -23,7 +23,7 @@ def main():
     )
     output = ROOT / "build/releases"
     output.mkdir(parents=True, exist_ok=True)
-    lock = (ROOT / "build/runtime-probe.lock").open("w")
+    lock = (ROOT / "build/matrix.lock").open("w")
     fcntl.flock(lock, fcntl.LOCK_EX)
     manifest = []
     for minecraft, profile in profiles.items():
