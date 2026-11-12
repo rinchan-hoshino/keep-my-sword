@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+// Wraps mayPlace on the two input slots (GrindstoneMenu$2/$3): this is where a broken stack is accepted, so the original is checked here.
 @Mixin(
         targets = {
             "net.minecraft.world.inventory.GrindstoneMenu$2",

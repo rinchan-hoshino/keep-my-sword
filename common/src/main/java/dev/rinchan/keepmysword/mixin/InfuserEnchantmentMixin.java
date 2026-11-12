@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+// @Pseudo because the Enchanting Infuser mod is optional. Injected at canEnchant HEAD so sealed inputs are refused before its own checks run.
 @Pseudo
 @Mixin(targets = "fuzs.enchantinginfuser.world.inventory.InfuserMenu", remap = false)
 public abstract class InfuserEnchantmentMixin {

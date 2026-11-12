@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+// HEAD injections on tick, drop and the close paths (doCloseContainer, die, disconnect) read state before vanilla changes it.
 @Mixin(ServerPlayer.class)
 public abstract class RepairViewPlayerMixin {
     @Inject(method = "tick", at = @At("HEAD"))

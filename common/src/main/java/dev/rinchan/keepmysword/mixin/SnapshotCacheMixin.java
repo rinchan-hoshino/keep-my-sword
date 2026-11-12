@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 
 import org.spongepowered.asm.mixin.*;
 
+// Per-stack fields hold the decoded original, so the cache is released together with the stack.
 @Mixin(ItemStack.class)
 public abstract class SnapshotCacheMixin implements SnapshotCache {
     @Unique private CustomData kms$data;

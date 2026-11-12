@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// Constructor RETURN gives both input slots the player's level; computeResult is wrapped so sealed inputs are repaired from their originals.
 @Mixin(GrindstoneMenu.class)
 public abstract class GrindstoneRepairMixin {
     @Unique private net.minecraft.world.level.Level kms$level;

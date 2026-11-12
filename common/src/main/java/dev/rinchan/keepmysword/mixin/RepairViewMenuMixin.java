@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Shadow;
 import net.minecraft.world.inventory.MenuType;
 
+// AbstractContainerMenu.clicked is the single entry for container clicks, so wrapping it brackets repair-view work with before/after calls.
 @Mixin(AbstractContainerMenu.class)
 public abstract class RepairViewMenuMixin implements RepairView.MenuTypeAccess {
     @Shadow @Final private MenuType<?> menuType;

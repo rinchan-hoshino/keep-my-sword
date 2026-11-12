@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** A sealed item is never an ingredient made from the vanilla carrier. */
+// Injected at test HEAD so a sealed stack fails before vanilla's ingredient match runs.
 @Mixin(Ingredient.class)
 public abstract class IngredientProtectionMixin {
     @Inject(

@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 import org.spongepowered.asm.mixin.Mixin;
 
+// Wraps the XP calculation of the output slot (GrindstoneMenu$4) so XP is computed from the sealed item's original enchantments.
 @Mixin(targets = "net.minecraft.world.inventory.GrindstoneMenu$4")
 public abstract class GrindstoneExperienceMixin {
     @WrapMethod(method = "getExperienceFromItem")

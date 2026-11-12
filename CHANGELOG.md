@@ -1,71 +1,70 @@
-## Keep My Sword 1.3.0
-
-- Let anvils, Enchanting Infusers, Repair Stations and other repair workstations repair sealed equipment by exposing its exact exhausted original while the work menu is open. New repair mods can generally use their normal transactions without a separate compatibility patch.
-- Reseal still-broken items when taken out, transferred to inventory, the menu closes, the player disconnects, or items are thrown or dropped on death; sweep player inventories once per second.
-- Keep items sealed in chests, hoppers, dispensers and shulker boxes, with automatic ordinary-slot block-storage detection. Register unusual storage menus in `repairViewExcludedMenus` using menu IDs or class names (restart required).
-- Remove the Infuser-specific repair accessor; retain sealed-input enchanting and anvil snapshot protections. Snapshot encoding and native persistence are unchanged.
-
-## Keep My Sword 1.2.2
-
-- Fix Advanced Enchanting Infuser repair of sealed broken equipment on Minecraft 1.21.1 while preserving repair costs and item data.
-
-## Keep My Sword 1.2.1
-
-- RinLib is now bundled inside Keep My Sword — no separate RinLib download needed.
-
-## Keep My Sword 1.2.0
-
-### Features & Improvements
-- **TOML configuration**: Added `config/keep_my_sword.toml` loaded via NightConfig on game startup (restart required after edits).
-- **Item exclusion list**: Added `excludedItems` to configure items that bypass broken-item protection. Supports item IDs (such as `"minecraft:diamond_sword"`) and item tags (such as `"#slashblade:swords"`). Defaults to an empty list `[]`.
-- **Existing compatibility**: The native `#keep_my_sword:excluded` item tag remains fully supported alongside the configuration file.
-- **Core behavior preserved**: Broken equipment protection, anvil repair mechanics, and item data persistence remain unchanged.
-
 # Changelog
+
+## 1.3.0
+
+- Anvils, Enchanting Infusers, repair stations and other repair menus can repair broken items. The exact original item is shown while the menu is open.
+- A broken item is sealed again when you take it out, move it to another inventory, close the menu, disconnect, or drop it.
+- Broken items stay sealed in chests, hoppers, dispensers and shulker boxes. Add other storage menus to `repairViewExcludedMenus` in the config (restart required).
+- The old Infuser-only repair hook is removed. Enchanting and anvil protection for sealed items still work as before.
+
+## 1.2.2
+
+- Fix Advanced Enchanting Infuser repair of sealed broken equipment on Minecraft 1.21.1.
+
+## 1.2.1
+
+- RinLib is now bundled inside Keep My Sword, so no separate RinLib download is needed.
+
+## 1.2.0
+
+- Add a config file, `config/keep_my_sword.toml`, read at startup (restart required after edits).
+- Add `excludedItems` to exclude item IDs or item tags from protection. The default is an empty list.
+- The `#keep_my_sword:excluded` item tag still works alongside the config file.
+- Repair, anvil and item data behaviour is unchanged.
 
 ## 1.1.2
 
-- Aligned Fabric and NeoForge loader manifests to SPDX `GPL-3.0-only` and bundled the repository `LICENSE` file in both JAR distributions.
-- Corrected platform license metadata on Modrinth and CurseForge to match the project's GNU General Public License v3.0.
-- Released version 1.1.2 for Minecraft 1.21.1, 26.1.2, and 26.2 on Fabric and NeoForge with no gameplay changes.
+- Set the license to GPL-3.0-only in both loader files and include the `LICENSE` file in both jars.
+- Correct the license on Modrinth and CurseForge.
+- Release for Minecraft 1.21.1, 26.1.2 and 26.2 on Fabric and NeoForge. No gameplay changes.
 
-## 1.1.1-wmf.1 — 2026-09-26
+## 1.1.1-wmf.1
 
-- Avoid damage and enchantment queries while decoding login inventory packets before a registry context is available.
-- Preserve the original item and existing carrier format until snapshot encoding is possible.
-- Add a regression test for unscoped item decoding. This pack hotfix is verified on Minecraft 1.21.1 / NeoForge.
+- Avoid damage and enchantment lookups while decoding login inventory packets before the registry is ready.
+- Keep the original item and its carrier format until the snapshot can be encoded.
+- Add a regression test for item decoding without a scope. Verified on Minecraft 1.21.1 / NeoForge.
 
-## 1.1.0 — 2026-09-19
+## 1.1.0
 
-- Isolate broken items as vanilla carriers with complete original-item snapshots, stopping further original item callbacks, attributes and enchantments.
-- Preserve broken-item data when Keep My Sword is uninstalled. Reinstall to display and repair the original item; uninstalled carriers remain recovery compasses with an explanatory tooltip.
-- Prevent carriers from being used as ordinary recipe ingredients and preserve their snapshots during metadata edits.
-- Support anvil, crafting and grindstone repair without reactivating input items.
-- Keep original data intact when snapshot encoding or recovery fails; retain unknown and future snapshots.
-- Remove custom item/component registration and loader-specific storage conversion adapters.
+- Broken items are replaced by a carrier item that keeps the full original item. The carrier has no attributes or enchantments.
+- Uninstalling the mod keeps the broken items' data. Reinstall to see and repair them again.
+- Carriers cannot be used as ordinary recipe ingredients, and their stored data is kept when the item is edited.
+- Anvil, crafting and grindstone repair work without reactivating the input items.
+- If encoding or recovery fails, the original data is left intact.
+- Custom item and component registration and loader-specific storage conversion are removed.
 
-## 1.0.2 — 2026-09-19
+## 1.0.2
 
 - Fix the item-destruction hook on Minecraft 26.1.2 and 26.2.
-- Share gameplay logic across all six supported Minecraft/loader targets, using RinLib 1.0.2 for durability state and clamping.
+- Share gameplay logic across all six Fabric/NeoForge targets.
 - Build Fabric 26.x with the native unobfuscated Loom pipeline.
-- Remove the empty Fabric entrypoint, unnecessary Fabric API runtime dependency, and redundant policy wrapper.
-- Refresh the icon and project description; add exclusion-tag translations.
-- Add actual server checks for breakage, anvil repair, exclusions, excess damage and restored item behavior, plus client startup checks.
+- Remove the empty Fabric entrypoint, an unneeded Fabric API dependency and a redundant wrapper.
+- Refresh the icon and description, and add exclusion-tag translations.
+- Add server checks for breakage, anvil repair, exclusions and item behaviour after repair.
 
-## 1.0.1 — 2026-08-31
+## 1.0.1
 
-- Keeps the same broken-item behavior while routing the destruction boundary through the independently tested policy owner.
-- Executes the common compatibility and warning-visual contracts in the release gate.
+- Same broken-item behaviour, with the destruction boundary moved into its own tested policy.
+- The compatibility and warning-visual checks run in the release gate.
 
-## 1.0.0 — 2026-08-26
+## 1.0.0
 
-- Promotes the destruction-boundary durability contract, GUI-only warning tint, empty default exclusion policy and six supported Fabric/NeoForge anchors to the stable public API.
+- First stable release. Breakage boundary, GUI-only warning tint, an empty default exclusion list, and six supported Fabric/NeoForge targets.
 
-## 0.1.3 — 2026-08-26
+## 0.1.3
 
-- Preserve the upstream durability pipeline and cancel only the final stack-shrink operation.
-- Remove all non-GUI broken-item model tinting.
-- Replace the dark inventory overlay with a light translucent warning red.
-- Keep the default exclusion tag empty; modpacks continue to own custom lifecycle exclusions.
-- Continue blocking broken-item inventory ticks by design.
+- Keep the upstream durability pipeline and cancel only the final stack-shrink step.
+- Remove all in-world broken-item tinting.
+- Use a light translucent red overlay for broken items in the GUI.
+- Keep the default exclusion tag empty.
+- Keep blocking inventory ticks for broken items.

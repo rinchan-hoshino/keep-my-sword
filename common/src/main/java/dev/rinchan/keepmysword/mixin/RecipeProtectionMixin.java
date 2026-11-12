@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 
 /** Covers recipes which match directly or through cached ingredients. Repair is explicit. */
+// Injected at getRecipeFor RETURN: vanilla finds the recipe first, and the result is cancelled only when a sealed stack is an input.
 @Mixin(RecipeManager.class)
 public abstract class RecipeProtectionMixin {
     @Inject(method = "getRecipeFor", at = @At("RETURN"), cancellable = true)
