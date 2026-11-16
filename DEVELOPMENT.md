@@ -27,7 +27,7 @@ python3 scripts/build-matrix.py
 
 - Broken items are stored as a carrier that holds the original item snapshot. See [docs/sealed-items.md](docs/sealed-items.md).
 - Repair menus show the exact original while they are open. Items are sealed again when the menu closes, when they leave the player's control, or when the player disconnects or dies.
-- Storage menus that must keep items sealed are listed in `repairViewExcludedMenus` (config).
+- Storage containers (block entities, compound/sided containers, and menus with general storage slots) keep items sealed automatically.
 - Exclusion tags belong to modpacks. The default `#keep_my_sword:excluded` tag is empty.
 
 ## Rules for changes

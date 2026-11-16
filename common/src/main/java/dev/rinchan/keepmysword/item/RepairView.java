@@ -1,27 +1,43 @@
 package dev.rinchan.keepmysword.item;
 
-import dev.rinchan.keepmysword.KeepMySword;
 import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.registries.BuiltInRegistries;
 
 /** The original is live only inside an open work menu; all exit paths seal broken items. */
 public final class RepairView {
     public static boolean enabled(AbstractContainerMenu menu, Player player) {
-        var type = ((MenuTypeAccess) menu).kms$menuType();
-        var id = type == null ? null : BuiltInRegistries.MENU.getKey(type);
-        if (menu == player.inventoryMenu || KeepMySword.isRepairViewExcluded(menu.getClass(), id == null ? "" : id.toString())) return false;
+        if (menu == null || menu == player.inventoryMenu
+                || menu instanceof InventoryMenu || menu instanceof HorseInventoryMenu) return false;
+        if (menu instanceof ItemCombinerMenu) return true;
+        boolean hasWorkSlot = false;
+        boolean hasResultContainer = false;
+        boolean hasGeneralStorageSlot = false;
         for (var slot : menu.slots) {
             if (slot.container instanceof Inventory) continue;
-            if (slot.getClass() != Slot.class
-                    || !(slot.container instanceof BlockEntity || slot.container instanceof CompoundContainer))
-                return true;
+            hasWorkSlot = true;
+            if (isStorageContainer(slot.container)) return false;
+            if (slot.container instanceof ResultContainer) hasResultContainer = true;
+            else if (isGeneralStorageSlot(slot)) hasGeneralStorageSlot = true;
         }
-        return false;
+        return hasWorkSlot && (hasResultContainer || !hasGeneralStorageSlot);
+    }
+
+    private static boolean isStorageContainer(Container container) {
+        return container instanceof BlockEntity
+                || container instanceof CompoundContainer
+                || container instanceof PlayerEnderChestContainer
+                || container instanceof WorldlyContainer;
+    }
+
+    private static boolean isGeneralStorageSlot(Slot slot) {
+        return slot.getMaxStackSize() > 1 && slot.mayPlace(new ItemStack(Items.COBBLESTONE));
     }
 
     public static void expose(AbstractContainerMenu menu, Player player) {
@@ -92,10 +108,6 @@ public final class RepairView {
             inventory.setChanged();
             ((EquipmentRefresh) player).kms$refreshEquipment();
         }
-    }
-
-    public interface MenuTypeAccess {
-        MenuType<?> kms$menuType();
     }
 
     private RepairView() {}

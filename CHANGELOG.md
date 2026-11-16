@@ -4,7 +4,7 @@
 
 - Anvils, Enchanting Infusers, repair stations and other repair menus can repair broken items. The exact original item is shown while the menu is open.
 - A broken item is sealed again when you take it out, move it to another inventory, close the menu, disconnect, or drop it.
-- Broken items stay sealed in chests, hoppers, dispensers and shulker boxes. Add other storage menus to `repairViewExcludedMenus` in the config (restart required).
+- Broken items stay sealed in chests, hoppers, dispensers, shulker boxes and other storage containers.
 - The old Infuser-only repair hook is removed. Enchanting and anvil protection for sealed items still work as before.
 
 ## 1.2.2

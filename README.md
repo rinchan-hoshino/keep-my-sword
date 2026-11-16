@@ -22,7 +22,6 @@ The file is `config/keep_my_sword.toml`. Restart the game after editing it.
 | Key | Default | Effect |
 | --- | --- | --- |
 | `excludedItems` | `[]` | Item IDs (`"minecraft:diamond_sword"`) or item tags (`"#slashblade:swords"`) that are not protected. |
-| `repairViewExcludedMenus` | Chests, shulker boxes, hoppers, dispensers, Sophisticated Backpacks and Sophisticated Storage | Menu IDs or class names that keep items sealed while the menu is open. Add modded storage menus here. |
 
 ## Compatibility
 

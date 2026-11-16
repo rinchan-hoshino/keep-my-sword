@@ -7,16 +7,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Shadow;
-import net.minecraft.world.inventory.MenuType;
 
 // AbstractContainerMenu.clicked is the single entry for container clicks, so wrapping it brackets repair-view work with before/after calls.
 @Mixin(AbstractContainerMenu.class)
-public abstract class RepairViewMenuMixin implements RepairView.MenuTypeAccess {
-    @Shadow @Final private MenuType<?> menuType;
-
-    public MenuType<?> kms$menuType() { return menuType; }
+public abstract class RepairViewMenuMixin {
 
     @WrapMethod(method = "clicked")
     private void kms$workTransaction(int index, int button, @Coerce Enum<?> type, Player player, Operation<Void> original) {
