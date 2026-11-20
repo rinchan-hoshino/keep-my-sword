@@ -102,6 +102,10 @@ tasks.named('test', Test) {
         systemProperty 'kms.jar', tasks.named('jar').get().archiveFile.get().asFile.absolutePath
         systemProperty 'kms.root', root.projectDir.absolutePath
         systemProperty 'kms.apiLayer', apiLayer
+        def reqAll = findProperty('requireAllReleases') ?: System.getProperty('kms.requireAllReleases')
+        if (reqAll != null) {
+            systemProperty 'kms.requireAllReleases', reqAll.toString()
+        }
     }
 }
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,27 +45,65 @@ class ArchitectureContractTest {
     private static final Pattern JSON_ARRAY = Pattern.compile("\"(mixins|client|server)\"\\s*:\\s*\\[([^\\]]*)\\]");
     private static final Pattern JSON_STRING = Pattern.compile("\"([^\"]+)\"");
 
-    private static Path resolvePackagedJar() {
+    private static List<Path> resolvePackagedJars() throws IOException {
+        Map<Path, Path> unique = new LinkedHashMap<>();
         String configured = System.getProperty("kms.jar");
         if (configured != null && !configured.isBlank()) {
             Path p = Path.of(configured);
             assertTrue(Files.isRegularFile(p), "Configured kms.jar does not exist: " + p);
-            return p;
+            unique.put(p.toRealPath(), p);
         }
-        // Fallback: locate latest built 1.21.1 NeoForge jar from project root
+
         Path root = resolveProjectRoot();
-        Path libsDir = root.resolve("build/profiles/1.21.1/neoforge/libs");
-        if (Files.isDirectory(libsDir)) {
-            try (Stream<Path> s = Files.list(libsDir)) {
-                return s.filter(p -> p.getFileName().toString().endsWith(".jar")
-                                && !p.getFileName().toString().endsWith("-sources.jar"))
-                        .findFirst()
-                        .orElseThrow(() -> new AssertionError("No packaged JAR found in " + libsDir));
-            } catch (IOException e) {
-                throw new AssertionError("Failed to scan " + libsDir, e);
+        Path releasesDir = root.resolve("build/releases");
+        boolean requireAll = Boolean.parseBoolean(System.getProperty("kms.requireAllReleases", "false"));
+        List<Path> releaseJars = List.of();
+        if (Files.isDirectory(releasesDir)) {
+            try (Stream<Path> s = Files.list(releasesDir)) {
+                releaseJars = s.filter(Files::isRegularFile)
+                        .filter(p -> {
+                            String name = p.getFileName().toString();
+                            return name.startsWith("keep-my-sword-") && name.endsWith(".jar");
+                        })
+                        .sorted()
+                        .toList();
+            }
+            for (Path jar : releaseJars) {
+                unique.put(jar.toRealPath(), jar);
             }
         }
-        throw new AssertionError("System property -Dkms.jar is not set and no built JAR found under " + libsDir);
+        if (requireAll) {
+            assertEquals(8, releaseJars.size(), "Expected all 8 release JARs in " + releasesDir + ", found: " + releaseJars);
+        }
+
+        if (unique.isEmpty()) {
+            Path libsDir = root.resolve("build/profiles/1.21.1/neoforge/libs");
+            if (Files.isDirectory(libsDir)) {
+                try (Stream<Path> s = Files.list(libsDir)) {
+                    Path fallback = s.filter(p -> p.getFileName().toString().endsWith(".jar")
+                                    && !p.getFileName().toString().endsWith("-sources.jar"))
+                            .findFirst()
+                            .orElseThrow(() -> new AssertionError("No packaged JAR found in " + libsDir));
+                    unique.put(fallback.toRealPath(), fallback);
+                }
+            }
+        }
+        assertFalse(unique.isEmpty(), "System property -Dkms.jar is not set and no built JARs found");
+        return List.copyOf(unique.values());
+    }
+
+    private static String inferApiLayer(Path jarPath) {
+        String name = jarPath.getFileName().toString();
+        if (name.contains("+1.20.1-") || name.contains("+1.20.1.")) {
+            return "v120";
+        }
+        if (name.contains("+1.21.1-") || name.contains("+1.21.1.")) {
+            return "v121";
+        }
+        if (name.contains("+26.")) {
+            return "v26";
+        }
+        return System.getProperty("kms.apiLayer", "v121");
     }
 
     private static Path resolveProjectRoot() {
@@ -84,132 +123,132 @@ class ArchitectureContractTest {
 
     @Test
     void dedicatedServerIsolationZeroClientReferencesOutsideClientPackages() throws Exception {
-        Path jarPath = resolvePackagedJar();
-        try (ZipFile zf = new ZipFile(jarPath.toFile())) {
-            Set<String> clientOnlyMixins = collectDeclaredMixins(zf, true);
-            List<String> violations = new ArrayList<>();
+        List<String> violations = new ArrayList<>();
+        for (Path jarPath : resolvePackagedJars()) {
+            try (ZipFile zf = new ZipFile(jarPath.toFile())) {
+                Set<String> clientOnlyMixins = collectDeclaredMixins(zf, true);
 
-            Enumeration<? extends ZipEntry> entries = zf.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                String name = entry.getName();
-                if (!name.endsWith(".class")) continue;
+                Enumeration<? extends ZipEntry> entries = zf.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = entries.nextElement();
+                    String name = entry.getName();
+                    if (!name.endsWith(".class")) continue;
 
-                String internalName = name.substring(0, name.length() - ".class".length());
-                if (isClientAllowedClass(internalName, clientOnlyMixins)) {
-                    continue;
-                }
-
-                byte[] bytes = readEntry(zf, entry);
-                List<String> utf8Pool = readConstantPoolUtf8AndClasses(bytes);
-                for (String token : utf8Pool) {
-                    for (String forbidden : FORBIDDEN_CLIENT_PREFIXES) {
-                        if (token.contains(forbidden)) {
-                            violations.add(internalName + " references forbidden client symbol: " + token);
-                            break;
-                        }
+                    String internalName = name.substring(0, name.length() - ".class".length());
+                    if (isClientAllowedClass(internalName, clientOnlyMixins)) {
+                        continue;
                     }
-                }
-            }
 
-            assertTrue(
-                    violations.isEmpty(),
-                    "Dedicated-server isolation violations in " + jarPath.getFileName() + ":\n"
-                            + String.join("\n", violations));
-        }
-    }
-
-    @Test
-    void mixinBidirectionalClosureBetweenConfigsJarAndSources() throws Exception {
-        Path jarPath = resolvePackagedJar();
-        Path root = resolveProjectRoot();
-        String apiLayer = System.getProperty("kms.apiLayer", "v121");
-
-        try (ZipFile zf = new ZipFile(jarPath.toFile())) {
-            Set<String> declaredMixins = collectDeclaredMixins(zf, false);
-            assertFalse(declaredMixins.isEmpty(), "Expected at least one declared mixin in " + jarPath.getFileName());
-
-            // Forward check: every declared mixin MUST exist as a .class inside the final JAR
-            List<String> missingInJar = new ArrayList<>();
-            for (String internalName : declaredMixins) {
-                if (zf.getEntry(internalName + ".class") == null) {
-                    missingInJar.add(internalName);
-                }
-            }
-            assertTrue(
-                    missingInJar.isEmpty(),
-                    "Declared mixins missing from packaged JAR: " + missingInJar);
-
-            // Reverse check 1 (JAR bytecode): every class with @Mixin annotation in JAR must be declared
-            List<String> undeclaredInJar = new ArrayList<>();
-            Enumeration<? extends ZipEntry> entries = zf.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                String name = entry.getName();
-                if (!name.endsWith(".class") || name.contains("$")) continue;
-                String internalName = name.substring(0, name.length() - ".class".length());
-                byte[] bytes = readEntry(zf, entry);
-                List<String> pool = readConstantPoolUtf8AndClasses(bytes);
-                boolean hasMixinAnnotation = pool.contains("Lorg/spongepowered/asm/mixin/Mixin;");
-                if (hasMixinAnnotation && !declaredMixins.contains(internalName)) {
-                    undeclaredInJar.add(internalName);
-                }
-            }
-            assertTrue(
-                    undeclaredInJar.isEmpty(),
-                    "Orphan @Mixin classes present in JAR but not registered in *.mixins.json: " + undeclaredInJar);
-
-            // Reverse check 2 (Sources): every @Mixin in common/src/main and common/src/<apiLayer> must be declared
-            List<Path> srcRoots = List.of(
-                    root.resolve("common/src/main/java"),
-                    root.resolve("common/src/" + apiLayer + "/java"));
-            List<String> undeclaredInSources = new ArrayList<>();
-            for (Path srcRoot : srcRoots) {
-                if (!Files.isDirectory(srcRoot)) continue;
-                try (Stream<Path> walk = Files.walk(srcRoot)) {
-                    for (Path javaFile : walk.filter(p -> p.toString().endsWith(".java")).toList()) {
-                        String content = Files.readString(javaFile, StandardCharsets.UTF_8);
-                        if (MIXIN_ANNOTATION.matcher(content).find()) {
-                            String rel = srcRoot.relativize(javaFile).toString().replace('\\', '/');
-                            String internalName = rel.substring(0, rel.length() - ".java".length());
-                            if (!declaredMixins.contains(internalName)) {
-                                undeclaredInSources.add(internalName);
+                    byte[] bytes = readEntry(zf, entry);
+                    List<String> utf8Pool = readConstantPoolUtf8AndClasses(bytes);
+                    for (String token : utf8Pool) {
+                        for (String forbidden : FORBIDDEN_CLIENT_PREFIXES) {
+                            if (token.contains(forbidden)) {
+                                violations.add(jarPath.getFileName() + ": " + internalName + " references forbidden client symbol: " + token);
+                                break;
                             }
                         }
                     }
                 }
             }
-            assertTrue(
-                    undeclaredInSources.isEmpty(),
-                    "Source @Mixin classes not registered in *.mixins.json: " + undeclaredInSources);
+        }
+        assertTrue(
+                violations.isEmpty(),
+                "Dedicated-server isolation violations:\n" + String.join("\n", violations));
+    }
+
+    @Test
+    void mixinBidirectionalClosureBetweenConfigsJarAndSources() throws Exception {
+        Path root = resolveProjectRoot();
+        for (Path jarPath : resolvePackagedJars()) {
+            String apiLayer = inferApiLayer(jarPath);
+            try (ZipFile zf = new ZipFile(jarPath.toFile())) {
+                Set<String> declaredMixins = collectDeclaredMixins(zf, false);
+                assertFalse(declaredMixins.isEmpty(), "Expected at least one declared mixin in " + jarPath.getFileName());
+
+                // Forward check: every declared mixin MUST exist as a .class inside the final JAR
+                List<String> missingInJar = new ArrayList<>();
+                for (String internalName : declaredMixins) {
+                    if (zf.getEntry(internalName + ".class") == null) {
+                        missingInJar.add(internalName);
+                    }
+                }
+                assertTrue(
+                        missingInJar.isEmpty(),
+                        "Declared mixins missing from packaged JAR " + jarPath.getFileName() + ": " + missingInJar);
+
+                // Reverse check 1 (JAR bytecode): every class with @Mixin annotation in JAR must be declared
+                List<String> undeclaredInJar = new ArrayList<>();
+                Enumeration<? extends ZipEntry> entries = zf.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = entries.nextElement();
+                    String name = entry.getName();
+                    if (!name.endsWith(".class") || name.contains("$")) continue;
+                    String internalName = name.substring(0, name.length() - ".class".length());
+                    byte[] bytes = readEntry(zf, entry);
+                    List<String> pool = readConstantPoolUtf8AndClasses(bytes);
+                    boolean hasMixinAnnotation = pool.contains("Lorg/spongepowered/asm/mixin/Mixin;");
+                    if (hasMixinAnnotation && !declaredMixins.contains(internalName)) {
+                        undeclaredInJar.add(internalName);
+                    }
+                }
+                assertTrue(
+                        undeclaredInJar.isEmpty(),
+                        "Orphan @Mixin classes present in JAR " + jarPath.getFileName() + " but not registered in *.mixins.json: " + undeclaredInJar);
+
+                // Reverse check 2 (Sources): every @Mixin in common/src/main and common/src/<apiLayer> must be declared
+                List<Path> srcRoots = List.of(
+                        root.resolve("common/src/main/java"),
+                        root.resolve("common/src/" + apiLayer + "/java"));
+                List<String> undeclaredInSources = new ArrayList<>();
+                for (Path srcRoot : srcRoots) {
+                    if (!Files.isDirectory(srcRoot)) continue;
+                    try (Stream<Path> walk = Files.walk(srcRoot)) {
+                        for (Path javaFile : walk.filter(p -> p.toString().endsWith(".java")).toList()) {
+                            String content = Files.readString(javaFile, StandardCharsets.UTF_8);
+                            if (MIXIN_ANNOTATION.matcher(content).find()) {
+                                String rel = srcRoot.relativize(javaFile).toString().replace('\\', '/');
+                                String internalName = rel.substring(0, rel.length() - ".java".length());
+                                if (!declaredMixins.contains(internalName)) {
+                                    undeclaredInSources.add(internalName);
+                                }
+                            }
+                        }
+                    }
+                }
+                assertTrue(
+                        undeclaredInSources.isEmpty(),
+                        "Source @Mixin classes not registered in *.mixins.json for " + jarPath.getFileName() + ": " + undeclaredInSources);
+            }
         }
     }
 
     @Test
     void cleanArtifactRedlineZeroRinlibZeroModMenuStubAndWithinSizeBudget() throws Exception {
-        Path jarPath = resolvePackagedJar();
-        long size = Files.size(jarPath);
-        assertTrue(
-                size > 0 && size < MAX_JAR_BYTES,
-                "Packaged JAR size out of budget (" + size + " bytes, max " + MAX_JAR_BYTES + "): " + jarPath);
-
-        try (ZipFile zf = new ZipFile(jarPath.toFile())) {
-            List<String> forbiddenEntries = new ArrayList<>();
-            Enumeration<? extends ZipEntry> entries = zf.entries();
-            while (entries.hasMoreElements()) {
-                String name = entries.nextElement().getName();
-                String lower = name.toLowerCase();
-                if (lower.contains("rinlib")) {
-                    forbiddenEntries.add("rinlib leak: " + name);
-                }
-                if (name.startsWith("com/terraformersmc/modmenu/")) {
-                    forbiddenEntries.add("modmenu compile stub leak: " + name);
-                }
-            }
+        for (Path jarPath : resolvePackagedJars()) {
+            long size = Files.size(jarPath);
             assertTrue(
-                    forbiddenEntries.isEmpty(),
-                    "Forbidden entries found in packaged JAR " + jarPath.getFileName() + ":\n"
-                            + String.join("\n", forbiddenEntries));
+                    size > 0 && size < MAX_JAR_BYTES,
+                    "Packaged JAR size out of budget (" + size + " bytes, max " + MAX_JAR_BYTES + "): " + jarPath);
+
+            try (ZipFile zf = new ZipFile(jarPath.toFile())) {
+                List<String> forbiddenEntries = new ArrayList<>();
+                Enumeration<? extends ZipEntry> entries = zf.entries();
+                while (entries.hasMoreElements()) {
+                    String name = entries.nextElement().getName();
+                    String lower = name.toLowerCase();
+                    if (lower.contains("rinlib")) {
+                        forbiddenEntries.add("rinlib leak: " + name);
+                    }
+                    if (name.startsWith("com/terraformersmc/modmenu/")) {
+                        forbiddenEntries.add("modmenu compile stub leak: " + name);
+                    }
+                }
+                assertTrue(
+                        forbiddenEntries.isEmpty(),
+                        "Forbidden entries found in packaged JAR " + jarPath.getFileName() + ":\n"
+                                + String.join("\n", forbiddenEntries));
+            }
         }
     }
 
