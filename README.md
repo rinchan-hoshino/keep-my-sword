@@ -10,7 +10,6 @@ Items stay in your inventory when durability runs out instead of disappearing. B
 - **Disabled until repaired**: Broken items deal bare-hand damage, mine at hand speed without tool drops, provide zero attributes or armor, skip passive ticks and combat/protection/movement enchantments, cannot be right-clicked as tools or weapons, and cannot be consumed as ordinary crafting ingredients.
 - **Still lets you open blocks**: Right-clicking an anvil, crafting table, grindstone, chest, or modded repair station while holding a broken item falls back to a bare-hand block interaction.
 - **Works natively with every repair system**: Because the broken item stays a real `ItemStack`, anvils, grindstones, crafting repair, Mending (configurable), Enchanting Infuser, Sophisticated Backpacks, and other modded repair mechanics work out of the box.
-- **Legacy v1.x save migration**: Old sealed recovery-compass carriers from 1.x worlds are automatically unsealed back into native broken items on load.
 - **Elytra-safe & mod-friendly**: Vanilla Elytra (which stops gliding at 1 durability) is never interfered with, and `#slashblade:swords`, `#tconstruct:modifiable`, `#tetra:modular_items` are excluded by default (missing mod tags are ignored safely).
 
 ## Configuration

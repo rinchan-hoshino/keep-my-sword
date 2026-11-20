@@ -2,7 +2,7 @@
 
 ## 2.0.0
 
-- **Complete rewrite to in-place broken state**: Removed the legacy recovery-compass carrier system and `RinLib` dependency completely. Every jar is now ~50–65 KB with zero external dependencies (not even Fabric API).
+- **In-place broken state engine**: Keeps broken tools, weapons, and armor in-place at 0 durability in a lightweight (~50–65 KB) standalone single JAR with zero external dependencies (not even Fabric API).
 - **6 engine-root guards**:
   1. Destruction interception & one-time first-break sound, particles, and optional actionbar notice.
   2. Server & client right-click gating that blocks broken tool/weapon/entity use while falling back to bare-hand block interactions (so anvils, crafting tables, grindstones, and chests still open).
@@ -10,7 +10,6 @@
   4. Mining gating (`1.0F` speed, no tool drops, skipped `mineBlock`).
   5. Attribute & passive tick gating (zero armor/attack/mod modifiers; armor stays worn with 0 protection).
   6. Enchantment, Mending, and crafting-ingredient protection (blocks Protection/Thorns/Frost Walker/Looting/etc. and ordinary crafting while allowing `RepairItemRecipe` and configurable Mending).
-- **Automatic v1.x save migration**: Legacy `keep_my_sword:sealed` and schema-1 recovery-compass carriers automatically unseal into native broken items.
 - **Native in-game config screen**: Added a zero-dependency vanilla config screen wired to ModMenu (Fabric) and Forge/NeoForge config screen factories with instant hot-reload.
 - **New visual polish**: Crisp 5×5 bottom-right broken badge replacing the full-slot red wash, dark-red tooltip line, `en_us`/`zh_cn`/`zh_tw`/`ja_jp` translations, and a redesigned 64×64 pixel-art icon.
 - **Expanded compatibility**: Added Minecraft `1.20.1` (Fabric & Forge) alongside `1.21.1`, `26.1.2`, and `26.2` (Fabric & NeoForge), with `#slashblade:swords`, `#tconstruct:modifiable`, and `#tetra:modular_items` excluded by default.
@@ -28,7 +27,7 @@
 
 ## 1.2.1
 
-- RinLib is now bundled inside Keep My Sword, so no separate RinLib download is needed.
+- Bundled internal runtime helpers inside Keep My Sword, so no separate library download is needed.
 
 ## 1.2.0
 
