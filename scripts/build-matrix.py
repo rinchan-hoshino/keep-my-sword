@@ -19,10 +19,12 @@ def discover_jdk(major: int) -> str:
     if env_key in os.environ and Path(os.environ[env_key]).is_dir():
         return os.environ[env_key]
     candidates = [
+        Path(f"/opt/java-{major}"),
         Path(f"/opt/homebrew/opt/openjdk@{major}/libexec/openjdk.jdk/Contents/Home"),
         Path(f"/Users/rin/Library/Java/JavaVirtualMachines/temurin-{major}.jdk/Contents/Home"),
     ]
     for pattern in (
+        f"/usr/lib/jvm/temurin-{major}-jdk-*",
         f"/opt/homebrew/Cellar/openjdk@{major}/*/libexec/openjdk.jdk/Contents/Home",
         f"{Path.home()}/.gradle/jdks/*-{major}-*/Contents/Home",
     ):
@@ -42,6 +44,8 @@ def verify_jar(jar_path: Path):
         for name in zf.namelist():
             if "rinlib" in name.lower():
                 raise RuntimeError(f"Forbidden rinlib entry found in {jar_path.name}: {name}")
+            if name.startswith("com/terraformersmc/modmenu/"):
+                raise RuntimeError(f"Forbidden modmenu compile stub leaked in {jar_path.name}: {name}")
 
 
 def main():
@@ -79,6 +83,7 @@ def main():
         for loader in loaders:
             tasks.append(f":{loader}:build")
 
+        in_container = Path("/.dockerenv").exists()
         command = [
             str(ROOT / "gradlew"),
             *tasks,
@@ -86,7 +91,7 @@ def main():
             "-Ploader=all",
             "-Porg.gradle.java.installations.paths=" + installations_paths,
             "--no-configuration-cache",
-            "--max-workers=2",
+            *(["--no-parallel", "--max-workers=1", "-Dorg.gradle.jvmargs=-Xmx1G"] if in_container else ["--max-workers=2"]),
         ]
         subprocess.run(command, cwd=ROOT, env=env, check=True)
 

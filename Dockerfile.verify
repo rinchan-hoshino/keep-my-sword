@@ -1,0 +1,37 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        gnupg \
+        libgl1 \
+        libglfw3 \
+        libopenal1 \
+        python3 \
+        xvfb \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public \
+        | gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb noble main" \
+        > /etc/apt/sources.list.d/adoptium.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        temurin-17-jdk \
+        temurin-21-jdk \
+        temurin-25-jdk \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -sfn "$(dirname "$(dirname "$(readlink -f /usr/lib/jvm/temurin-17-jdk-*/bin/java)")")" /opt/java-17 \
+    && ln -sfn "$(dirname "$(dirname "$(readlink -f /usr/lib/jvm/temurin-21-jdk-*/bin/java)")")" /opt/java-21 \
+    && ln -sfn "$(dirname "$(dirname "$(readlink -f /usr/lib/jvm/temurin-25-jdk-*/bin/java)")")" /opt/java-25
+
+ENV JAVA_17_HOME=/opt/java-17 \
+    JAVA_21_HOME=/opt/java-21 \
+    JAVA_25_HOME=/opt/java-25 \
+    JAVA_HOME=/opt/java-21 \
+    PATH="/opt/java-21/bin:${PATH}"
+
+WORKDIR /workspace
+ENTRYPOINT ["xvfb-run", "-a"]

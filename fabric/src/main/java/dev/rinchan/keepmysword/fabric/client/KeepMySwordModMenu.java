@@ -1,4 +1,4 @@
-package dev.rinchan.keepmysword.fabric;
+package dev.rinchan.keepmysword.fabric.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

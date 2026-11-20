@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="GPL-3.0-only"
+
+[[mods]]
+modId="keep_my_sword_e2e"
+version="1.0.0"
+displayName="Keep My Sword E2E Harness"
+description="Black-box GameTest harness for verifying the packaged Keep My Sword JAR."
+
+[[dependencies.keep_my_sword_e2e]]
+modId="keep_my_sword"
+type="required"
+versionRange="[2.0.0,)"
+ordering="AFTER"
+side="BOTH"

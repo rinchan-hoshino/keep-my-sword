@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1
+
+- **Dedicated Server isolation**: Moved client-only config screen registration and client lifecycle classes into dedicated client packages (`KeepMySwordForgeClient`, `KeepMySwordNeoForgeClient`, `KeepMySwordModMenu`) so dedicated servers never load client GUI classes.
+- **Verification**: Validated across the full build matrix, property-based invariant tests, packaged-JAR architecture contracts, and real Minecraft 1.21.1 NeoForge GameTest E2E.
+
 ## 2.0.0
 
 - **In-place broken state engine**: Keeps broken tools, weapons, and armor in-place at 0 durability in a lightweight (~50–65 KB) standalone single JAR with zero external dependencies (not even Fabric API).

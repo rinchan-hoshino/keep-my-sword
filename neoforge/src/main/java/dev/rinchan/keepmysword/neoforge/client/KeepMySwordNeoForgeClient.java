@@ -1,4 +1,4 @@
-package dev.rinchan.keepmysword.neoforge;
+package dev.rinchan.keepmysword.neoforge.client;
 
 import dev.rinchan.keepmysword.KeepMySword;
 import dev.rinchan.keepmysword.client.KeepMySwordConfigScreen;

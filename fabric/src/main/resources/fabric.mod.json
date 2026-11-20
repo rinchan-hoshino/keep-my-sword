@@ -14,7 +14,7 @@
       "dev.rinchan.keepmysword.fabric.KeepMySwordFabric"
     ],
     "modmenu": [
-      "dev.rinchan.keepmysword.fabric.KeepMySwordModMenu"
+      "dev.rinchan.keepmysword.fabric.client.KeepMySwordModMenu"
     ]
   },
   "mixins": [

@@ -17,8 +17,20 @@ sourceSets.main.java.srcDir root.file("common/src/${apiLayer}/java")
 sourceSets.main.resources.srcDir root.file('common/src/main/resources')
 sourceSets.main.resources.srcDir root.file("common/src/${apiLayer}/resources")
 sourceSets.test.java.srcDir root.file('common/src/test/java')
+if (apiLayer != 'v121') {
+    sourceSets.test.java.exclude('**/KeepMySwordConfigScreenTest.java')
+}
 sourceSets.test.compileClasspath += sourceSets.main.compileClasspath
 sourceSets.test.runtimeClasspath += sourceSets.main.runtimeClasspath
+
+if (apiLayer == 'v121') {
+    sourceSets {
+        gametest {
+            compileClasspath += configurations.compileClasspath
+            runtimeClasspath += configurations.runtimeClasspath
+        }
+    }
+}
 sourceSets.main.resources.srcDir tasks.register('generateModMetadata', ProcessResources) {
     def replaceProperties = [
         minecraft_version_range: root.minecraft_version_range,
@@ -45,6 +57,11 @@ neoForge {
         "${modId}" {
             sourceSet(sourceSets.main)
         }
+        if (apiLayer == 'v121') {
+            keep_my_sword_e2e {
+                sourceSet(sourceSets.gametest)
+            }
+        }
     }
     unitTest {
         enable()
@@ -55,6 +72,14 @@ neoForge {
         server {
             server()
             programArgument '--nogui'
+        }
+        if (apiLayer == 'v121') {
+            gameTestServer {
+                type = 'gameTestServer'
+                loadedMods = [mods.keep_my_sword_e2e]
+                systemProperty 'neoforge.enabledGameTestNamespaces', 'keep_my_sword_e2e'
+                gameDirectory = layout.buildDirectory.dir('run-gametest-e2e')
+            }
         }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
@@ -71,7 +96,37 @@ dependencies {
 }
 
 tasks.named('test', Test) {
+    dependsOn tasks.named('jar')
     useJUnitPlatform()
+    doFirst {
+        systemProperty 'kms.jar', tasks.named('jar').get().archiveFile.get().asFile.absolutePath
+        systemProperty 'kms.root', root.projectDir.absolutePath
+        systemProperty 'kms.apiLayer', apiLayer
+    }
+}
+
+if (apiLayer == 'v121') {
+    def stagePackagedJarForE2E = tasks.register('stagePackagedJarForE2E') {
+        dependsOn tasks.named('jar')
+        doLast {
+            def modsDir = layout.buildDirectory.dir('run-gametest-e2e/mods').get().asFile
+            if (modsDir.exists()) {
+                modsDir.listFiles()?.each { it.delete() }
+            } else {
+                modsDir.mkdirs()
+            }
+            def packagedJar = tasks.named('jar').get().archiveFile.get().asFile
+            copy {
+                from packagedJar
+                into modsDir
+            }
+            logger.lifecycle("Staged packaged JAR for black-box E2E GameTest: ${packagedJar.name}")
+        }
+    }
+
+    tasks.matching { it.name == 'runGameTestServer' }.configureEach {
+        dependsOn stagePackagedJarForE2E
+    }
 }
 
 publishing {
