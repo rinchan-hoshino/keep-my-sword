@@ -1,5 +1,14 @@
 {
-  "tag.item.keep_my_sword.excluded": "不受 Keep My Sword 影响",
-  "item.keep_my_sword.broken": "已损坏，修复后可使用",
-  "item.keep_my_sword.recovery": "损坏物品 — 安装 Keep My Sword 后可修复。"
+  "tag.item.keep_my_sword.excluded": "不受 Keep My Sword 保护",
+  "item.keep_my_sword.broken": "已损坏 · 修复后可用",
+  "message.keep_my_sword.broken": "%s 已损坏，修复后可再次使用",
+  "screen.keep_my_sword.title": "Keep My Sword 设置",
+  "screen.keep_my_sword.allow_mending": "允许经验修补修复已损坏装备",
+  "screen.keep_my_sword.show_notification": "首次损坏时显示快捷栏提示",
+  "screen.keep_my_sword.show_overlay": "物品槽绘制损坏角标",
+  "screen.keep_my_sword.excluded_items": "排除列表（物品 ID 或 #标签，逗号分隔）",
+  "screen.keep_my_sword.excluded_hint": "例如：#slashblade:swords, minecraft:diamond_sword",
+  "screen.keep_my_sword.save": "保存",
+  "screen.keep_my_sword.cancel": "取消",
+  "screen.keep_my_sword.reset": "恢复默认"
 }

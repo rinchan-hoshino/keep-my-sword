@@ -1,11 +1,10 @@
-# Supported versions
+# Supported Versions
 
-| Minecraft | Fabric | NeoForge | Java |
-| --- | --- | --- | --- |
-| 1.21.1 | Yes | Yes | 21 |
-| 26.1.2 | Yes | Yes | 25 |
-| 26.2 | Yes | Yes | 25 |
+| Minecraft | Fabric | Forge | NeoForge | Java |
+| --- | --- | --- | --- | --- |
+| `1.20.1` | Yes | Yes | — | 17 |
+| `1.21.1` | Yes | — | Yes | 21 |
+| `26.1.2` | Yes | — | Yes | 25 |
+| `26.2` | Yes | — | Yes | 25 |
 
-`profiles.json` selects the loader versions and Minecraft API adapter. The two 26.x versions share the same source. All profiles use the local `DamageState` for durability state and clamping, with one shared gameplay implementation. Small API adapters bind the version-specific tag, use-result, attribute-group, rendering and destruction methods.
-
-Historical port branches are development history, not additional supported releases.
+`profiles.json` selects the loader versions and thin API adapter (`v120`, `v121`, `v26`). `26.1.2` and `26.2` share the same `v26` adapter.

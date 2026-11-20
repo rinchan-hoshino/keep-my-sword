@@ -1,11 +1,12 @@
 package dev.rinchan.keepmysword.fabric;
 
 import dev.rinchan.keepmysword.KeepMySword;
-import dev.rinchan.rinlib.v2.RinFabric;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 
 public final class KeepMySwordFabric implements ModInitializer {
-    @Override public void onInitialize() {
-        new RinFabric("keep_my_sword").start(new KeepMySword());
+    @Override
+    public void onInitialize() {
+        KeepMySword.init(FabricLoader.getInstance().getConfigDir());
     }
 }

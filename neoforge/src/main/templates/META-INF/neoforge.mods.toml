@@ -17,9 +17,6 @@ config="keep_my_sword.mixins.json"
 [[mixins]]
 config="keep_my_sword.client.mixins.json"
 
-[[mixins]]
-config="keep_my_sword.neoforge.mixins.json"
-
 [[dependencies.${mod_id}]]
 modId="neoforge"
 type="required"
@@ -33,5 +30,3 @@ type="required"
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"
-
-${extra_mixins}

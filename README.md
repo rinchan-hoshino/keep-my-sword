@@ -2,34 +2,42 @@
 
 <img src="docs/artwork/icon.png" alt="Keep My Sword" width="96" height="96">
 
-Items stay in your inventory after they break. A broken tool or weapon is kept in an unusable state and can still be repaired.
-
-![Holding a diamond sword with no durability remaining](https://cdn.modrinth.com/data/pPO0fpz4/images/e0971797aee78a779a76036dd26df0320808efc2.png)
-
-![Repairing the diamond sword in an anvil](https://cdn.modrinth.com/data/pPO0fpz4/images/8b706cf65c468aa224bccbdf6b2e49eab90d7d08.png)
+Items stay in your inventory when durability runs out instead of disappearing. Broken tools, weapons, and armor remain the real item in-place — completely unusable until repaired, with zero save-file pollution and zero dependencies.
 
 ## How it works
 
-- A broken item stays in your inventory with its original data kept safe. It cannot be used as a normal recipe ingredient.
-- Repair it at an anvil, grindstone or Enchanting Infuser. The repair uses the item's exact original data.
-- Broken items stay sealed when moved into chests, hoppers, shulker boxes and other storage.
-- Items in the `#keep_my_sword:excluded` tag, or listed in the config, are not protected.
+- **In-place broken state**: When a damageable item reaches 0 durability, destruction is prevented and durability clamps at 0. Break sound, item particles, and an optional actionbar notice play once when it breaks.
+- **Disabled until repaired**: Broken items deal bare-hand damage, mine at hand speed without tool drops, provide zero attributes or armor, skip passive ticks and combat/protection/movement enchantments, cannot be right-clicked as tools or weapons, and cannot be consumed as ordinary crafting ingredients.
+- **Still lets you open blocks**: Right-clicking an anvil, crafting table, grindstone, chest, or modded repair station while holding a broken item falls back to a bare-hand block interaction.
+- **Works natively with every repair system**: Because the broken item stays a real `ItemStack`, anvils, grindstones, crafting repair, Mending (configurable), Enchanting Infuser, Sophisticated Backpacks, and other modded repair mechanics work out of the box.
+- **Legacy v1.x save migration**: Old sealed recovery-compass carriers from 1.x worlds are automatically unsealed back into native broken items on load.
+- **Elytra-safe & mod-friendly**: Vanilla Elytra (which stops gliding at 1 durability) is never interfered with, and `#slashblade:swords`, `#tconstruct:modifiable`, `#tetra:modular_items` are excluded by default (missing mod tags are ignored safely).
 
 ## Configuration
 
-The file is `config/keep_my_sword.toml`. Restart the game after editing it.
+Edit in-game via **ModMenu** (Fabric) or the **Mods -> Config** button (Forge / NeoForge) for instant hot-reload, or edit `config/keep_my_sword.toml`:
 
 | Key | Default | Effect |
 | --- | --- | --- |
-| `excludedItems` | `[]` | Item IDs (`"minecraft:diamond_sword"`) or item tags (`"#slashblade:swords"`) that are not protected. |
+| `allowMendingWhenBroken` | `true` | Allow Mending to repair broken items with XP orbs. |
+| `showBreakNotification` | `true` | Show an actionbar message when an item first enters the broken state. |
+| `showBrokenOverlay` | `true` | Draw a 5×5 broken-item badge on the bottom-right corner of GUI slots. |
+| `excludedItems` | `["#slashblade:swords", "#tconstruct:modifiable", "#tetra:modular_items"]` | Item IDs (`"minecraft:diamond_sword"`) or item tags (`"#modid:tag"`) skipped by Keep My Sword. |
 
-## Compatibility
+Datapacks can also exclude items via the `#keep_my_sword:excluded` item tag.
 
-- Minecraft 1.21.1
-- Fabric and NeoForge
-- Enchanting Infuser repair: supported from 1.3.0.
+## Supported Versions
+
+Zero runtime dependencies (no Fabric API, no library mod required).
+
+| Minecraft | Loaders | Java |
+| --- | --- | --- |
+| `1.20.1` | Fabric, Forge | 17 |
+| `1.21.1` | Fabric, NeoForge | 21 |
+| `26.1.2` | Fabric, NeoForge | 25 |
+| `26.2` | Fabric, NeoForge | 25 |
 
 ## Download
 
 - [Modrinth](https://modrinth.com/mod/keep-my-sword)
-- [GitHub releases](https://github.com/rinchan-hoshino/keep-my-sword/releases)
+- [GitHub Releases](https://github.com/rinchan-hoshino/keep-my-sword/releases)

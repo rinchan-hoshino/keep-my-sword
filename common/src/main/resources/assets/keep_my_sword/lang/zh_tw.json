@@ -1,0 +1,14 @@
+{
+  "tag.item.keep_my_sword.excluded": "不受 Keep My Sword 保護",
+  "item.keep_my_sword.broken": "已損壞 · 修復後可用",
+  "message.keep_my_sword.broken": "%s 已損壞，修復後可再次使用",
+  "screen.keep_my_sword.title": "Keep My Sword 設定",
+  "screen.keep_my_sword.allow_mending": "允許修補附魔修復已損壞裝備",
+  "screen.keep_my_sword.show_notification": "首次損壞時顯示快捷列提示",
+  "screen.keep_my_sword.show_overlay": "物品欄繪製損壞角標",
+  "screen.keep_my_sword.excluded_items": "排除清單（物品 ID 或 #標籤，逗號分隔）",
+  "screen.keep_my_sword.excluded_hint": "例如：#slashblade:swords, minecraft:diamond_sword",
+  "screen.keep_my_sword.save": "儲存",
+  "screen.keep_my_sword.cancel": "取消",
+  "screen.keep_my_sword.reset": "重設預設值"
+}

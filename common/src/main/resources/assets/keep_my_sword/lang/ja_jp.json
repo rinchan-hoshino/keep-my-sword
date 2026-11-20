@@ -1,0 +1,14 @@
+{
+  "tag.item.keep_my_sword.excluded": "Keep My Sword の保護対象外",
+  "item.keep_my_sword.broken": "破損済み · 修理すると使用可能",
+  "message.keep_my_sword.broken": "%s が破損しました。修理すると再び使用できます",
+  "screen.keep_my_sword.title": "Keep My Sword 設定",
+  "screen.keep_my_sword.allow_mending": "破損アイテムの修繕を許可",
+  "screen.keep_my_sword.show_notification": "破損時のアクションバー通知",
+  "screen.keep_my_sword.show_overlay": "スロットの破損バッジ表示",
+  "screen.keep_my_sword.excluded_items": "除外アイテム / タグ（カンマ区切り）",
+  "screen.keep_my_sword.excluded_hint": "例: #slashblade:swords, minecraft:diamond_sword",
+  "screen.keep_my_sword.save": "保存",
+  "screen.keep_my_sword.cancel": "キャンセル",
+  "screen.keep_my_sword.reset": "デフォルトに戻す"
+}

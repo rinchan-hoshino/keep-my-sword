@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.rinchan.keepmysword.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EnchantmentHelperMixin",
+    "EquipmentRefreshMixin",
+    "IngredientProtectionMixin",
+    "ItemStackMixin",
+    "LegacyMigrationPlayerMixin",
+    "PlayerMixin",
+    "RecipeProtectionMixin",
+    "ServerPlayerGameModeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

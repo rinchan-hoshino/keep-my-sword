@@ -1,37 +1,23 @@
 # Development
 
-Use Java 21 for Minecraft 1.21.1 and Java 25 for 26.x. Set `JAVA_HOME` for one build, or `JAVA_21_HOME` and `JAVA_25_HOME` for the matrix runner.
+Keep My Sword 2.0.0 has zero runtime dependencies and builds 8 targets across 4 Minecraft versions (`1.20.1`, `1.21.1`, `26.1.2`, `26.2`).
 
 ```sh
+# Build default profile (1.21.1 Fabric + NeoForge) and run unit tests
 ./gradlew build
-python3 scripts/build-matrix.py
-```
 
-`profiles.json` lists the supported game, loader and toolchain versions. The default build writes to `build/profiles/1.21.1/<loader>/`. The matrix runner writes each target to its own directory and collects the artifacts and hashes in `build/releases/manifest.json`.
+# Build and verify all 8 targets (<120KB budget, zero rinlib classes)
+python3 scripts/build-matrix.py
+
+# Regenerate the 512x512 icon from the 64x64 pixel-art script
+python3 scripts/draw_icon.py
+```
 
 ## Layout
 
-- `common/src/main/java` holds the shared code. Both loaders compile it through `build.gradle`.
-- `common/src/main/java/dev/rinchan/keepmysword/mixin` holds the Mixins. Each one has a comment that gives its injection point.
-- `common/src/main/resources` holds the assets, data, and mixin configs.
-- `common/src/test/java` holds the unit tests. The NeoForge build runs them with `./gradlew test`.
-- `fabric/` and `neoforge/` hold the loader entrypoints, build scripts, and metadata templates.
-
-## Dependencies
-
-- RinLib is pinned in `gradle.properties` (`rinlib_version`). Fabric includes it with `include`; NeoForge includes it with `jarJar`. Players do not install RinLib separately.
-- To build against a local RinLib jar, pass `-PrinlibJar=<path>` for Fabric or `-PrinlibNeoJar=<path>` for NeoForge.
-- `DamageState` comes from `dev.rinchan.rinlib.item`. Keep-My-Sword does not carry its own copy.
-
-## Design notes
-
-- Broken items are stored as a carrier that holds the original item snapshot. See [docs/sealed-items.md](docs/sealed-items.md).
-- Repair menus show the exact original while they are open. Items are sealed again when the menu closes, when they leave the player's control, or when the player disconnects or dies.
-- Storage containers (block entities, compound/sided containers, and menus with general storage slots) keep items sealed automatically.
-- Exclusion tags belong to modpacks. The default `#keep_my_sword:excluded` tag is empty.
-
-## Rules for changes
-
-- Do not package runtime probes or test-only registry objects.
-- Do not add release metadata other than the version in `gradle.properties`.
-- Do not hard-code local paths.
+- `common/src/main/java` — version-agnostic config (`SimpleToml`, `ExclusionMatcher`, `KeepMySwordConfig`), pure durability invariants (`DurabilityPolicy`), badge style (`BrokenVisualStyle`), and shared `EquipmentRefreshMixin`.
+- `common/src/v120/` — thin `1.20.1` adapter and Mixins (NBT, `getAttributeModifiers`, `BlockState.use` hand masking, Forge `onArmorTick`).
+- `common/src/v121/` — thin `1.21.1` adapter and Mixins (`DataComponents`, `forEachModifier`, data-driven `EnchantmentHelper`, legacy v1.x unsealer).
+- `common/src/v26/` — thin `26.1.2` / `26.2` adapter and Mixins (`Identifier`, `GuiGraphicsExtractor`, `DataComponents.GLIDER`).
+- `common/src/test/java` — JUnit 5 unit tests (config/TOML, randomized durability state-machine invariants, badge bounds, legacy unsealer).
+- `fabric/`, `forge/`, `neoforge/` — minimal loader entrypoints, config screen bindings, and mod metadata.

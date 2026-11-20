@@ -1,5 +1,14 @@
 {
   "tag.item.keep_my_sword.excluded": "Excluded from Keep My Sword",
   "item.keep_my_sword.broken": "Broken — repair to use",
-  "item.keep_my_sword.recovery": "Broken item — install Keep My Sword to repair it."
+  "message.keep_my_sword.broken": "%s broke — repair it to use again",
+  "screen.keep_my_sword.title": "Keep My Sword Settings",
+  "screen.keep_my_sword.allow_mending": "Allow Mending on Broken Items",
+  "screen.keep_my_sword.show_notification": "Break Actionbar Notice",
+  "screen.keep_my_sword.show_overlay": "Broken Slot Badge",
+  "screen.keep_my_sword.excluded_items": "Excluded Items / Tags (comma-separated)",
+  "screen.keep_my_sword.excluded_hint": "e.g. #slashblade:swords, minecraft:diamond_sword",
+  "screen.keep_my_sword.save": "Save",
+  "screen.keep_my_sword.cancel": "Cancel",
+  "screen.keep_my_sword.reset": "Reset Defaults"
 }
