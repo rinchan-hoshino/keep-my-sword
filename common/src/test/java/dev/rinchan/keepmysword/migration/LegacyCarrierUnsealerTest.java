@@ -150,6 +150,130 @@ class LegacyCarrierUnsealerTest {
     }
 
     @Test
+    void stripsRetiredAndUnknownComponentsInNativePayloadWithoutMutatingCarrier() {
+        RegistryAccess reg = registries();
+        ItemStack original = new ItemStack(Items.GOLDEN_BOOTS);
+        original.set(DataComponents.CUSTOM_NAME, Component.literal("Apotheosis Boots"));
+        original.setDamageValue(original.getMaxDamage());
+
+        CompoundTag encoded = (CompoundTag) ItemStack.CODEC
+                .encodeStart(reg.createSerializationContext(NbtOps.INSTANCE), original)
+                .getOrThrow();
+        encoded.putInt("DataVersion", LegacyCarrierUnsealer.currentDataVersion());
+        assertInstanceOf(CompoundTag.class, encoded.get("components"));
+        CompoundTag components = (CompoundTag) encoded.get("components");
+        components.putString("wmf_affix_origins:stack_instance_id", "e94a9e70-0000-0000-0000-000000000001");
+        components.putInt("deleted_mod:dead_comp", 42);
+        components.put("!deleted_mod:dead_comp", new CompoundTag());
+        components.putString("!", "invalid");
+        components.putString("bad namespace:key!", "invalid");
+
+        CompoundTag custom = new CompoundTag();
+        custom.put(LegacyCarrierUnsealer.SEALED_KEY, encoded);
+        ItemStack carrier = new ItemStack(Items.RECOVERY_COMPASS);
+        carrier.set(DataComponents.CUSTOM_DATA, CustomData.of(custom));
+
+        Optional<ItemStack> restored = LegacyCarrierUnsealer.unseal(carrier, reg);
+        assertTrue(restored.isPresent());
+        assertTrue(restored.get().is(Items.GOLDEN_BOOTS));
+        assertEquals("Apotheosis Boots", restored.get().getHoverName().getString());
+        assertEquals(restored.get().getMaxDamage(), restored.get().getDamageValue());
+        assertTrue(BrokenState.isBroken(restored.get()));
+
+        // Original carrier payload must remain untouched.
+        CompoundTag carrierRoot = carrier.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag carrierPayload = (CompoundTag) carrierRoot.get(LegacyCarrierUnsealer.SEALED_KEY);
+        CompoundTag carrierComponents = (CompoundTag) carrierPayload.get("components");
+        assertTrue(carrierComponents.contains("wmf_affix_origins:stack_instance_id"));
+        assertTrue(carrierComponents.contains("!deleted_mod:dead_comp"));
+    }
+
+    @Test
+    void stripsRetiredAndUnknownComponentsInSchema1Payload() throws Exception {
+        RegistryAccess reg = registries();
+        ItemStack original = new ItemStack(Items.GOLDEN_BOOTS);
+        original.set(DataComponents.CUSTOM_NAME, Component.literal("Schema1 Apotheosis Boots"));
+        original.setDamageValue(original.getMaxDamage());
+
+        CompoundTag encoded = (CompoundTag) ItemStack.CODEC
+                .encodeStart(reg.createSerializationContext(NbtOps.INSTANCE), original)
+                .getOrThrow();
+        CompoundTag components = (CompoundTag) encoded.get("components");
+        assertNotNull(components);
+        components.putString("wmf_affix_origins:stack_instance_id", "e94a9e70-1234-5678-9abc-def012345678");
+        components.putInt("deleted_mod:dead_comp", 99);
+        components.put("!deleted_mod:dead_comp", new CompoundTag());
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        NbtIo.writeCompressed(encoded, out);
+        String b64 = Base64.getEncoder().encodeToString(out.toByteArray());
+
+        ListTag chunks = new ListTag();
+        chunks.add(StringTag.valueOf(b64.substring(0, b64.length() / 2)));
+        chunks.add(StringTag.valueOf(b64.substring(b64.length() / 2)));
+
+        CompoundTag payload = new CompoundTag();
+        payload.putInt("schema", 1);
+        payload.putInt("data_version", LegacyCarrierUnsealer.currentDataVersion());
+        payload.put("chunks", chunks);
+
+        CompoundTag custom = new CompoundTag();
+        custom.put(LegacyCarrierUnsealer.SEALED_KEY, payload);
+        ItemStack carrier = new ItemStack(Items.RECOVERY_COMPASS);
+        carrier.set(DataComponents.CUSTOM_DATA, CustomData.of(custom));
+
+        Optional<ItemStack> restored = LegacyCarrierUnsealer.unseal(carrier, reg);
+        assertTrue(restored.isPresent());
+        assertTrue(restored.get().is(Items.GOLDEN_BOOTS));
+        assertEquals("Schema1 Apotheosis Boots", restored.get().getHoverName().getString());
+        assertEquals(restored.get().getMaxDamage(), restored.get().getDamageValue());
+        assertTrue(BrokenState.isBroken(restored.get()));
+    }
+
+    @Test
+    void removesEmptyComponentsTagWhenOnlyDeadComponentsPresentAndPreservesCarrierOnFailure() {
+        RegistryAccess reg = registries();
+
+        CompoundTag onlyDeadComponents = new CompoundTag();
+        onlyDeadComponents.putString("wmf_affix_origins:stack_instance_id", "e94a9e70-only-dead");
+
+        CompoundTag validItemWithOnlyDead = new CompoundTag();
+        validItemWithOnlyDead.putString("id", "minecraft:diamond_pickaxe");
+        validItemWithOnlyDead.putInt("count", 1);
+        validItemWithOnlyDead.putInt("DataVersion", LegacyCarrierUnsealer.currentDataVersion());
+        validItemWithOnlyDead.put("components", onlyDeadComponents);
+
+        CompoundTag customValid = new CompoundTag();
+        customValid.put(LegacyCarrierUnsealer.SEALED_KEY, validItemWithOnlyDead);
+        ItemStack validCarrier = new ItemStack(Items.RECOVERY_COMPASS);
+        validCarrier.set(DataComponents.CUSTOM_DATA, CustomData.of(customValid));
+
+        Optional<ItemStack> restored = LegacyCarrierUnsealer.unseal(validCarrier, reg);
+        assertTrue(restored.isPresent());
+        assertTrue(restored.get().is(Items.DIAMOND_PICKAXE));
+        assertEquals(restored.get().getMaxDamage(), restored.get().getDamageValue());
+
+        // If decode still fails (e.g. unknown item id), carrier must not be mutated.
+        CompoundTag failingItem = new CompoundTag();
+        failingItem.putString("id", "deleted_mod:nonexistent_sword");
+        failingItem.putInt("count", 1);
+        failingItem.putInt("DataVersion", LegacyCarrierUnsealer.currentDataVersion());
+        failingItem.put("components", onlyDeadComponents.copy());
+
+        CompoundTag customFailing = new CompoundTag();
+        customFailing.put(LegacyCarrierUnsealer.SEALED_KEY, failingItem);
+        ItemStack failingCarrier = new ItemStack(Items.RECOVERY_COMPASS);
+        failingCarrier.set(DataComponents.CUSTOM_DATA, CustomData.of(customFailing));
+
+        assertTrue(LegacyCarrierUnsealer.unseal(failingCarrier, reg).isEmpty());
+        CompoundTag failingRoot = failingCarrier.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag failingPayload = (CompoundTag) failingRoot.get(LegacyCarrierUnsealer.SEALED_KEY);
+        CompoundTag failingComponents = (CompoundTag) failingPayload.get("components");
+        assertNotNull(failingComponents);
+        assertTrue(failingComponents.contains("wmf_affix_origins:stack_instance_id"));
+    }
+
+    @Test
     void gatesBrokenItemEnchantmentLevelExceptConfiguredMending() {
         Enchantment.EnchantmentDefinition def = Enchantment.definition(
                 HolderSet.empty(),

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.3
+
+- **Legacy carrier unseal hardening**: Automatically strips retired/unregistered `DataComponentType` keys (including `!` removal entries) on a copy of the upgraded item tag before `ItemStack.CODEC.parse` in `v121` and `v26`, logging a warning for each stripped component while leaving the original carrier untouched on failure.
+
 ## 2.0.2
 
 - **1.20.1 Forge `pack.mcmeta` fix**: Added `pack.mcmeta` (`pack_format: 15`) to the Forge template resources to eliminate the `ResourcePackInfo` startup warning on Minecraft `1.20.1` Forge without affecting other targets.
