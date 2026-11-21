@@ -73,7 +73,7 @@ class ArchitectureContractTest {
             }
         }
         if (requireAll) {
-            assertEquals(8, releaseJars.size(), "Expected all 8 release JARs in " + releasesDir + ", found: " + releaseJars);
+            assertEquals(10, releaseJars.size(), "Expected all 10 release JARs in " + releasesDir + ", found: " + releaseJars);
         }
 
         if (unique.isEmpty()) {

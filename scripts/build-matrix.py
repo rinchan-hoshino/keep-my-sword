@@ -36,16 +36,27 @@ def discover_jdk(major: int) -> str:
     raise RuntimeError(f"Could not find JDK {major}; set {env_key}")
 
 
-def verify_jar(jar_path: Path):
+def verify_jar(jar_path: Path, minecraft: str, loader: str):
     size = jar_path.stat().st_size
     if size >= MAX_JAR_BYTES:
         raise RuntimeError(f"JAR exceeds 120KB budget: {jar_path.name} ({size} bytes)")
     with zipfile.ZipFile(jar_path) as zf:
-        for name in zf.namelist():
+        names = set(zf.namelist())
+        for name in names:
             if "rinlib" in name.lower():
                 raise RuntimeError(f"Forbidden rinlib entry found in {jar_path.name}: {name}")
             if name.startswith("com/terraformersmc/modmenu/"):
                 raise RuntimeError(f"Forbidden modmenu compile stub leaked in {jar_path.name}: {name}")
+        if minecraft == "1.20.1" and loader == "forge":
+            if "pack.mcmeta" not in names:
+                raise RuntimeError(f"Missing pack.mcmeta in 1.20.1 forge JAR: {jar_path.name}")
+            pack_meta = json.loads(zf.read("pack.mcmeta").decode("utf-8"))
+            if pack_meta.get("pack", {}).get("pack_format") != 15:
+                raise RuntimeError(f"Expected pack.pack_format == 15 in {jar_path.name}, got: {pack_meta}")
+        elif "pack.mcmeta" in names:
+            pack_meta = json.loads(zf.read("pack.mcmeta").decode("utf-8"))
+            if pack_meta.get("pack", {}).get("pack_format") == 15:
+                raise RuntimeError(f"Unexpected pack_format == 15 pack.mcmeta in non-1.20.1-forge JAR: {jar_path.name}")
 
 
 def main():
@@ -105,7 +116,7 @@ def main():
             )
             target = output / f"keep-my-sword-{version}+{minecraft}-{loader}.jar"
             shutil.copy2(source, target)
-            verify_jar(target)
+            verify_jar(target, minecraft, loader)
             binary = target.read_bytes()
             manifest.append(
                 dict(

@@ -47,7 +47,8 @@ class LegacyCarrierUnsealerTest {
             boolean wasInIde = SharedConstants.IS_RUNNING_IN_IDE;
             SharedConstants.IS_RUNNING_IN_IDE = false;
             try {
-                List<?> pending = (List<?>) build.invoke(initializers, VanillaRegistries.createLookup());
+                HolderLookup.Provider lookup = createVanillaLookup();
+                List<?> pending = (List<?>) build.invoke(initializers, lookup);
                 Method apply = Class.forName(
                                 "net.minecraft.core.component.DataComponentInitializers$PendingComponents")
                         .getMethod("apply");
@@ -59,6 +60,14 @@ class LegacyCarrierUnsealerTest {
             }
         } catch (NoSuchFieldException ignored) {
             // 1.21.1 binds item components during Bootstrap.bootStrap().
+        }
+    }
+
+    private static HolderLookup.Provider createVanillaLookup() throws Exception {
+        try {
+            return (HolderLookup.Provider) VanillaRegistries.class.getMethod("createLookup").invoke(null);
+        } catch (NoSuchMethodException ignored) {
+            return (HolderLookup.Provider) VanillaRegistries.class.getMethod("createWorldLookup").invoke(null);
         }
     }
 

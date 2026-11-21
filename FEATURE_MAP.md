@@ -42,7 +42,7 @@ Zero-dependency, multi-version in-place broken durability engine for Minecraft.
 - `client/KeepMySwordConfigScreen.java` & `mixin/GuiGraphicsMixin.java`: Native zero-dependency config screen and 5×5 broken badge overlay.
 - `migration/LegacyCarrierUnsealer.java` & `mixin/LegacyMigrationPlayerMixin.java`: Automatically unseals legacy `keep_my_sword:sealed` recovery-compass carriers (native v1.2+ and schema-1 compressed payloads) on player inventory tick.
 
-## 8-Target Build Matrix (`profiles.json`)
+## 10-Target Build Matrix (`profiles.json`)
 
 | Minecraft | Java | API Layer | Loaders |
 | --- | --- | --- | --- |
@@ -50,6 +50,7 @@ Zero-dependency, multi-version in-place broken durability engine for Minecraft.
 | `1.21.1` | 21 | `v121` | `fabric`, `neoforge` |
 | `26.1.2` | 25 | `v26` | `fabric`, `neoforge` |
 | `26.2` | 25 | `v26` | `fabric`, `neoforge` |
+| `26.3` | 25 | `v26` | `fabric`, `neoforge` |
 
 ## Verification Suites & Local Gates
 
@@ -70,7 +71,7 @@ Zero-dependency, multi-version in-place broken durability engine for Minecraft.
   ```bash
   ./scripts/verify.sh [--container]
   ```
-- Full 8-target build + `<120KB`, zero-`rinlib`, zero-`modmenu` verification:
+- Full 10-target build + `<120KB`, zero-`rinlib`, zero-`modmenu` verification:
   ```bash
   python3 scripts/build-matrix.py
   ```

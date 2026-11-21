@@ -35,6 +35,7 @@ Zero runtime dependencies (no Fabric API, no library mod required).
 | `1.21.1` | Fabric, NeoForge | 21 |
 | `26.1.2` | Fabric, NeoForge | 25 |
 | `26.2` | Fabric, NeoForge | 25 |
+| `26.3` | Fabric, NeoForge | 25 |
 
 ## Building & Verification
 
@@ -44,7 +45,7 @@ Enable the local `pre-push` verification hook once per clone:
 ./scripts/setup-hooks.sh
 ```
 
-Run the full verification suite (8-target build matrix, property-based invariant tests, packaged-JAR architecture contracts, config screen lifecycle test, and packaged-JAR Minecraft `1.21.1` NeoForge GameTest E2E). Pass `--container` (or omit JDK 17/21/25 on the host) to run inside `Dockerfile.verify`:
+Run the full verification suite (10-target build matrix, property-based invariant tests, packaged-JAR architecture contracts, config screen lifecycle test, and packaged-JAR Minecraft `1.21.1` NeoForge GameTest E2E). Pass `--container` (or omit JDK 17/21/25 on the host) to run inside `Dockerfile.verify`:
 
 ```bash
 ./scripts/verify.sh [--container]
