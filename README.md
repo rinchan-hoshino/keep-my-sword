@@ -31,27 +31,3 @@ Toggle options in-game via **Mod Menu** (Fabric) or **Mods → Config** (Forge /
 | `excludedItems` | `["#slashblade:swords", "#tconstruct:modifiable", "#tetra:modular_items"]` | Item IDs (`"minecraft:diamond_sword"`) or item tags (`"#modid:tag"`) ignored by Keep My Sword. |
 
 Modpacks and datapacks can also exclude items with the `#keep_my_sword:excluded` item tag.
-
-## Supported Versions
-
-Standalone JAR with no required library mods (no Fabric API needed).
-
-| Minecraft | Loaders | Java |
-| --- | --- | --- |
-| `1.20.1` | Fabric, Forge | 17 |
-| `1.21.1` | Fabric, NeoForge | 21 |
-| `26.1.2` | Fabric, NeoForge | 25 |
-| `26.2` | Fabric, NeoForge | 25 |
-| `26.3` | Fabric, NeoForge | 25 |
-
-## Building
-
-```bash
-./scripts/setup-hooks.sh
-./scripts/verify.sh [--container]
-```
-
-## Download
-
-- [Modrinth](https://modrinth.com/mod/keep-my-sword)
-- [GitHub Releases](https://github.com/rinchan-hoshino/keep-my-sword/releases)
